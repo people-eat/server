@@ -12,7 +12,8 @@
         "lint": "eslint packages/**/**.ts",
         "npm-check": "npm-check -i @people-eat/*",
         "npm-check-all": "nx run-many --target=npm-check && yarn npm-check",
-        "start": "node --loader ts-node/esm packages/adapter-host-development/src/index.ts"
+        "start": "node --loader ts-node/esm packages/adapter-host-development/src/index.ts",
+        "start:prod": "node packages/adapter-host-development/dist/index.js"
     },
     "dependencies": {},
     "devDependencies": {
