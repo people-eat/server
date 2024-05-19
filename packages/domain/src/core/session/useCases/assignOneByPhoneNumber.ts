@@ -1,10 +1,10 @@
 import bcrypt from 'bcryptjs';
-import { type Authorization, type DataSource, type Logger } from '../../..';
+import { type Authorization, type DataSource } from '../../..';
+import { type Runtime } from '../../Runtime';
 import { type Platform } from '../../shared';
 
 export interface AssignOneSessionByPhoneNumberInput {
-    dataSourceAdapter: DataSource.Adapter;
-    logger: Logger.Adapter;
+    runtime: Runtime;
     context: Authorization.Context;
     request: { phoneNumber: string; password: string; title: string; platform: Platform };
 }
@@ -17,7 +17,7 @@ export interface AssignOneSessionByPhoneNumberRequest {
 }
 
 export async function assignOneByPhoneNumber({
-    dataSourceAdapter,
+    runtime: { dataSourceAdapter },
     context,
     request,
 }: AssignOneSessionByPhoneNumberInput): Promise<boolean> {

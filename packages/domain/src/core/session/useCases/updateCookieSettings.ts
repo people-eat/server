@@ -1,8 +1,8 @@
-import { type Authorization, type DataSource, type Logger } from '../../..';
+import { type Authorization } from '../../..';
+import { type Runtime } from '../../Runtime';
 
 export interface UpdateCookieSettingsInput {
-    dataSourceAdapter: DataSource.Adapter;
-    logger: Logger.Adapter;
+    runtime: Runtime;
     context: Authorization.Context;
     request: { cookieSettings: UpdateCookieSettingsRequest };
 }
@@ -12,7 +12,11 @@ export interface UpdateCookieSettingsRequest {
     googleAnalytics?: boolean;
 }
 
-export async function updateCookieSettings({ dataSourceAdapter, context, request }: UpdateCookieSettingsInput): Promise<boolean> {
+export async function updateCookieSettings({
+    runtime: { dataSourceAdapter },
+    context,
+    request,
+}: UpdateCookieSettingsInput): Promise<boolean> {
     const { cookieSettings } = request;
 
     const success: boolean = await dataSourceAdapter.sessionRepository.updateOne({ sessionId: context.sessionId }, { cookieSettings });

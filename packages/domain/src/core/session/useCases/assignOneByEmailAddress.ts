@@ -1,10 +1,10 @@
 import bcrypt from 'bcryptjs';
-import { type Authorization, type DataSource, type Logger } from '../../..';
+import { type Authorization, type DataSource } from '../../..';
+import { type Runtime } from '../../Runtime';
 import { type Platform } from '../../shared';
 
 export interface AssignOneSessionByEmailAddressInput {
-    dataSourceAdapter: DataSource.Adapter;
-    logger: Logger.Adapter;
+    runtime: Runtime;
     context: Authorization.Context;
     request: AssignOneSessionByEmailAddressRequest;
 }
@@ -17,7 +17,7 @@ export interface AssignOneSessionByEmailAddressRequest {
 }
 
 export async function assignOneByEmailAddress({
-    dataSourceAdapter,
+    runtime: { dataSourceAdapter },
     context,
     request,
 }: AssignOneSessionByEmailAddressInput): Promise<boolean> {

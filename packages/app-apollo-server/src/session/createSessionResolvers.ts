@@ -2,6 +2,7 @@ import { type Authorization, type Service } from '@people-eat/server-domain';
 import {
     type GQLSession,
     type GQLSessionMutation,
+    type GQLSessionMutationAssignOneArgs,
     type GQLSessionMutationAssignOneByEmailAddressArgs,
     type GQLSessionMutationAssignOneByIdentityProviderArgs,
     type GQLSessionMutationAssignOneByPhoneNumberArgs,
@@ -38,6 +39,12 @@ export function createSessionResolvers(
                 { request }: GQLSessionMutationAssignOneByIdentityProviderArgs,
                 context: Authorization.Context,
             ): Promise<boolean> => service.session.assignOneByIdentityProvider(context, request),
+
+            assignOne: async (
+                _parent: GQLSessionMutation,
+                { userId }: GQLSessionMutationAssignOneArgs,
+                context: Authorization.Context,
+            ): Promise<boolean> => service.session.assignOne(context, { userId }),
 
             updateCookieSettings: async (
                 _parent: GQLSessionMutation,

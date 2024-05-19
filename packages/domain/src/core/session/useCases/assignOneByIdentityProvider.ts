@@ -1,10 +1,9 @@
-import { type Authorization, type DataSource, type IdentityProvider, type Logger } from '../../..';
+import { type Authorization, type DataSource, type IdentityProvider } from '../../..';
+import { type Runtime } from '../../Runtime';
 import { type IdentityProvider as IdentityProviderEnum, type Platform } from '../../shared';
 
 export interface AssignOneSessionByIdentityProviderInput {
-    dataSourceAdapter: DataSource.Adapter;
-    identityProviderAdapter: IdentityProvider.Adapter;
-    logger: Logger.Adapter;
+    runtime: Runtime;
     context: Authorization.Context;
     request: AssignOneSessionByIdentityProviderRequest;
 }
@@ -17,9 +16,7 @@ export interface AssignOneSessionByIdentityProviderRequest {
 }
 
 export async function assignOneByIdentityProvider({
-    dataSourceAdapter,
-    identityProviderAdapter,
-    // logger,
+    runtime: { dataSourceAdapter, identityProviderAdapter },
     context,
     request,
 }: AssignOneSessionByIdentityProviderInput): Promise<boolean> {

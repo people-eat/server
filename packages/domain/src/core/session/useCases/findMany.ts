@@ -1,10 +1,10 @@
-import { Authorization, type DataSource, type Logger } from '../../..';
+import { Authorization, type DataSource } from '../../..';
+import { type Runtime } from '../../Runtime';
 import { type FindManyRequest } from '../../shared';
 import { type Session } from '../Session';
 
 export interface FindManySessionsInput {
-    dataSourceAdapter: DataSource.Adapter;
-    logger: Logger.Adapter;
+    runtime: Runtime;
     context: Authorization.Context;
     request: FindManySessionsRequest;
 }
@@ -12,8 +12,7 @@ export interface FindManySessionsInput {
 export type FindManySessionsRequest = { userId: string } & FindManyRequest;
 
 export async function findMany({
-    dataSourceAdapter,
-    logger,
+    runtime: { dataSourceAdapter, logger },
     context,
     request: { userId },
 }: FindManySessionsInput): Promise<Session[] | undefined> {

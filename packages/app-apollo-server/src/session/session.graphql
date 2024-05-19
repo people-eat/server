@@ -72,6 +72,7 @@ type SessionMutation {
     assignOneByEmailAddress(request: CreateOneSessionByEmailAddressRequest!): Boolean!
     assignOneByPhoneNumber(request: CreateOneSessionByPhoneNumberRequest!): Boolean!
     assignOneByIdentityProvider(request: CreateOneSessionByIdentityProviderRequest!): Boolean!
+    assignOne(userId: String!): Boolean!
 
     updateCookieSettings(request: SessionCookieSettingsInput!): Boolean!
 }

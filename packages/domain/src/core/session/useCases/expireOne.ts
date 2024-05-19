@@ -1,8 +1,8 @@
-import { Authorization, type DataSource, type Logger } from '../../..';
+import { Authorization } from '../../..';
+import { type Runtime } from '../../Runtime';
 
 export interface ExpireOneSessionInput {
-    dataSourceAdapter: DataSource.Adapter;
-    logger: Logger.Adapter;
+    runtime: Runtime;
     context: Authorization.Context;
     request: ExpireOneSessionRequest;
 }
@@ -13,8 +13,7 @@ export interface ExpireOneSessionRequest {
 }
 
 export async function expireOne({
-    dataSourceAdapter,
-    logger,
+    runtime: { dataSourceAdapter, logger },
     context,
     request: { userId, sessionId },
 }: ExpireOneSessionInput): Promise<boolean> {

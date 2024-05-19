@@ -1677,10 +1677,15 @@ export type GQLSessionCookieSettingsInput = {
 
 export type GQLSessionMutation = {
     __typename?: 'SessionMutation';
+    assignOne: Scalars['Boolean'];
     assignOneByEmailAddress: Scalars['Boolean'];
     assignOneByIdentityProvider: Scalars['Boolean'];
     assignOneByPhoneNumber: Scalars['Boolean'];
     updateCookieSettings: Scalars['Boolean'];
+};
+
+export type GQLSessionMutationAssignOneArgs = {
+    userId: Scalars['String'];
 };
 
 export type GQLSessionMutationAssignOneByEmailAddressArgs = {
@@ -4452,6 +4457,7 @@ export type GQLSessionMutationResolvers<
     ContextType = any,
     ParentType extends GQLResolversParentTypes['SessionMutation'] = GQLResolversParentTypes['SessionMutation'],
 > = {
+    assignOne?: Resolver<GQLResolversTypes['Boolean'], ParentType, ContextType, RequireFields<GQLSessionMutationAssignOneArgs, 'userId'>>;
     assignOneByEmailAddress?: Resolver<
         GQLResolversTypes['Boolean'],
         ParentType,
