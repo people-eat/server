@@ -37,12 +37,12 @@ export function createPaymentAdapter({
                     return undefined;
                 }
             },
-            createPaymentIntent: async ({
+            createPaymentIntentFromSetupIntent: async ({
                 setupIntentId,
                 pullAmount,
                 payoutAmount,
                 destinationAccountId,
-            }: PaymentProvider.CreatePaymentIntentInput): Promise<boolean> => {
+            }: PaymentProvider.CreatePaymentIntentInputFromSetupIntentInput): Promise<boolean> => {
                 try {
                     const setupIntent: Stripe.SetupIntent = await client.setupIntents.retrieve(setupIntentId);
 
@@ -162,6 +162,25 @@ export function createPaymentAdapter({
                 } catch (error) {
                     logger.error(error);
                     return false;
+                }
+            },
+            createPaymentIntent: async ({
+                amount,
+            }: PaymentProvider.CreatePaymentIntentInput): Promise<{ paymentIntentId: string; clientSecret: string }> => {
+                try {
+                    const paymentIntent: Stripe.PaymentIntent = await client.paymentIntents.create({
+                        amount,
+                        currency: 'eur',
+                    });
+
+                    if (!paymentIntent.client_secret) throw new Error();
+
+                    return {
+                        paymentIntentId: paymentIntent.id,
+                        clientSecret: paymentIntent.client_secret,
+                    };
+                } catch (error) {
+                    throw new Error();
                 }
             },
         },

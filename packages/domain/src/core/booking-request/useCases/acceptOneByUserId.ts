@@ -93,7 +93,7 @@ export async function acceptOneByUserId({ runtime, context, request }: AcceptOne
         return true;
     }
 
-    const paymentSuccess: boolean = await paymentAdapter.STRIPE.createPaymentIntent({
+    const paymentSuccess: boolean = await paymentAdapter.STRIPE.createPaymentIntentFromSetupIntent({
         currencyCode: bookingRequest.currencyCode,
         pullAmount: bookingRequest.totalAmountUser,
         payoutAmount: bookingRequest.totalAmountCook,

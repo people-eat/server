@@ -29,7 +29,7 @@ export async function handleTimeTriggeredTask(runtime: Runtime, timeTriggeredTas
             return;
         }
 
-        const paymentSuccess: boolean = await paymentAdapter.STRIPE.createPaymentIntent({
+        const paymentSuccess: boolean = await paymentAdapter.STRIPE.createPaymentIntentFromSetupIntent({
             currencyCode: bookingRequest.currencyCode,
             pullAmount: bookingRequest.totalAmountUser,
             payoutAmount: bookingRequest.totalAmountCook,

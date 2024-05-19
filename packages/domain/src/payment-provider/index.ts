@@ -4,6 +4,7 @@ export {
     CreateConnectedAccountInput,
     CreateConnectedAccountOnboardingUrlInput,
     CreatePaymentIntentInput,
+    CreatePaymentIntentInputFromSetupIntentInput,
     IsConnectedAccountEnabledInput,
     TransferPaymentToCookAccountInput,
 } from './Adapter';
