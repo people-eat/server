@@ -37,6 +37,7 @@ export function createAdminResolvers(service: Service): Resolvers<'Admin' | 'Adm
                 _input: GQLAdminQueryFindManyArgs,
                 context: Authorization.Context,
             ): Promise<GQLAdmin[]> => service.admin.findMany(context, {}) as any,
+            giftCardPromoCodes: () => ({} as any),
         },
     };
 }

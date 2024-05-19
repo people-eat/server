@@ -59,6 +59,11 @@ export type GQLAdminGiftCardPromoCodeMutationDeleteOneArgs = {
     giftCardPromoCodeId: Scalars['String'];
 };
 
+export type GQLAdminGiftCardPromoCodeQuery = {
+    __typename?: 'AdminGiftCardPromoCodeQuery';
+    findMany: Array<GQLGiftCardPromoCode>;
+};
+
 export type GQLAdminMutation = {
     __typename?: 'AdminMutation';
     createOne: Scalars['Boolean'];
@@ -78,6 +83,7 @@ export type GQLAdminQuery = {
     __typename?: 'AdminQuery';
     findMany: Array<GQLAdmin>;
     findOne?: Maybe<GQLAdmin>;
+    giftCardPromoCodes: GQLAdminGiftCardPromoCodeQuery;
 };
 
 export type GQLAdminQueryFindManyArgs = {
@@ -209,6 +215,7 @@ export type GQLCook = {
     __typename?: 'Cook';
     biography: Scalars['String'];
     bookingRequests: Array<GQLBookingRequest>;
+    city: Scalars['String'];
     cookId: Scalars['String'];
     createdAt: Scalars['DateTime'];
     followerCount: Scalars['UInt'];
@@ -2426,6 +2433,7 @@ export type GQLResolversTypes = {
     Address: ResolverTypeWrapper<GQLAddress>;
     Admin: ResolverTypeWrapper<GQLAdmin>;
     AdminGiftCardPromoCodeMutation: ResolverTypeWrapper<GQLAdminGiftCardPromoCodeMutation>;
+    AdminGiftCardPromoCodeQuery: ResolverTypeWrapper<GQLAdminGiftCardPromoCodeQuery>;
     AdminMutation: ResolverTypeWrapper<GQLAdminMutation>;
     AdminQuery: ResolverTypeWrapper<GQLAdminQuery>;
     Allergy: ResolverTypeWrapper<GQLAllergy>;
@@ -2624,6 +2632,7 @@ export type GQLResolversParentTypes = {
     Address: GQLAddress;
     Admin: GQLAdmin;
     AdminGiftCardPromoCodeMutation: GQLAdminGiftCardPromoCodeMutation;
+    AdminGiftCardPromoCodeQuery: GQLAdminGiftCardPromoCodeQuery;
     AdminMutation: GQLAdminMutation;
     AdminQuery: GQLAdminQuery;
     Allergy: GQLAllergy;
@@ -2847,6 +2856,14 @@ export type GQLAdminGiftCardPromoCodeMutationResolvers<
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type GQLAdminGiftCardPromoCodeQueryResolvers<
+    ContextType = any,
+    ParentType extends GQLResolversParentTypes['AdminGiftCardPromoCodeQuery'] = GQLResolversParentTypes['AdminGiftCardPromoCodeQuery'],
+> = {
+    findMany?: Resolver<Array<GQLResolversTypes['GiftCardPromoCode']>, ParentType, ContextType>;
+    __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type GQLAdminMutationResolvers<
     ContextType = any,
     ParentType extends GQLResolversParentTypes['AdminMutation'] = GQLResolversParentTypes['AdminMutation'],
@@ -2868,6 +2885,7 @@ export type GQLAdminQueryResolvers<
 > = {
     findMany?: Resolver<Array<GQLResolversTypes['Admin']>, ParentType, ContextType, Partial<GQLAdminQueryFindManyArgs>>;
     findOne?: Resolver<Maybe<GQLResolversTypes['Admin']>, ParentType, ContextType, RequireFields<GQLAdminQueryFindOneArgs, 'adminId'>>;
+    giftCardPromoCodes?: Resolver<GQLResolversTypes['AdminGiftCardPromoCodeQuery'], ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3029,6 +3047,7 @@ export type GQLConfiguredMenuCourseResolvers<
 export type GQLCookResolvers<ContextType = any, ParentType extends GQLResolversParentTypes['Cook'] = GQLResolversParentTypes['Cook']> = {
     biography?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;
     bookingRequests?: Resolver<Array<GQLResolversTypes['BookingRequest']>, ParentType, ContextType>;
+    city?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;
     cookId?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;
     createdAt?: Resolver<GQLResolversTypes['DateTime'], ParentType, ContextType>;
     followerCount?: Resolver<GQLResolversTypes['UInt'], ParentType, ContextType>;
@@ -5272,6 +5291,7 @@ export type GQLResolvers<ContextType = any> = {
     Address?: GQLAddressResolvers<ContextType>;
     Admin?: GQLAdminResolvers<ContextType>;
     AdminGiftCardPromoCodeMutation?: GQLAdminGiftCardPromoCodeMutationResolvers<ContextType>;
+    AdminGiftCardPromoCodeQuery?: GQLAdminGiftCardPromoCodeQueryResolvers<ContextType>;
     AdminMutation?: GQLAdminMutationResolvers<ContextType>;
     AdminQuery?: GQLAdminQueryResolvers<ContextType>;
     Allergy?: GQLAllergyResolvers<ContextType>;

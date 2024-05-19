@@ -128,6 +128,7 @@ export async function startApolloServerApp({
             supportRequests: () => ({}),
             searchRequests: () => ({} as any),
             giftCardPromoCodes: () => ({} as any),
+            admins: () => ({} as any),
         },
         Mutation: {
             admins: () => ({} as any),

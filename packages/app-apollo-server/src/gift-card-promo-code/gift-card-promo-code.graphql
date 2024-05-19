@@ -28,3 +28,11 @@ type AdminGiftCardPromoCodeMutation {
 type AdminMutation {
     giftCardPromoCodes: AdminGiftCardPromoCodeMutation!
 }
+
+type AdminGiftCardPromoCodeQuery {
+    findMany: [GiftCardPromoCode!]!
+}
+
+type AdminQuery {
+    giftCardPromoCodes: AdminGiftCardPromoCodeQuery!
+}

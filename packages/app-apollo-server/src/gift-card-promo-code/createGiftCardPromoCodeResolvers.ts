@@ -3,13 +3,16 @@ import {
     type GQLAdminGiftCardPromoCodeMutation,
     type GQLAdminGiftCardPromoCodeMutationCreateOneArgs,
     type GQLAdminGiftCardPromoCodeMutationDeleteOneArgs,
+    type GQLAdminGiftCardPromoCodeQuery,
     type GQLGiftCardPromoCode,
     type GQLGiftCardPromoCodeQuery,
     type GQLGiftCardPromoCodeQueryFindOneArgs,
 } from '../generated';
 import { type Resolvers } from '../Resolvers';
 
-export function createGiftCardPromoCodeResolvers(service: Service): Resolvers<'GiftCardPromoCodeQuery' | 'AdminGiftCardPromoCodeMutation'> {
+export function createGiftCardPromoCodeResolvers(
+    service: Service,
+): Resolvers<'GiftCardPromoCodeQuery' | 'AdminGiftCardPromoCodeMutation' | 'AdminGiftCardPromoCodeQuery'> {
     return {
         AdminGiftCardPromoCodeMutation: {
             createOne: async (
@@ -22,6 +25,13 @@ export function createGiftCardPromoCodeResolvers(service: Service): Resolvers<'G
                 { giftCardPromoCodeId }: GQLAdminGiftCardPromoCodeMutationDeleteOneArgs,
                 context: Authorization.Context,
             ): Promise<boolean> => service.giftCardPromoCode.deleteOne(context, { giftCardPromoCodeId }),
+        },
+        AdminGiftCardPromoCodeQuery: {
+            findMany: async (
+                _parent: GQLAdminGiftCardPromoCodeQuery,
+                _options: unknown,
+                context: Authorization.Context,
+            ): Promise<GQLGiftCardPromoCode[]> => service.giftCardPromoCode.findMany(context, {}) as any,
         },
         GiftCardPromoCodeQuery: {
             findOne: async (

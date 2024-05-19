@@ -12,7 +12,7 @@ import { createCookService } from './cook/createCookService';
 import { createCourseService } from './course/createCourseService';
 import { createEmailAddressUpdateService } from './email-address-update/createEmailAddressUpdateService';
 import { createFavoriteCookService } from './favorite-cook/createFavoriteCookService';
-import { createGiftCardPromoCodeService } from './gift-card-promo-code/createAddressService';
+import { createGiftCardPromoCodeService } from './gift-card-promo-code/createGiftCardPromoCodeService';
 import { createGlobalBookingRequestService } from './global-booking-request/createGlobalBookingRequestService';
 import { createKitchenService } from './kitchen/createKitchenService';
 import { createLanguageService } from './language/createLanguageService';

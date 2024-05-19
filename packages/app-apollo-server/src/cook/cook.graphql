@@ -3,6 +3,7 @@ type Cook {
     isLocked: Boolean!
     isVisible: Boolean!
     location: Location!
+    city: String!
     rank: CookRank!
     biography: String!
     travelExpenses: UInt!
