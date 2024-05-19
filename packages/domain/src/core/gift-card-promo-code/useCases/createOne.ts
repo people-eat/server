@@ -13,13 +13,13 @@ export interface CreateOneAddressInput {
 export async function createOne({ runtime: { dataSourceAdapter, logger }, context, request }: CreateOneAddressInput): Promise<boolean> {
     const { redeemCode, balance, expiresAt } = request;
 
-    await Authorization.isAdmin({ context, dataSourceAdapter, logger });
+    const { adminId } = await Authorization.isAdmin({ context, dataSourceAdapter, logger });
 
     const giftCardPromoCodeId: NanoId = createNanoId();
 
     const success: boolean = await dataSourceAdapter.giftCardPromoCodeRepository.insertOne({
         giftCardPromoCodeId,
-        adminId: context.userId ?? '',
+        adminId,
         redeemCode: redeemCode.trim(),
         amount: balance.amount,
         currencyCode: balance.currencyCode,
