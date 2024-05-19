@@ -79,6 +79,7 @@ input CreateMenuBookingRequestRequest {
     occasion: String!
     travelExpensesAmount: UInt!
     configuredMenu: CreateConfiguredMenuRequest!
+    giftCardPromoCodeId: String
 }
 
 input CreateBookingRequestRequest {

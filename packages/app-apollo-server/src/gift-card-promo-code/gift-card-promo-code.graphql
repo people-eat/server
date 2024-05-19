@@ -1,0 +1,30 @@
+type GiftCardPromoCode {
+    giftCardPromoCodeId: String!
+    redeemCode: String!
+    balance: Price!
+    expiresAt: DateTime!
+    createdAt: DateTime!
+}
+
+type GiftCardPromoCodeQuery {
+    findOne(giftCardPromoCodeId: String!): GiftCardPromoCode
+}
+
+type Query {
+    giftCardPromoCodes: GiftCardPromoCodeQuery!
+}
+
+input CreateOneGiftCardPromoCodeRequest {
+    redeemCode: String!
+    balance: PriceInput!
+    expiresAt: DateTime!
+}
+
+type AdminGiftCardPromoCodeMutation {
+    createOne(giftCardPromoCode: CreateOneGiftCardPromoCodeRequest!): Boolean!
+    deleteOne(giftCardPromoCodeId: String!): Boolean!
+}
+
+type AdminMutation {
+    giftCardPromoCodes: AdminGiftCardPromoCodeMutation!
+}

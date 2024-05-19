@@ -1,4 +1,4 @@
-import { type DBMenu } from './entities';
+import { type DBGiftCardPromoCode, type DBMenu } from './entities';
 import { type DBAddress } from './entities/Address';
 import { type DBBookingRequest } from './entities/BookingRequest';
 import { type DBCook } from './entities/Cook';
@@ -87,6 +87,8 @@ export interface Adapter {
 
     supportRequestRepository: Repository<DBSupportRequest>;
     timeTriggeredTaskRepository: Repository<DBTimeTriggeredTask>;
+
+    giftCardPromoCodeRepository: Repository<DBGiftCardPromoCode>;
 
     query: <T>(request: string) => Promise<T>;
 }

@@ -45,9 +45,24 @@ export type GQLAdmin = {
     user: GQLPublicUser;
 };
 
+export type GQLAdminGiftCardPromoCodeMutation = {
+    __typename?: 'AdminGiftCardPromoCodeMutation';
+    createOne: Scalars['Boolean'];
+    deleteOne: Scalars['Boolean'];
+};
+
+export type GQLAdminGiftCardPromoCodeMutationCreateOneArgs = {
+    giftCardPromoCode: GQLCreateOneGiftCardPromoCodeRequest;
+};
+
+export type GQLAdminGiftCardPromoCodeMutationDeleteOneArgs = {
+    giftCardPromoCodeId: Scalars['String'];
+};
+
 export type GQLAdminMutation = {
     __typename?: 'AdminMutation';
     createOne: Scalars['Boolean'];
+    giftCardPromoCodes: GQLAdminGiftCardPromoCodeMutation;
     unlockBookingRequestPayment: Scalars['Boolean'];
 };
 
@@ -858,6 +873,7 @@ export type GQLCreateMenuBookingRequestRequest = {
     cookId: Scalars['String'];
     dateTime: Scalars['DateTime'];
     duration: Scalars['UInt'];
+    giftCardPromoCodeId?: InputMaybe<Scalars['String']>;
     location: GQLLocationInput;
     message: Scalars['String'];
     occasion: Scalars['String'];
@@ -897,6 +913,12 @@ export type GQLCreateOneCourseRequest = {
     index: Scalars['UInt'];
     mealOptions?: InputMaybe<Array<GQLCreateOneMealOptionRequest>>;
     title: Scalars['String'];
+};
+
+export type GQLCreateOneGiftCardPromoCodeRequest = {
+    balance: GQLPriceInput;
+    expiresAt: Scalars['DateTime'];
+    redeemCode: Scalars['String'];
 };
 
 export type GQLCreateOneGlobalBookingRequestRequest = {
@@ -1135,6 +1157,24 @@ export type GQLFollowing = {
 };
 
 export type GQLGender = 'DIVERSE' | 'FEMALE' | 'MALE' | 'NO_INFORMATION';
+
+export type GQLGiftCardPromoCode = {
+    __typename?: 'GiftCardPromoCode';
+    balance: GQLPrice;
+    createdAt: Scalars['DateTime'];
+    expiresAt: Scalars['DateTime'];
+    giftCardPromoCodeId: Scalars['String'];
+    redeemCode: Scalars['String'];
+};
+
+export type GQLGiftCardPromoCodeQuery = {
+    __typename?: 'GiftCardPromoCodeQuery';
+    findOne?: Maybe<GQLGiftCardPromoCode>;
+};
+
+export type GQLGiftCardPromoCodeQueryFindOneArgs = {
+    giftCardPromoCodeId: Scalars['String'];
+};
 
 export type GQLGlobalBookingRequest = {
     __typename?: 'GlobalBookingRequest';
@@ -1561,6 +1601,7 @@ export type GQLQuery = {
     cookSpecificFees: GQLCookSpecificFeeQuery;
     cooks: GQLCookQuery;
     customerFeeUpdates: GQLCustomerFeeUpdateQuery;
+    giftCardPromoCodes: GQLGiftCardPromoCodeQuery;
     globalBookingRequests: GQLGlobalBookingRequestQuery;
     kitchens: GQLKitchenQuery;
     languages: GQLLanguageQuery;
@@ -2384,6 +2425,7 @@ export type GQLResolversUnionParentTypes = {
 export type GQLResolversTypes = {
     Address: ResolverTypeWrapper<GQLAddress>;
     Admin: ResolverTypeWrapper<GQLAdmin>;
+    AdminGiftCardPromoCodeMutation: ResolverTypeWrapper<GQLAdminGiftCardPromoCodeMutation>;
     AdminMutation: ResolverTypeWrapper<GQLAdminMutation>;
     AdminQuery: ResolverTypeWrapper<GQLAdminQuery>;
     Allergy: ResolverTypeWrapper<GQLAllergy>;
@@ -2439,6 +2481,7 @@ export type GQLResolversTypes = {
     CreateOneAdminRequest: GQLCreateOneAdminRequest;
     CreateOneCookRequest: GQLCreateOneCookRequest;
     CreateOneCourseRequest: GQLCreateOneCourseRequest;
+    CreateOneGiftCardPromoCodeRequest: GQLCreateOneGiftCardPromoCodeRequest;
     CreateOneGlobalBookingRequestRequest: GQLCreateOneGlobalBookingRequestRequest;
     CreateOneMealOptionRequest: GQLCreateOneMealOptionRequest;
     CreateOneMealRequest: GQLCreateOneMealRequest;
@@ -2472,6 +2515,8 @@ export type GQLResolversTypes = {
     FindManyRequest: GQLFindManyRequest;
     Following: ResolverTypeWrapper<GQLFollowing>;
     Gender: GQLGender;
+    GiftCardPromoCode: ResolverTypeWrapper<GQLGiftCardPromoCode>;
+    GiftCardPromoCodeQuery: ResolverTypeWrapper<GQLGiftCardPromoCodeQuery>;
     GlobalBookingRequest: ResolverTypeWrapper<GQLGlobalBookingRequest>;
     GlobalBookingRequestPriceClass: ResolverTypeWrapper<GQLGlobalBookingRequestPriceClass>;
     GlobalBookingRequestPriceClassType: GQLGlobalBookingRequestPriceClassType;
@@ -2578,6 +2623,7 @@ export type GQLResolversTypes = {
 export type GQLResolversParentTypes = {
     Address: GQLAddress;
     Admin: GQLAdmin;
+    AdminGiftCardPromoCodeMutation: GQLAdminGiftCardPromoCodeMutation;
     AdminMutation: GQLAdminMutation;
     AdminQuery: GQLAdminQuery;
     Allergy: GQLAllergy;
@@ -2631,6 +2677,7 @@ export type GQLResolversParentTypes = {
     CreateOneAdminRequest: GQLCreateOneAdminRequest;
     CreateOneCookRequest: GQLCreateOneCookRequest;
     CreateOneCourseRequest: GQLCreateOneCourseRequest;
+    CreateOneGiftCardPromoCodeRequest: GQLCreateOneGiftCardPromoCodeRequest;
     CreateOneGlobalBookingRequestRequest: GQLCreateOneGlobalBookingRequestRequest;
     CreateOneMealOptionRequest: GQLCreateOneMealOptionRequest;
     CreateOneMealRequest: GQLCreateOneMealRequest;
@@ -2662,6 +2709,8 @@ export type GQLResolversParentTypes = {
     FindManyPublicMenusRequest: GQLFindManyPublicMenusRequest;
     FindManyRequest: GQLFindManyRequest;
     Following: GQLFollowing;
+    GiftCardPromoCode: GQLGiftCardPromoCode;
+    GiftCardPromoCodeQuery: GQLGiftCardPromoCodeQuery;
     GlobalBookingRequest: GQLGlobalBookingRequest;
     GlobalBookingRequestPriceClass: GQLGlobalBookingRequestPriceClass;
     GlobalBookingRequestQuery: GQLGlobalBookingRequestQuery;
@@ -2779,11 +2828,31 @@ export type GQLAdminResolvers<ContextType = any, ParentType extends GQLResolvers
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type GQLAdminGiftCardPromoCodeMutationResolvers<
+    ContextType = any,
+    ParentType extends GQLResolversParentTypes['AdminGiftCardPromoCodeMutation'] = GQLResolversParentTypes['AdminGiftCardPromoCodeMutation'],
+> = {
+    createOne?: Resolver<
+        GQLResolversTypes['Boolean'],
+        ParentType,
+        ContextType,
+        RequireFields<GQLAdminGiftCardPromoCodeMutationCreateOneArgs, 'giftCardPromoCode'>
+    >;
+    deleteOne?: Resolver<
+        GQLResolversTypes['Boolean'],
+        ParentType,
+        ContextType,
+        RequireFields<GQLAdminGiftCardPromoCodeMutationDeleteOneArgs, 'giftCardPromoCodeId'>
+    >;
+    __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type GQLAdminMutationResolvers<
     ContextType = any,
     ParentType extends GQLResolversParentTypes['AdminMutation'] = GQLResolversParentTypes['AdminMutation'],
 > = {
     createOne?: Resolver<GQLResolversTypes['Boolean'], ParentType, ContextType, RequireFields<GQLAdminMutationCreateOneArgs, 'request'>>;
+    giftCardPromoCodes?: Resolver<GQLResolversTypes['AdminGiftCardPromoCodeMutation'], ParentType, ContextType>;
     unlockBookingRequestPayment?: Resolver<
         GQLResolversTypes['Boolean'],
         ParentType,
@@ -3728,6 +3797,31 @@ export type GQLFollowingResolvers<
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type GQLGiftCardPromoCodeResolvers<
+    ContextType = any,
+    ParentType extends GQLResolversParentTypes['GiftCardPromoCode'] = GQLResolversParentTypes['GiftCardPromoCode'],
+> = {
+    balance?: Resolver<GQLResolversTypes['Price'], ParentType, ContextType>;
+    createdAt?: Resolver<GQLResolversTypes['DateTime'], ParentType, ContextType>;
+    expiresAt?: Resolver<GQLResolversTypes['DateTime'], ParentType, ContextType>;
+    giftCardPromoCodeId?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;
+    redeemCode?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;
+    __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GQLGiftCardPromoCodeQueryResolvers<
+    ContextType = any,
+    ParentType extends GQLResolversParentTypes['GiftCardPromoCodeQuery'] = GQLResolversParentTypes['GiftCardPromoCodeQuery'],
+> = {
+    findOne?: Resolver<
+        Maybe<GQLResolversTypes['GiftCardPromoCode']>,
+        ParentType,
+        ContextType,
+        RequireFields<GQLGiftCardPromoCodeQueryFindOneArgs, 'giftCardPromoCodeId'>
+    >;
+    __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type GQLGlobalBookingRequestResolvers<
     ContextType = any,
     ParentType extends GQLResolversParentTypes['GlobalBookingRequest'] = GQLResolversParentTypes['GlobalBookingRequest'],
@@ -4259,6 +4353,7 @@ export type GQLQueryResolvers<ContextType = any, ParentType extends GQLResolvers
     cookSpecificFees?: Resolver<GQLResolversTypes['CookSpecificFeeQuery'], ParentType, ContextType>;
     cooks?: Resolver<GQLResolversTypes['CookQuery'], ParentType, ContextType>;
     customerFeeUpdates?: Resolver<GQLResolversTypes['CustomerFeeUpdateQuery'], ParentType, ContextType>;
+    giftCardPromoCodes?: Resolver<GQLResolversTypes['GiftCardPromoCodeQuery'], ParentType, ContextType>;
     globalBookingRequests?: Resolver<GQLResolversTypes['GlobalBookingRequestQuery'], ParentType, ContextType>;
     kitchens?: Resolver<GQLResolversTypes['KitchenQuery'], ParentType, ContextType>;
     languages?: Resolver<GQLResolversTypes['LanguageQuery'], ParentType, ContextType>;
@@ -5176,6 +5271,7 @@ export type GQLUserUserRatingQueryResolvers<
 export type GQLResolvers<ContextType = any> = {
     Address?: GQLAddressResolvers<ContextType>;
     Admin?: GQLAdminResolvers<ContextType>;
+    AdminGiftCardPromoCodeMutation?: GQLAdminGiftCardPromoCodeMutationResolvers<ContextType>;
     AdminMutation?: GQLAdminMutationResolvers<ContextType>;
     AdminQuery?: GQLAdminQueryResolvers<ContextType>;
     Allergy?: GQLAllergyResolvers<ContextType>;
@@ -5230,6 +5326,8 @@ export type GQLResolvers<ContextType = any> = {
     EmailAddress?: GraphQLScalarType;
     EmailAddressUpdate?: GQLEmailAddressUpdateResolvers<ContextType>;
     Following?: GQLFollowingResolvers<ContextType>;
+    GiftCardPromoCode?: GQLGiftCardPromoCodeResolvers<ContextType>;
+    GiftCardPromoCodeQuery?: GQLGiftCardPromoCodeQueryResolvers<ContextType>;
     GlobalBookingRequest?: GQLGlobalBookingRequestResolvers<ContextType>;
     GlobalBookingRequestPriceClass?: GQLGlobalBookingRequestPriceClassResolvers<ContextType>;
     GlobalBookingRequestQuery?: GQLGlobalBookingRequestQueryResolvers<ContextType>;

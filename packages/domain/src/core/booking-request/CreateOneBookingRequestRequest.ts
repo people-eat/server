@@ -27,6 +27,7 @@ export function isCreateOneCookBookingRequestRequest(
 
 export interface CreateOneMenuBookingRequestRequest extends CreateOneBookingRequestBaseRequest {
     configuredMenu: CreateOneConfiguredMenuRequest;
+    giftCardPromoCodeId?: string;
 }
 
 export function isCreateOneMenuBookingRequestRequest(

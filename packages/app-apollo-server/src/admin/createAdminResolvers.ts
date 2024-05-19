@@ -24,6 +24,7 @@ export function createAdminResolvers(service: Service): Resolvers<'Admin' | 'Adm
                 { bookingRequestId }: GQLAdminMutationUnlockBookingRequestPaymentArgs,
                 context: Authorization.Context,
             ): Promise<boolean> => service.bookingRequest.unlockPayment(context, { bookingRequestId }),
+            giftCardPromoCodes: () => ({} as any),
         },
         AdminQuery: {
             findOne: async (

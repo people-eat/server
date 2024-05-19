@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { Authorization, type Course, type MealOption, type PublicMenu } from '../../..';
 import { type Context } from '../../../authorization';
-import { type DBUser } from '../../../data-source';
+import { type DBBookingRequest, type DBGiftCardPromoCode, type DBUser } from '../../../data-source';
 import { createNanoId } from '../../../utils/createNanoId';
 import { calculateMenuPrice } from '../../calculateMenuPrice';
 import { type ConfiguredMenuCourse } from '../../configured-menu';
@@ -41,6 +41,7 @@ async function persistMenuBookingRequest(
         occasion,
         travelExpensesAmount,
         configuredMenu,
+        giftCardPromoCodeId,
     } = menuBookingRequest;
 
     const publicMenu: PublicMenu | undefined = await findOnePublicMenu({
@@ -68,7 +69,19 @@ async function persistMenuBookingRequest(
         publicMenu.pricePerChild,
     );
 
-    const totalAmountUser: number = (menuPrice + menuPrice * 0.04 + travelExpensesAmount + 25) / (1 - 0.015);
+    const giftCardPromoCode: DBGiftCardPromoCode | undefined = await dataSourceAdapter.giftCardPromoCodeRepository.findOne({
+        giftCardPromoCodeId,
+    });
+
+    const bookingRequestWithPromoCode: DBBookingRequest | undefined = await dataSourceAdapter.bookingRequestRepository.findOne({
+        userId,
+        giftCardPromoCodeId,
+    });
+
+    const totalAmountUser: number =
+        giftCardPromoCode && !bookingRequestWithPromoCode
+            ? (menuPrice + menuPrice * 0.04 + travelExpensesAmount - giftCardPromoCode.amount + 25) / (1 - 0.015)
+            : (menuPrice + menuPrice * 0.04 + travelExpensesAmount + 25) / (1 - 0.015);
     const totalAmountCook: number = Math.trunc(menuPrice * ((100 - 18) / 100)) + travelExpensesAmount;
 
     const success: boolean = await dataSourceAdapter.bookingRequestRepository.insertOne({
@@ -91,6 +104,7 @@ async function persistMenuBookingRequest(
         fee: 22,
         occasion: occasion.trim(),
         createdAt: new Date(),
+        giftCardPromoCodeId,
         paymentData: { ...paymentData, provider: 'STRIPE', confirmed: false, unlocked: false },
     });
 

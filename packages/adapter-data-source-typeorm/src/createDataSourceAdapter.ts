@@ -85,6 +85,8 @@ export async function createDataSourceAdapter({ logger, connection, reset }: Cre
         supportRequestRepository: createGenericRepository(AppDataSource.getRepository(entities.SupportRequestEntity), logger),
         timeTriggeredTaskRepository: createGenericRepository(AppDataSource.getRepository(entities.TimeTriggeredTaskEntity), logger),
 
+        giftCardPromoCodeRepository: createGenericRepository(AppDataSource.getRepository(entities.GiftCardPromoCodeEntity), logger),
+
         query: <T>(request: string) => AppDataSource.query(request) as Promise<T>,
     };
 }

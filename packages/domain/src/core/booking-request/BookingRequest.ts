@@ -31,4 +31,6 @@ export interface BookingRequest {
         confirmed: boolean;
         unlocked: boolean;
     };
+
+    giftCardPromoCodeId?: string;
 }

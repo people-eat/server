@@ -48,6 +48,7 @@ import { createCustomerFeeUpdateResolvers } from './customer-fee-update/createCu
 import { createEmailAddressUpdateResolvers } from './email-address-update/createEmailAddressUpdateResolvers';
 import { createFollowingResolvers } from './following/createFollowingResolvers';
 import { type GQLResolvers, type GQLSubscriptionBookingRequestChatMessageCreationsArgs } from './generated';
+import { createGiftCardPromoCodeResolvers } from './gift-card-promo-code/createGiftCardPromoCodeResolvers';
 import { createGlobalBookingRequestResolvers } from './global-booking-request/createGlobalBookingRequestResolvers';
 import { createKitchenResolvers } from './kitchen/createKitchenResolvers';
 import { createLanguageResolvers } from './language/createLanguageResolvers';
@@ -126,6 +127,7 @@ export async function startApolloServerApp({
             bookingRequests: () => ({}),
             supportRequests: () => ({}),
             searchRequests: () => ({} as any),
+            giftCardPromoCodes: () => ({} as any),
         },
         Mutation: {
             admins: () => ({} as any),
@@ -186,6 +188,7 @@ export async function startApolloServerApp({
         ...createOneTimeAccessTokenResolvers(service),
         ...createSupportRequestResolvers(service),
         ...createSearchRequestResolvers(service),
+        ...createGiftCardPromoCodeResolvers(service),
     };
 
     const path: string = '/graphql';

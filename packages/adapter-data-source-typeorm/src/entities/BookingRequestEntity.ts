@@ -3,6 +3,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryColu
 import { ChatMessageEntity } from './ChatMessageEntity';
 import { ConfiguredMenuEntity } from './ConfiguredMenuEntity';
 import { CookEntity } from './CookEntity';
+import { GiftCardPromoCodeEntity } from './GiftCardPromoCodeEntity';
 import { KitchenEntity } from './KitchenEntity';
 import { SupportRequestEntity } from './SupportRequestEntity';
 import { UserEntity } from './UserEntity';
@@ -84,6 +85,9 @@ export class BookingRequestEntity implements DataSource.DBBookingRequest {
         unlocked: boolean;
     };
 
+    @Column('char', { length: 20, nullable: true })
+    giftCardPromoCodeId?: string;
+
     /* relations */
 
     @OneToMany(() => ChatMessageEntity, (chatMessage: ChatMessageEntity) => chatMessage.bookingRequest, { cascade: true })
@@ -106,4 +110,8 @@ export class BookingRequestEntity implements DataSource.DBBookingRequest {
 
     @OneToOne(() => ConfiguredMenuEntity, (configuredMenu: ConfiguredMenuEntity) => configuredMenu.bookingRequest)
     configuredMenu?: ConfiguredMenuEntity;
+
+    @ManyToOne(() => GiftCardPromoCodeEntity, (giftCardPromoCode: GiftCardPromoCodeEntity) => giftCardPromoCode.bookingRequests)
+    @JoinColumn({ name: 'giftCardPromoCodeId' })
+    giftCardPromoCode?: GiftCardPromoCodeEntity;
 }

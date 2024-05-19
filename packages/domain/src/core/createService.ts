@@ -12,6 +12,7 @@ import { createCookService } from './cook/createCookService';
 import { createCourseService } from './course/createCourseService';
 import { createEmailAddressUpdateService } from './email-address-update/createEmailAddressUpdateService';
 import { createFavoriteCookService } from './favorite-cook/createFavoriteCookService';
+import { createGiftCardPromoCodeService } from './gift-card-promo-code/createAddressService';
 import { createGlobalBookingRequestService } from './global-booking-request/createGlobalBookingRequestService';
 import { createKitchenService } from './kitchen/createKitchenService';
 import { createLanguageService } from './language/createLanguageService';
@@ -97,5 +98,6 @@ export function createService(runtime: Runtime): Service {
         oneTimeAccessToken: createOneTimeAccessTokenService(runtime),
         supportRequest: createSupportRequestService(runtime),
         searchRequest: createSearchRequestService(runtime),
+        giftCardPromoCode: createGiftCardPromoCodeService(runtime),
     };
 }
