@@ -40,7 +40,7 @@ export class MenuEntity implements DataSource.DBMenu {
     @Column('varchar', { nullable: true })
     greetingFromKitchen?: string;
 
-    @Column('smallint', { unsigned: true })
+    @Column('mediumint', { unsigned: true })
     basePrice!: number;
 
     @Column('smallint', { unsigned: true })
