@@ -57,6 +57,7 @@ import { createMealResolvers } from './meal/createMealResolvers';
 import { createMenuConfigurationResolvers } from './menu-configuration/createMenuConfigurationResolvers';
 import { createMenuVisitResolvers } from './menu-visit/createMenuVisitResolvers';
 import { createMenuResolvers } from './menu/createMenuResolvers';
+import { createNewsletterSubscriptionResolvers } from './newsletter-subscription/createNewsletterSubscriptionResolvers';
 import { createNotificationConfigurationResolvers } from './notification-configuration/createNotificationConfigurationResolvers';
 import { createNotificationResolvers } from './notification/createNotificationResolvers';
 import { createOneTimeAccessTokenResolvers } from './one-time-access-token/createOneTimeAccessTokenResolvers';
@@ -140,6 +141,7 @@ export async function startApolloServerApp({
             sessions: () => ({} as any),
             cooks: () => ({} as any),
             searchRequests: () => ({} as any),
+            newsletterSubscriptions: () => ({} as any),
         },
         Subscription: {
             bookingRequestChatMessageCreations: {
@@ -190,6 +192,7 @@ export async function startApolloServerApp({
         ...createSupportRequestResolvers(service),
         ...createSearchRequestResolvers(service),
         ...createGiftCardPromoCodeResolvers(service),
+        ...createNewsletterSubscriptionResolvers(service),
     };
 
     const path: string = '/graphql';

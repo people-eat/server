@@ -21,6 +21,7 @@ import { createMealOptionService } from './meal-option/createMealOptionService';
 import { createMealService } from './meal/createMealService';
 import { createMenuCategoryService } from './menu-category/createMenuCategoryService';
 import { createMenuService } from './menu/createMenuService';
+import { createNewsletterSubscriptionService } from './newsletter-subscription/createNewsletterSubscriptionService';
 import { createOneTimeAccessTokenService } from './one-time-access-token/createOneTimeAccessTokenService';
 import { createPhoneNumberUpdateService } from './phone-number-update/createPhoneNumberUpdateService';
 import { createPublicCookService } from './public-cook/createPublicCookService';
@@ -99,5 +100,6 @@ export function createService(runtime: Runtime): Service {
         supportRequest: createSupportRequestService(runtime),
         searchRequest: createSearchRequestService(runtime),
         giftCardPromoCode: createGiftCardPromoCodeService(runtime),
+        newsletterSubscription: createNewsletterSubscriptionService(runtime),
     };
 }

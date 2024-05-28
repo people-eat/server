@@ -1,0 +1,7 @@
+type NewsletterSubscriptionMutation {
+    createOne(emailAddress: String!): Boolean!
+}
+
+type Mutation {
+    newsletterSubscriptions: NewsletterSubscriptionMutation!
+}

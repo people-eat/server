@@ -18,6 +18,7 @@ export { type MealOption as DBMealOption } from '../../core/meal-option/MealOpti
 export { type Meal as DBMeal } from '../../core/meal/Meal';
 export { type MenuCategory as DBMenuCategory } from '../../core/menu-category/MenuCategory';
 export { type MenuVisit as DBMenuVisit } from '../../core/menu-visit/MenuVisit';
+export { type NewsletterSubscription as DBNewsletterSubscription } from '../../core/newsletter-subscription/NewsletterSubscription';
 export { type NotificationConfiguration as DBNotificationConfiguration } from '../../core/notification-configuration/NotificationConfiguration';
 export { type Notification as DBNotification } from '../../core/notification/Notification';
 export { type PrivacyPolicyUpdate as DBPrivacyPolicyUpdate } from '../../core/privacy-policy-update/PrivacyPolicyUpdate';

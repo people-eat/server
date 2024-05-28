@@ -19,6 +19,7 @@ import { type MealOptionService } from './meal-option/createMealOptionService';
 import { type MealService } from './meal/createMealService';
 import { type MenuCategoryService } from './menu-category/createMenuCategoryService';
 import { type MenuService } from './menu/createMenuService';
+import { type NewsletterSubscriptionService } from './newsletter-subscription/createNewsletterSubscriptionService';
 import { type OneTimeAccessTokenService } from './one-time-access-token/createOneTimeAccessTokenService';
 import { type PhoneNumberUpdateService } from './phone-number-update/createPhoneNumberUpdateService';
 import { type PublicCookService } from './public-cook/createPublicCookService';
@@ -71,4 +72,5 @@ export interface Service {
     supportRequest: SupportRequestService;
     searchRequest: SearchRequestService;
     giftCardPromoCode: GiftCardPromoCodeService;
+    newsletterSubscription: NewsletterSubscriptionService;
 }

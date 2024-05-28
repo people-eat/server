@@ -87,6 +87,11 @@ export async function createDataSourceAdapter({ logger, connection, reset }: Cre
 
         giftCardPromoCodeRepository: createGenericRepository(AppDataSource.getRepository(entities.GiftCardPromoCodeEntity), logger),
 
+        newsletterSubscriptionRepository: createGenericRepository(
+            AppDataSource.getRepository(entities.NewsletterSubscriptionEntity),
+            logger,
+        ),
+
         query: <T>(request: string) => AppDataSource.query(request) as Promise<T>,
     };
 }

@@ -27,6 +27,7 @@ import {
     type DBMealOption,
     type DBMenuCategory,
     type DBMenuVisit,
+    type DBNewsletterSubscription,
     type DBNotification,
     type DBNotificationConfiguration,
     type DBPrivacyPolicyUpdate,
@@ -89,6 +90,8 @@ export interface Adapter {
     timeTriggeredTaskRepository: Repository<DBTimeTriggeredTask>;
 
     giftCardPromoCodeRepository: Repository<DBGiftCardPromoCode>;
+
+    newsletterSubscriptionRepository: Repository<DBNewsletterSubscription>;
 
     query: <T>(request: string) => Promise<T>;
 }

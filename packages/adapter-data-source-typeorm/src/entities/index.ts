@@ -25,6 +25,7 @@ export { MealOptionEntity } from './MealOptionEntity';
 export { MenuCategoryEntity } from './MenuCategoryEntity';
 export { MenuEntity } from './MenuEntity';
 export { MenuVisitEntity } from './MenuVisitEntity';
+export { NewsletterSubscriptionEntity } from './NewsletterSubscriptionEntity';
 export { NotificationConfigurationEntity } from './NotificationConfigurationEntity';
 export { NotificationEntity } from './NotificationEntity';
 export { OneTimeAccessTokenEntity } from './OneTimeAccessTokenEntity';

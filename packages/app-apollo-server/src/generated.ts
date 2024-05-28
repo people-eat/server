@@ -1356,12 +1356,22 @@ export type GQLMutation = {
     customerFeeUpdates: GQLCustomerFeeUpdateMutation;
     kitchens: GQLKitchenMutation;
     languages: GQLLanguageMutation;
+    newsletterSubscriptions: GQLNewsletterSubscriptionMutation;
     notifications: GQLNotificationMutation;
     privacyPolicyUpdates: GQLPrivacyPolicyUpdateMutation;
     searchRequests: GQLSearchRequestMutation;
     sessions: GQLSessionMutation;
     termsUpdates: GQLTermsUpdateMutation;
     users: GQLUserMutation;
+};
+
+export type GQLNewsletterSubscriptionMutation = {
+    __typename?: 'NewsletterSubscriptionMutation';
+    createOne: Scalars['Boolean'];
+};
+
+export type GQLNewsletterSubscriptionMutationCreateOneArgs = {
+    emailAddress: Scalars['String'];
 };
 
 export type GQLNotification = {
@@ -2553,6 +2563,7 @@ export type GQLResolversTypes = {
     MenuConfigurationCourse: ResolverTypeWrapper<GQLMenuConfigurationCourse>;
     MenuVisit: ResolverTypeWrapper<GQLMenuVisit>;
     Mutation: ResolverTypeWrapper<{}>;
+    NewsletterSubscriptionMutation: ResolverTypeWrapper<GQLNewsletterSubscriptionMutation>;
     Notification: ResolverTypeWrapper<GQLNotification>;
     NotificationConfiguration: ResolverTypeWrapper<GQLNotificationConfiguration>;
     NotificationConfigurationMutation: ResolverTypeWrapper<GQLNotificationConfigurationMutation>;
@@ -2745,6 +2756,7 @@ export type GQLResolversParentTypes = {
     MenuConfigurationCourse: GQLMenuConfigurationCourse;
     MenuVisit: GQLMenuVisit;
     Mutation: {};
+    NewsletterSubscriptionMutation: GQLNewsletterSubscriptionMutation;
     Notification: GQLNotification;
     NotificationConfiguration: GQLNotificationConfiguration;
     NotificationConfigurationMutation: GQLNotificationConfigurationMutation;
@@ -4060,12 +4072,26 @@ export type GQLMutationResolvers<
     customerFeeUpdates?: Resolver<GQLResolversTypes['CustomerFeeUpdateMutation'], ParentType, ContextType>;
     kitchens?: Resolver<GQLResolversTypes['KitchenMutation'], ParentType, ContextType>;
     languages?: Resolver<GQLResolversTypes['LanguageMutation'], ParentType, ContextType>;
+    newsletterSubscriptions?: Resolver<GQLResolversTypes['NewsletterSubscriptionMutation'], ParentType, ContextType>;
     notifications?: Resolver<GQLResolversTypes['NotificationMutation'], ParentType, ContextType>;
     privacyPolicyUpdates?: Resolver<GQLResolversTypes['PrivacyPolicyUpdateMutation'], ParentType, ContextType>;
     searchRequests?: Resolver<GQLResolversTypes['SearchRequestMutation'], ParentType, ContextType>;
     sessions?: Resolver<GQLResolversTypes['SessionMutation'], ParentType, ContextType>;
     termsUpdates?: Resolver<GQLResolversTypes['TermsUpdateMutation'], ParentType, ContextType>;
     users?: Resolver<GQLResolversTypes['UserMutation'], ParentType, ContextType>;
+};
+
+export type GQLNewsletterSubscriptionMutationResolvers<
+    ContextType = any,
+    ParentType extends GQLResolversParentTypes['NewsletterSubscriptionMutation'] = GQLResolversParentTypes['NewsletterSubscriptionMutation'],
+> = {
+    createOne?: Resolver<
+        GQLResolversTypes['Boolean'],
+        ParentType,
+        ContextType,
+        RequireFields<GQLNewsletterSubscriptionMutationCreateOneArgs, 'emailAddress'>
+    >;
+    __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type GQLNotificationResolvers<
@@ -5373,6 +5399,7 @@ export type GQLResolvers<ContextType = any> = {
     MenuConfigurationCourse?: GQLMenuConfigurationCourseResolvers<ContextType>;
     MenuVisit?: GQLMenuVisitResolvers<ContextType>;
     Mutation?: GQLMutationResolvers<ContextType>;
+    NewsletterSubscriptionMutation?: GQLNewsletterSubscriptionMutationResolvers<ContextType>;
     Notification?: GQLNotificationResolvers<ContextType>;
     NotificationConfiguration?: GQLNotificationConfigurationResolvers<ContextType>;
     NotificationConfigurationMutation?: GQLNotificationConfigurationMutationResolvers<ContextType>;
