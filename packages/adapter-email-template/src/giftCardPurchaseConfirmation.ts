@@ -3,6 +3,7 @@ export interface GiftCardPurchaseConfirmationInput {
         firstName: string;
     };
 
+    message: string;
     occasion: string;
 
     recipient: {
@@ -17,12 +18,15 @@ export interface GiftCardPurchaseConfirmationInput {
 
 export function giftCardPurchaseConfirmation({
     buyer,
+    message,
     occasion,
     recipient,
     balance,
     automatedEmailDelivery,
 }: GiftCardPurchaseConfirmationInput): string {
     const formatPrice = (amount: number, currencyCode: string): string => (amount / 100).toFixed(2) + ' ' + currencyCode;
+
+    const messageSection: string = message ? `<div><span style="font-weight: bold;">Nachricht:</span> ${message}</div><div> </div>` : '';
 
     return `
         <!DOCTYPE html>
@@ -336,7 +340,7 @@ export function giftCardPurchaseConfirmation({
         <tbody>
         <tr>
         <td align="left" class="kl-text" style="font-size:0px;padding:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;word-break:break-word;">
-        <div style="font-family:Helvetica, Arial, sans-serif;font-size:16px;font-style:normal;font-weight:400;letter-spacing:0px;line-height:1.5;text-align:left;color:#414141;"><div><span style="font-weight: bold; font-size: 25px; color: rgb(7, 0, 48);">Buchungsbestätigung</span></div></div>
+        <div style="font-family:Helvetica, Arial, sans-serif;font-size:16px;font-style:normal;font-weight:400;letter-spacing:0px;line-height:1.5;text-align:left;color:#414141;"><div><span style="font-weight: bold; font-size: 25px; color: rgb(7, 0, 48);">Bestellungsbestätigung</span></div></div>
         </td>
         </tr>
         </tbody>
@@ -392,6 +396,7 @@ export function giftCardPurchaseConfirmation({
         <div> </div>
         <div><span style="font-weight: bold;">Empfänger:</span> ${recipient.firstName} ${recipient.lastName}</div>
         <div> </div>
+        ${messageSection}
         <div><span style="font-weight: bold;">Gutscheinwert:</span> ${formatPrice(balance, '€')}</div>
         <div> </div>
         <div><span style="font-weight: bold;">Wird automatisch an Empfänger per Email zugestellt: <span style="font-weight: 400;">${

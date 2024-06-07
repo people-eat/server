@@ -1,5 +1,6 @@
+import moment from 'moment';
 import { type Authorization } from '../../..';
-import { giftCardPurchaseConfirmation } from '../../../../../adapter-email-template/src';
+import { giftCardPurchaseConfirmation, giftCardReceived } from '../../../../../adapter-email-template/src';
 import { type DBGiftCard, type DBUser } from '../../../data-source';
 import { type Runtime } from '../../Runtime';
 import { type NanoId } from '../../shared';
@@ -35,7 +36,7 @@ export async function confirmOne({ runtime, request }: ConfirmOneGiftCardInput):
 
     if (!persistingSuccess) return false;
 
-    const { initialBalanceAmount, occasion, userId, buyer, recipient } = giftCard;
+    const { redeemCode, initialBalanceAmount, occasion, message, userId, buyer, recipient, expiresAt } = giftCard;
 
     if (userId) {
         const user: DBUser | undefined = await dataSourceAdapter.userRepository.findOne({ userId });
@@ -43,13 +44,28 @@ export async function confirmOne({ runtime, request }: ConfirmOneGiftCardInput):
         await emailAdapter.sendToOne(
             'PeopleEat',
             user.emailAddress,
-            'Gutschein',
+            'Bestellbestätigung Gutschein',
             giftCardPurchaseConfirmation({
                 buyer: { firstName: user.firstName },
                 occasion,
+                message,
                 recipient,
                 balance: initialBalanceAmount,
                 automatedEmailDelivery: Boolean(recipient.deliveryInformation),
+            }),
+        );
+        await emailAdapter.sendToOne(
+            'PeopleEat',
+            user.emailAddress,
+            'Der Gutschein wurde erfolgreich erstellt',
+            giftCardReceived({
+                buyer: { firstName: user.firstName, lastName: user.lastName },
+                occasion,
+                message,
+                recipient,
+                balance: initialBalanceAmount,
+                redeemCode,
+                formattedExpirationDate: moment(expiresAt).format('L'),
             }),
         );
         if (recipient.deliveryInformation) {
@@ -57,20 +73,6 @@ export async function confirmOne({ runtime, request }: ConfirmOneGiftCardInput):
                 dueDate: new Date(recipient.deliveryInformation.date),
                 task: { type: 'TIME_TRIGGERED_TASK_SEND_GIFT_CARD', giftCardId },
             });
-            // await emailAdapter.sendToOne(
-            //     'PeopleEat',
-            //     recipient.deliveryInformation.emailAddress,
-            //     'Gutschein',
-            //     giftCardReceived({
-            //         buyer: { firstName: user.firstName, lastName: user.lastName },
-            //         occasion,
-            //         message,
-            //         recipient,
-            //         balance: initialBalanceAmount,
-            //         redeemCode,
-            //         formattedExpirationDate: moment(expiresAt).format('L'),
-            //     }),
-            // );
         }
     }
 
@@ -78,13 +80,29 @@ export async function confirmOne({ runtime, request }: ConfirmOneGiftCardInput):
         await emailAdapter.sendToOne(
             'PeopleEat',
             buyer.emailAddress,
-            'Gutschein',
+            'Bestellbestätigung Gutschein',
             giftCardPurchaseConfirmation({
                 buyer: { firstName: buyer.firstName },
                 occasion,
+                message,
                 recipient,
                 balance: initialBalanceAmount,
                 automatedEmailDelivery: Boolean(recipient.deliveryInformation),
+            }),
+        );
+
+        await emailAdapter.sendToOne(
+            'PeopleEat',
+            buyer.emailAddress,
+            'Der Gutschein wurde erfolgreich erstellt',
+            giftCardReceived({
+                buyer,
+                occasion,
+                message,
+                recipient,
+                balance: initialBalanceAmount,
+                redeemCode,
+                formattedExpirationDate: moment(expiresAt).format('L'),
             }),
         );
         if (recipient.deliveryInformation) {
@@ -92,20 +110,6 @@ export async function confirmOne({ runtime, request }: ConfirmOneGiftCardInput):
                 dueDate: new Date(recipient.deliveryInformation.date),
                 task: { type: 'TIME_TRIGGERED_TASK_SEND_GIFT_CARD', giftCardId },
             });
-            // await emailAdapter.sendToOne(
-            //     'PeopleEat',
-            //     recipient.deliveryInformation.emailAddress,
-            //     'Gutschein',
-            //     giftCardReceived({
-            //         buyer,
-            //         occasion,
-            //         message,
-            //         recipient,
-            //         balance: initialBalanceAmount,
-            //         redeemCode,
-            //         formattedExpirationDate: moment(expiresAt).format('L'),
-            //     }),
-            // );
         }
     }
 

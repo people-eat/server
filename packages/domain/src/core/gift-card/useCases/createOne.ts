@@ -25,7 +25,7 @@ export async function createOne({
     const giftCardId: NanoId = createNanoId();
     const redeemCode: string = giftCardId;
     const expiresAt: Date = new Date();
-    expiresAt.setFullYear(expiresAt.getFullYear() + 1);
+    expiresAt.setFullYear(expiresAt.getFullYear() + 3);
 
     const success: boolean = await dataSourceAdapter.giftCardRepository.insertOne({
         giftCardId,
@@ -48,12 +48,12 @@ export async function createOne({
         },
 
         initialBalanceAmount: balance,
-        initialPeopleEatAmount: balance * 0.18,
-        initialCookAmount: balance * 0.82,
+        initialPeopleEatAmount: balance * 0.22,
+        initialCookAmount: balance * 0.78,
 
         remainingBalanceAmount: balance,
-        remainingPeopleEatAmount: balance * 0.18,
-        remainingCookAmount: balance * 0.82,
+        remainingPeopleEatAmount: balance * 0.22,
+        remainingCookAmount: balance * 0.78,
 
         currencyCode: 'EUR',
     });

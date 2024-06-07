@@ -90,45 +90,43 @@ export async function handleTimeTriggeredTask(runtime: Runtime, timeTriggeredTas
 
         const { redeemCode, userId, buyer, occasion, recipient, message, initialBalanceAmount, expiresAt } = giftCard;
 
-        if (userId) {
+        if (userId && recipient.deliveryInformation) {
             const user: DBUser | undefined = await dataSourceAdapter.userRepository.findOne({ userId });
             if (!user || !user.emailAddress) return;
 
-            if (recipient.deliveryInformation) {
-                await emailAdapter.sendToOne(
-                    'PeopleEat',
-                    recipient.deliveryInformation.emailAddress,
-                    'Gutschein',
-                    giftCardReceived({
-                        buyer: { firstName: user.firstName, lastName: user.lastName },
-                        occasion,
-                        message,
-                        recipient,
-                        balance: initialBalanceAmount,
-                        redeemCode,
-                        formattedExpirationDate: moment(expiresAt).format('L'),
-                    }),
-                );
-            }
+            await emailAdapter.sendToOne(
+                'PeopleEat',
+                recipient.deliveryInformation.emailAddress,
+                `${user.firstName} hat dir ein Geschenk geschickt`,
+                giftCardReceived({
+                    buyer: { firstName: user.firstName, lastName: user.lastName },
+                    occasion,
+                    message,
+                    recipient,
+                    balance: initialBalanceAmount,
+                    redeemCode,
+                    formattedExpirationDate: moment(expiresAt).format('L'),
+                }),
+            );
         }
 
-        if (buyer) {
-            if (recipient.deliveryInformation) {
-                await emailAdapter.sendToOne(
-                    'PeopleEat',
-                    recipient.deliveryInformation.emailAddress,
-                    'Gutschein',
-                    giftCardReceived({
-                        buyer,
-                        occasion,
-                        message,
-                        recipient,
-                        balance: initialBalanceAmount,
-                        redeemCode,
-                        formattedExpirationDate: moment(expiresAt).format('L'),
-                    }),
-                );
-            }
+        if (buyer && recipient.deliveryInformation) {
+            await emailAdapter.sendToOne(
+                'PeopleEat',
+                recipient.deliveryInformation.emailAddress,
+                `${buyer.firstName} hat dir ein Geschenk geschickt`,
+                giftCardReceived({
+                    buyer,
+                    occasion,
+                    message,
+                    recipient,
+                    balance: initialBalanceAmount,
+                    redeemCode,
+                    formattedExpirationDate: moment(expiresAt).format('L'),
+                }),
+            );
         }
+
+        await dataSourceAdapter.timeTriggeredTaskRepository.deleteOne({ timeTriggeredTaskId: timeTriggeredTask.timeTriggeredTaskId });
     }
 }

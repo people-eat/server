@@ -31,6 +31,10 @@ export function giftCardReceived({
 }: GiftCardReceivedInput): string {
     const formatPrice = (amount: number, currencyCode: string): string => (amount / 100).toFixed(2) + ' ' + currencyCode;
 
+    const messageSection: string = message
+        ? `<p style="text-align: left;"><span style="font-weight: bold;">${buyer.firstName} <span style="font-weight: 400;">hat dir eine Nachricht hinterlassen:</span> ${message}</span></p>`
+        : '';
+
     return `
     <!DOCTYPE html>
     <html xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml">
@@ -348,7 +352,7 @@ export function giftCardReceived({
     <td align="left" class="kl-text" style="font-size:0px;padding:0px;padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;word-break:break-word;">
     <div style="font-family:Helvetica, Arial, sans-serif;font-size:16px;font-style:normal;font-weight:400;letter-spacing:0px;line-height:1.5;text-align:left;color:#414141;"><div style="text-align: left;"><span style="font-size: 20px;"><strong><span style="color: rgb(255, 100, 51);">${
         buyer.firstName
-    } ${buyer.lastName}</span> HAT EIN GESCHENK FÜR DICH VORBEREITET</strong></span></div></div>
+    } ${buyer.lastName}</span> hat dir ein Geschenk geschickt</strong></span></div></div>
     </td>
     </tr>
     </tbody>
@@ -446,9 +450,7 @@ export function giftCardReceived({
         balance,
         '€',
     )} 🎉</span></p>
-    <p style="text-align: left;"><span style="font-weight: bold;">${
-        buyer.firstName
-    } <span style="font-weight: 400;">hat dir eine Nachricht hinterlassen:</span> ${message}</span></p>
+    ${messageSection}
     <p style="text-align: left;"><span style="font-weight: bold;">GUTSCHEIN CODE: ${redeemCode}</span></p>
     <p style="padding-bottom:0; text-align:left"><span style="font-size: 12px; font-weight: 400; color: rgb(48, 47, 47);">Der Gutschein Code ist gültig bis zum: ${formattedExpirationDate}</span></p></div>
     </td>
@@ -518,7 +520,7 @@ export function giftCardReceived({
     <tr>
     <td align="center" bgcolor="#f97316" role="presentation" style="border:none;border-radius:12px;cursor:auto;mso-padding-alt:20px 15px 20px 15px;background:#f97316;" valign="middle">
     <a href="https://www.people-eat.com/" style="color:#FFF; font-style:normal; font-weight:700; text-decoration:none; display:inline-block; background:#f97316; font-family:Arial; font-size:16px; line-height:100%; letter-spacing:0; margin:0; text-transform:none; padding:20px 15px 20px 15px; mso-padding-alt:0; border-radius:12px" target="_blank">
-    EXPERIENCE AUSSUCHEN
+    Privatkoch finden
     </a>
     </td>
     </tr>
