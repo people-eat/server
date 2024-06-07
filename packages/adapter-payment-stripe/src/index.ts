@@ -180,7 +180,16 @@ export function createPaymentAdapter({
                         clientSecret: paymentIntent.client_secret,
                     };
                 } catch (error) {
+                    console.log(error);
                     throw new Error();
+                }
+            },
+            checkPaymentIntentCompleted: async (paymentIntentId: string): Promise<boolean> => {
+                try {
+                    const res: Stripe.PaymentIntent = await client.paymentIntents.retrieve(paymentIntentId);
+                    return res.status === 'succeeded';
+                } catch (error) {
+                    return false;
                 }
             },
         },

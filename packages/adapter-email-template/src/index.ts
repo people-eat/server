@@ -6,6 +6,8 @@ export { cookBookingRequestCookDeclinedNotification } from './cookBookingRequest
 export { cookBookingRequestCustomerConfirmation } from './cookBookingRequestCustomerConfirmation';
 export { cookRegistrationConfirmation } from './cookRegistrationConfirmation';
 export { customerPaymentAnnouncement } from './customerPaymentAnnouncement';
+export { giftCardPurchaseConfirmation } from './giftCardPurchaseConfirmation';
+export { giftCardReceived } from './giftCardReceived';
 export { globalBookingRequestCookConfirmation } from './globalBookingRequestCookConfirmation';
 export { globalBookingRequestCustomerConfirmation } from './globalBookingRequestCustomerConfirmation';
 export { menuBookingRequestCookConfirmation } from './menuBookingRequestCookConfirmation';

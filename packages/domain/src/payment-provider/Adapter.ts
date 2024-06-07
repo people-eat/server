@@ -46,5 +46,6 @@ export type Adapter = Record<
         createConnectedAccountDashboardUrl(input: CreateConnectedAccountDashboardUrlInput): Promise<{ url: string } | undefined>;
         transferPaymentToCookAccount(input: TransferPaymentToCookAccountInput): Promise<boolean>;
         createPaymentIntent(input: CreatePaymentIntentInput): Promise<{ paymentIntentId: string; clientSecret: string }>;
+        checkPaymentIntentCompleted(paymentIntentId: string): Promise<boolean>;
     }
 >;

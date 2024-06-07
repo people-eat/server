@@ -9,10 +9,12 @@ import { createChatMessageService } from './chat-message/createChatMessageServic
 import { createConfiguredMenuService } from './configured-menu/createConfiguredMenuService';
 import { createCookLanguageService } from './cook-language/createCookLanguageService';
 import { createCookService } from './cook/createCookService';
+import { createCouponCodeService } from './coupon-code/createCouponCodeService';
 import { createCourseService } from './course/createCourseService';
 import { createEmailAddressUpdateService } from './email-address-update/createEmailAddressUpdateService';
 import { createFavoriteCookService } from './favorite-cook/createFavoriteCookService';
 import { createGiftCardPromoCodeService } from './gift-card-promo-code/createGiftCardPromoCodeService';
+import { createGiftCardService } from './gift-card/createGiftCardService';
 import { createGlobalBookingRequestService } from './global-booking-request/createGlobalBookingRequestService';
 import { createKitchenService } from './kitchen/createKitchenService';
 import { createLanguageService } from './language/createLanguageService';
@@ -100,6 +102,8 @@ export function createService(runtime: Runtime): Service {
         supportRequest: createSupportRequestService(runtime),
         searchRequest: createSearchRequestService(runtime),
         giftCardPromoCode: createGiftCardPromoCodeService(runtime),
+        giftCard: createGiftCardService(runtime),
+        couponCode: createCouponCodeService(runtime),
         newsletterSubscription: createNewsletterSubscriptionService(runtime),
     };
 }

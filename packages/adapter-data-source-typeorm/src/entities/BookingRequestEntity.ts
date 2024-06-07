@@ -1,5 +1,6 @@
 import { Shared, type DataSource } from '@people-eat/server-domain';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryColumn } from 'typeorm';
+import { type NanoId } from '../../../domain/src/core/shared';
 import { ChatMessageEntity } from './ChatMessageEntity';
 import { ConfiguredMenuEntity } from './ConfiguredMenuEntity';
 import { CookEntity } from './CookEntity';
@@ -11,13 +12,13 @@ import { UserEntity } from './UserEntity';
 @Entity('BookingRequests')
 export class BookingRequestEntity implements DataSource.DBBookingRequest {
     @PrimaryColumn('char', { length: 20 })
-    bookingRequestId!: string;
+    bookingRequestId!: NanoId;
 
     @Column('char', { length: 20 })
-    userId!: string;
+    userId!: NanoId;
 
     @Column('char', { length: 20 })
-    cookId!: string;
+    cookId!: NanoId;
 
     @Column('boolean', { nullable: true })
     userAccepted?: boolean;
@@ -86,7 +87,16 @@ export class BookingRequestEntity implements DataSource.DBBookingRequest {
     };
 
     @Column('char', { length: 20, nullable: true })
-    giftCardPromoCodeId?: string;
+    giftCardPromoCodeId?: NanoId;
+
+    @Column('json')
+    appliedGiftCard?: {
+        giftCardId: NanoId;
+        usedAmount: number;
+        usedAmountCook: number;
+        usedAmountPeopleEat: number;
+        usedAmountStripe: number;
+    };
 
     /* relations */
 

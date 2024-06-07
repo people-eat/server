@@ -23,6 +23,9 @@ type BookingRequest {
     allergies: [Allergy!]!
 
     configuredMenu: ConfiguredMenu
+
+    giftCardPromoCode: GiftCardPromoCode
+    giftCard: GiftCard
 }
 
 enum BookingRequestStatus {

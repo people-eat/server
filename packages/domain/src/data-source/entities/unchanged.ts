@@ -11,6 +11,7 @@ export { type CookVisit as DBCookVisit } from '../../core/cook-visit/CookVisit';
 export { type Course as DBCourse } from '../../core/course/Course';
 export { type CustomerFeeUpdate as DBCustomerFeeUpdate } from '../../core/customer-fee-update/CustomerFeeUpdate';
 export { type FavoriteCook as DBFavoriteCook } from '../../core/favorite-cook/FavoriteCook';
+export { type GiftCard as DBGiftCard } from '../../core/gift-card/GiftCard';
 export { type Kitchen as DBKitchen } from '../../core/kitchen/Kitchen';
 export { type Language as DBLanguage } from '../../core/language/Language';
 export { type Log as DBLog } from '../../core/log/Log';

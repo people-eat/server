@@ -15,6 +15,7 @@ export { CourseEntity } from './CourseEntity';
 export { CustomerFeeUpdateEntity } from './CustomerFeeUpdateEntity';
 export { EmailAddressUpdateEntity } from './EmailAddressUpdateEntity';
 export { FavoriteCookEntity } from './FavoriteCookEntity';
+export { GiftCardEntity } from './GiftCardEntity';
 export { GiftCardPromoCodeEntity } from './GiftCardPromoCodeEntity';
 export { GlobalBookingRequestEntity } from './GlobalBookingRequestEntity';
 export { KitchenEntity } from './KitchenEntity';

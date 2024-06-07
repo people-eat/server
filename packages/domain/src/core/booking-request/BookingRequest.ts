@@ -33,4 +33,12 @@ export interface BookingRequest {
     };
 
     giftCardPromoCodeId?: string;
+
+    appliedGiftCard?: {
+        giftCardId: NanoId;
+        usedAmount: number;
+        usedAmountCook: number;
+        usedAmountPeopleEat: number;
+        usedAmountStripe: number;
+    };
 }

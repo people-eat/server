@@ -49,6 +49,7 @@ import { createEmailAddressUpdateResolvers } from './email-address-update/create
 import { createFollowingResolvers } from './following/createFollowingResolvers';
 import { type GQLResolvers, type GQLSubscriptionBookingRequestChatMessageCreationsArgs } from './generated';
 import { createGiftCardPromoCodeResolvers } from './gift-card-promo-code/createGiftCardPromoCodeResolvers';
+import { createGiftCardResolvers } from './gift-card/createGiftCardResolvers';
 import { createGlobalBookingRequestResolvers } from './global-booking-request/createGlobalBookingRequestResolvers';
 import { createKitchenResolvers } from './kitchen/createKitchenResolvers';
 import { createLanguageResolvers } from './language/createLanguageResolvers';
@@ -128,8 +129,9 @@ export async function startApolloServerApp({
             bookingRequests: () => ({}),
             supportRequests: () => ({}),
             searchRequests: () => ({} as any),
-            giftCardPromoCodes: () => ({} as any),
+            couponCodes: () => ({} as any),
             admins: () => ({} as any),
+            giftCards: () => ({} as any),
         },
         Mutation: {
             admins: () => ({} as any),
@@ -141,6 +143,7 @@ export async function startApolloServerApp({
             sessions: () => ({} as any),
             cooks: () => ({} as any),
             searchRequests: () => ({} as any),
+            giftCards: () => ({} as any),
             newsletterSubscriptions: () => ({} as any),
         },
         Subscription: {
@@ -192,6 +195,7 @@ export async function startApolloServerApp({
         ...createSupportRequestResolvers(service),
         ...createSearchRequestResolvers(service),
         ...createGiftCardPromoCodeResolvers(service),
+        ...createGiftCardResolvers(service),
         ...createNewsletterSubscriptionResolvers(service),
     };
 

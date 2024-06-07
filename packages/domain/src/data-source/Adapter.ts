@@ -20,6 +20,7 @@ import {
     type DBCourse,
     type DBCustomerFeeUpdate,
     type DBFavoriteCook,
+    type DBGiftCard,
     type DBKitchen,
     type DBLanguage,
     type DBLog,
@@ -90,6 +91,7 @@ export interface Adapter {
     timeTriggeredTaskRepository: Repository<DBTimeTriggeredTask>;
 
     giftCardPromoCodeRepository: Repository<DBGiftCardPromoCode>;
+    giftCardRepository: Repository<DBGiftCard>;
 
     newsletterSubscriptionRepository: Repository<DBNewsletterSubscription>;
 

@@ -1,7 +1,8 @@
-import { customerPaymentAnnouncement } from '@people-eat/server-adapter-email-template';
+import { customerPaymentAnnouncement, giftCardReceived } from '@people-eat/server-adapter-email-template';
 import moment from 'moment';
-import { type DBBookingRequest, type DBCook, type DBUser } from '../../../data-source';
+import { type DBBookingRequest, type DBCook, type DBGiftCard, type DBUser } from '../../../data-source';
 import { type Runtime } from '../../Runtime';
+import { type NanoId } from '../../shared';
 import { type TimeTriggeredTask } from '../TimeTriggeredTask';
 
 // eslint-disable-next-line max-statements
@@ -80,5 +81,54 @@ export async function handleTimeTriggeredTask(runtime: Runtime, timeTriggeredTas
         if (!emailSuccess) return;
 
         await dataSourceAdapter.timeTriggeredTaskRepository.deleteOne({ timeTriggeredTaskId: timeTriggeredTask.timeTriggeredTaskId });
+    }
+
+    if (timeTriggeredTask.task.type === 'TIME_TRIGGERED_TASK_SEND_GIFT_CARD') {
+        const giftCardId: NanoId = timeTriggeredTask.task.giftCardId;
+        const giftCard: DBGiftCard | undefined = await dataSourceAdapter.giftCardRepository.findOne({ giftCardId });
+        if (!giftCard) return;
+
+        const { redeemCode, userId, buyer, occasion, recipient, message, initialBalanceAmount, expiresAt } = giftCard;
+
+        if (userId) {
+            const user: DBUser | undefined = await dataSourceAdapter.userRepository.findOne({ userId });
+            if (!user || !user.emailAddress) return;
+
+            if (recipient.deliveryInformation) {
+                await emailAdapter.sendToOne(
+                    'PeopleEat',
+                    recipient.deliveryInformation.emailAddress,
+                    'Gutschein',
+                    giftCardReceived({
+                        buyer: { firstName: user.firstName, lastName: user.lastName },
+                        occasion,
+                        message,
+                        recipient,
+                        balance: initialBalanceAmount,
+                        redeemCode,
+                        formattedExpirationDate: moment(expiresAt).format('L'),
+                    }),
+                );
+            }
+        }
+
+        if (buyer) {
+            if (recipient.deliveryInformation) {
+                await emailAdapter.sendToOne(
+                    'PeopleEat',
+                    recipient.deliveryInformation.emailAddress,
+                    'Gutschein',
+                    giftCardReceived({
+                        buyer,
+                        occasion,
+                        message,
+                        recipient,
+                        balance: initialBalanceAmount,
+                        redeemCode,
+                        formattedExpirationDate: moment(expiresAt).format('L'),
+                    }),
+                );
+            }
+        }
     }
 }

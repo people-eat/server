@@ -86,6 +86,7 @@ export async function createDataSourceAdapter({ logger, connection, reset }: Cre
         timeTriggeredTaskRepository: createGenericRepository(AppDataSource.getRepository(entities.TimeTriggeredTaskEntity), logger),
 
         giftCardPromoCodeRepository: createGenericRepository(AppDataSource.getRepository(entities.GiftCardPromoCodeEntity), logger),
+        giftCardRepository: createGenericRepository(AppDataSource.getRepository(entities.GiftCardEntity), logger),
 
         newsletterSubscriptionRepository: createGenericRepository(
             AppDataSource.getRepository(entities.NewsletterSubscriptionEntity),

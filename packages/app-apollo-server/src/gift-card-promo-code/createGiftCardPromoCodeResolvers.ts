@@ -4,15 +4,15 @@ import {
     type GQLAdminGiftCardPromoCodeMutationCreateOneArgs,
     type GQLAdminGiftCardPromoCodeMutationDeleteOneArgs,
     type GQLAdminGiftCardPromoCodeQuery,
+    type GQLCouponCode,
+    type GQLCouponCodeQueryFindOneArgs,
     type GQLGiftCardPromoCode,
-    type GQLGiftCardPromoCodeQuery,
-    type GQLGiftCardPromoCodeQueryFindOneArgs,
 } from '../generated';
 import { type Resolvers } from '../Resolvers';
 
 export function createGiftCardPromoCodeResolvers(
     service: Service,
-): Resolvers<'GiftCardPromoCodeQuery' | 'AdminGiftCardPromoCodeMutation' | 'AdminGiftCardPromoCodeQuery'> {
+): Resolvers<'CouponCodeQuery' | 'AdminGiftCardPromoCodeMutation' | 'AdminGiftCardPromoCodeQuery' | 'CouponCode'> {
     return {
         AdminGiftCardPromoCodeMutation: {
             createOne: async (
@@ -33,12 +33,19 @@ export function createGiftCardPromoCodeResolvers(
                 context: Authorization.Context,
             ): Promise<GQLGiftCardPromoCode[]> => service.giftCardPromoCode.findMany(context, {}) as any,
         },
-        GiftCardPromoCodeQuery: {
+        CouponCodeQuery: {
             findOne: async (
-                _parent: GQLGiftCardPromoCodeQuery,
-                { giftCardPromoCodeId }: GQLGiftCardPromoCodeQueryFindOneArgs,
+                _parent: any,
+                { couponCodeId }: GQLCouponCodeQueryFindOneArgs,
                 context: Authorization.Context,
-            ): Promise<GQLGiftCardPromoCode | undefined> => service.giftCardPromoCode.findOne(context, { giftCardPromoCodeId }) as any,
+            ): Promise<GQLCouponCode | undefined> => service.couponCode.findOne(context, { couponCodeId }) as any,
+        },
+        CouponCode: {
+            __resolveType: (obj: GQLCouponCode): 'GiftCardPromoCode' | 'GiftCard' => {
+                console.log(obj);
+                if ('giftCardPromoCodeId' in obj) return 'GiftCardPromoCode';
+                return 'GiftCard';
+            },
         },
     };
 }

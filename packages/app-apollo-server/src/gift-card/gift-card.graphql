@@ -1,0 +1,74 @@
+enum GiftCardStatus {
+    CREATED
+    PAYED
+}
+
+type GiftCard {
+    giftCardId: String!
+    redeemCode: String!
+    status: GiftCardStatus!
+    balance: Price!
+    expiresAt: DateTime!
+    createdAt: DateTime!
+}
+
+input GiftCardRecipientDeliveryInformation {
+    emailAddress: String!
+    date: Date!
+}
+
+input GiftCardRecipient {
+    firstName: String!
+    lastName: String!
+    deliveryInformation: GiftCardRecipientDeliveryInformation
+}
+
+input CreateOneGiftCardRequestBuyer {
+    emailAddress: EmailAddress!
+    firstName: String!
+    lastName: String!
+}
+
+input CreateOneGiftCardRequest {
+    userId: String
+    buyer: CreateOneGiftCardRequestBuyer
+    recipient: GiftCardRecipient!
+
+    balance: UInt!
+    message: String!
+    occasion: String!
+
+    """
+    The day the recipient should be notified about him receiving the gift card
+    """
+    deliveryDate: DateTime
+}
+
+type CreateOneGiftCardSuccessResponse {
+    giftCardId: String!
+    stripeClientSecret: String!
+}
+
+type CreateOneGiftCardFailedResponse {
+    failed: Boolean!
+}
+
+union CreateOneGiftCardResponse = CreateOneGiftCardSuccessResponse | CreateOneGiftCardFailedResponse
+
+type GiftCardMutation {
+    createOne(request: CreateOneGiftCardRequest!): CreateOneGiftCardResponse!
+    confirmOne(giftCardId: String!): Boolean!
+}
+
+type Mutation {
+    giftCards: GiftCardMutation!
+}
+
+type GiftCardQuery {
+    findOne(redeemCode: String!): GiftCard
+    findAll: [GiftCard!]!
+}
+
+type Query {
+    giftCards: GiftCardQuery!
+}

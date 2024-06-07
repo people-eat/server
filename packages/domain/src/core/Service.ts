@@ -7,10 +7,12 @@ import { type ChatMessageService } from './chat-message/createChatMessageService
 import { type ConfiguredMenuService } from './configured-menu/createConfiguredMenuService';
 import { type CookLanguageService } from './cook-language/createCookLanguageService';
 import { type CookService } from './cook/createCookService';
+import { type CouponCodeService } from './coupon-code/createCouponCodeService';
 import { type CourseService } from './course/createCourseService';
 import { type EmailAddressUpdateService } from './email-address-update/createEmailAddressUpdateService';
 import { type FavoriteCookService } from './favorite-cook/createFavoriteCookService';
 import { type GiftCardPromoCodeService } from './gift-card-promo-code/createGiftCardPromoCodeService';
+import { type GiftCardService } from './gift-card/createGiftCardService';
 import { type GlobalBookingRequestService } from './global-booking-request/createGlobalBookingRequestService';
 import { type KitchenService } from './kitchen/createKitchenService';
 import { type LanguageService } from './language/createLanguageService';
@@ -72,5 +74,7 @@ export interface Service {
     supportRequest: SupportRequestService;
     searchRequest: SearchRequestService;
     giftCardPromoCode: GiftCardPromoCodeService;
+    giftCard: GiftCardService;
+    couponCode: CouponCodeService;
     newsletterSubscription: NewsletterSubscriptionService;
 }

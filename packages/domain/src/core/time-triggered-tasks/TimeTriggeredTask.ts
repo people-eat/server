@@ -10,7 +10,15 @@ export interface TimeTriggeredTaskPullPaymentAnnouncement {
     bookingRequestId: NanoId;
 }
 
-export type TimeTriggeredTaskVariation = TimeTriggeredTaskPullPayment | TimeTriggeredTaskPullPaymentAnnouncement;
+export interface TimeTriggeredTaskSendGiftCard {
+    type: 'TIME_TRIGGERED_TASK_SEND_GIFT_CARD';
+    giftCardId: NanoId;
+}
+
+export type TimeTriggeredTaskVariation =
+    | TimeTriggeredTaskPullPayment
+    | TimeTriggeredTaskPullPaymentAnnouncement
+    | TimeTriggeredTaskSendGiftCard;
 
 export interface TimeTriggeredTask {
     timeTriggeredTaskId: NanoId;

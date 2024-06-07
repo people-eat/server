@@ -6,12 +6,20 @@ type GiftCardPromoCode {
     createdAt: DateTime!
 }
 
-type GiftCardPromoCodeQuery {
-    findOne(giftCardPromoCodeId: String!): GiftCardPromoCode
+union CouponCode = GiftCardPromoCode | GiftCard
+
+type CouponCodeQuery {
+    """
+    Supports gift card promo codes and regular gift cards
+    """
+    findOne(couponCodeId: String!): CouponCode
 }
 
 type Query {
-    giftCardPromoCodes: GiftCardPromoCodeQuery!
+    """
+    Supports gift card promo codes and regular gift cards
+    """
+    couponCodes: CouponCodeQuery!
 }
 
 input CreateOneGiftCardPromoCodeRequest {
