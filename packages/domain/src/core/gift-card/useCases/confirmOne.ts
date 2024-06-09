@@ -13,7 +13,7 @@ export interface ConfirmOneGiftCardInput {
 }
 
 export async function confirmOne({ runtime, request }: ConfirmOneGiftCardInput): Promise<boolean> {
-    const { dataSourceAdapter, paymentAdapter, emailAdapter } = runtime;
+    const { dataSourceAdapter, paymentAdapter, emailAdapter, notificationEmailAddresses } = runtime;
 
     const { giftCardId } = request;
 
@@ -112,6 +112,18 @@ export async function confirmOne({ runtime, request }: ConfirmOneGiftCardInput):
             });
         }
     }
+
+    // admin notification
+
+    emailAdapter
+        .sendToMany(
+            'PeopleEat Bot',
+            notificationEmailAddresses,
+            'Ein Gutschein wurde gekauft',
+            `Es wurde ein Gutschein im Wert von ${initialBalanceAmount / 100} € gekauft.`,
+        )
+        .then(() => undefined)
+        .catch(() => undefined);
 
     return true;
 }

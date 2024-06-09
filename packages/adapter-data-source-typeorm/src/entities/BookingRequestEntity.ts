@@ -89,7 +89,7 @@ export class BookingRequestEntity implements DataSource.DBBookingRequest {
     @Column('char', { length: 20, nullable: true })
     giftCardPromoCodeId?: NanoId;
 
-    @Column('json')
+    @Column('json', { nullable: true })
     appliedGiftCard?: {
         giftCardId: NanoId;
         usedAmount: number;
