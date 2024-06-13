@@ -145,6 +145,8 @@ export async function startApolloServerApp({
             searchRequests: () => ({} as any),
             giftCards: () => ({} as any),
             newsletterSubscriptions: () => ({} as any),
+            cookVisits: () => ({} as any),
+            menuVisits: () => ({} as any),
         },
         Subscription: {
             bookingRequestChatMessageCreations: {
@@ -188,8 +190,8 @@ export async function startApolloServerApp({
         ...createCookRatingResolvers(),
         ...createUserRatingResolvers(),
         ...createAddressResolvers(service),
-        ...createCookVisitResolvers(),
-        ...createMenuVisitResolvers(),
+        ...createCookVisitResolvers(service),
+        ...createMenuVisitResolvers(service),
         ...createFollowingResolvers(service),
         ...createOneTimeAccessTokenResolvers(service),
         ...createSupportRequestResolvers(service),

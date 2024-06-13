@@ -6,6 +6,7 @@ import { type CategoryService } from './category/createCategoryService';
 import { type ChatMessageService } from './chat-message/createChatMessageService';
 import { type ConfiguredMenuService } from './configured-menu/createConfiguredMenuService';
 import { type CookLanguageService } from './cook-language/createCookLanguageService';
+import { type CookVisitService } from './cook-visit/createCookVisitService';
 import { type CookService } from './cook/createCookService';
 import { type CouponCodeService } from './coupon-code/createCouponCodeService';
 import { type CourseService } from './course/createCourseService';
@@ -20,6 +21,7 @@ import { type LogService } from './log/createLogService';
 import { type MealOptionService } from './meal-option/createMealOptionService';
 import { type MealService } from './meal/createMealService';
 import { type MenuCategoryService } from './menu-category/createMenuCategoryService';
+import { type MenuVisitService } from './menu-visit/createMenuVisitService';
 import { type MenuService } from './menu/createMenuService';
 import { type NewsletterSubscriptionService } from './newsletter-subscription/createNewsletterSubscriptionService';
 import { type OneTimeAccessTokenService } from './one-time-access-token/createOneTimeAccessTokenService';
@@ -77,4 +79,6 @@ export interface Service {
     giftCard: GiftCardService;
     couponCode: CouponCodeService;
     newsletterSubscription: NewsletterSubscriptionService;
+    menuVisitService: MenuVisitService;
+    cookVisitService: CookVisitService;
 }

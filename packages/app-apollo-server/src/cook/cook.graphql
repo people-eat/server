@@ -1,3 +1,10 @@
+type CookVisitStatistics {
+    visits: [CookVisit!]!
+    visitCountTotal: UInt!
+    visitCountLastWeek: UInt!
+    visitCountLastMonth: UInt!
+}
+
 type Cook {
     cookId: String!
     isLocked: Boolean!
@@ -32,6 +39,8 @@ type Cook {
 
     followers: [Following!]!
     followerCount: UInt!
+
+    visitStatistics: CookVisitStatistics!
 }
 
 type CookQuery {

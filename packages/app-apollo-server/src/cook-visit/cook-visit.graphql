@@ -25,3 +25,11 @@ type CookCookVisitQuery {
 type CookQuery {
     cookVisits(cookId: String!): UserAddressQuery!
 }
+
+type CookVisitMutation {
+    createOne(cookId: String!): Boolean!
+}
+
+type Mutation {
+    cookVisits: CookVisitMutation!
+}

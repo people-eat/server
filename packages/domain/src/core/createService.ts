@@ -8,6 +8,7 @@ import { createCategoryService } from './category/createCategoryService';
 import { createChatMessageService } from './chat-message/createChatMessageService';
 import { createConfiguredMenuService } from './configured-menu/createConfiguredMenuService';
 import { createCookLanguageService } from './cook-language/createCookLanguageService';
+import { createCookVisitService } from './cook-visit/createCookVisitService';
 import { createCookService } from './cook/createCookService';
 import { createCouponCodeService } from './coupon-code/createCouponCodeService';
 import { createCourseService } from './course/createCourseService';
@@ -22,6 +23,7 @@ import { createLogService } from './log/createLogService';
 import { createMealOptionService } from './meal-option/createMealOptionService';
 import { createMealService } from './meal/createMealService';
 import { createMenuCategoryService } from './menu-category/createMenuCategoryService';
+import { createMenuVisitService } from './menu-visit/createMenuVisitService';
 import { createMenuService } from './menu/createMenuService';
 import { createNewsletterSubscriptionService } from './newsletter-subscription/createNewsletterSubscriptionService';
 import { createOneTimeAccessTokenService } from './one-time-access-token/createOneTimeAccessTokenService';
@@ -105,5 +107,7 @@ export function createService(runtime: Runtime): Service {
         giftCard: createGiftCardService(runtime),
         couponCode: createCouponCodeService(runtime),
         newsletterSubscription: createNewsletterSubscriptionService(runtime),
+        menuVisitService: createMenuVisitService(runtime),
+        cookVisitService: createCookVisitService(runtime),
     };
 }

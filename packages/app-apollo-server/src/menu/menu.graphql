@@ -1,3 +1,10 @@
+type MenuVisitStatistics {
+    visits: [MenuVisit!]!
+    visitCountTotal: UInt!
+    visitCountLastWeek: UInt!
+    visitCountLastMonth: UInt!
+}
+
 type Menu {
     menuId: String!
     cookId: String!
@@ -23,6 +30,8 @@ type Menu {
 
     imageUrl: Url
     imageUrls: [Url!]!
+
+    visitStatistics: MenuVisitStatistics!
 }
 
 type CookMenuQuery {

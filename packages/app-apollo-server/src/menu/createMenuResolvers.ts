@@ -1,4 +1,5 @@
 import { type Authorization, type Category, type Course, type Kitchen, type MenuCategory, type Service } from '@people-eat/server-domain';
+import { type MenuVisitStatistics } from '../../../domain/src/core/menu-visit/MenuVisitStatistics';
 import {
     type GQLCategory,
     type GQLCookMenuMutation,
@@ -24,6 +25,7 @@ import {
     type GQLCourse,
     type GQLKitchen,
     type GQLMenu,
+    type GQLMenuVisitStatistics,
 } from '../generated';
 import { type Resolvers } from '../Resolvers';
 
@@ -54,6 +56,14 @@ export function createMenuResolvers(service: Service): Resolvers<'Menu' | 'CookM
             courseCount: async ({ cookId, menuId }: GQLMenu, _input: unknown, context: Authorization.Context): Promise<number> => {
                 const results: Course[] | undefined = await service.course.findAll(context, { cookId, menuId });
                 return results?.length ?? 0;
+            },
+            visitStatistics: async (
+                { menuId }: GQLMenu,
+                _input: unknown,
+                context: Authorization.Context,
+            ): Promise<GQLMenuVisitStatistics> => {
+                const stats: MenuVisitStatistics = await service.menuVisitService.findStatistics(context, { menuId });
+                return stats as any;
             },
         },
         CookMenuMutation: {

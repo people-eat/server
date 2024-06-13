@@ -241,6 +241,7 @@ export type GQLCook = {
     ratingCount: Scalars['UInt'];
     travelExpenses: Scalars['UInt'];
     user: GQLUser;
+    visitStatistics: GQLCookVisitStatistics;
 };
 
 export type GQLCookBookingRequestChatMessageMutation = {
@@ -830,6 +831,23 @@ export type GQLCookVisit = {
     sessionId: Scalars['String'];
 };
 
+export type GQLCookVisitMutation = {
+    __typename?: 'CookVisitMutation';
+    createOne: Scalars['Boolean'];
+};
+
+export type GQLCookVisitMutationCreateOneArgs = {
+    cookId: Scalars['String'];
+};
+
+export type GQLCookVisitStatistics = {
+    __typename?: 'CookVisitStatistics';
+    visitCountLastMonth: Scalars['UInt'];
+    visitCountLastWeek: Scalars['UInt'];
+    visitCountTotal: Scalars['UInt'];
+    visits: Array<GQLCookVisit>;
+};
+
 export type GQLCouponCode = GQLGiftCard | GQLGiftCardPromoCode;
 
 export type GQLCouponCodeQuery = {
@@ -1393,6 +1411,7 @@ export type GQLMenu = {
     pricePerAdult: Scalars['UInt'];
     pricePerChild?: Maybe<Scalars['UInt']>;
     title: Scalars['String'];
+    visitStatistics: GQLMenuVisitStatistics;
 };
 
 export type GQLMenuConfiguration = {
@@ -1428,17 +1447,36 @@ export type GQLMenuVisit = {
     sessionId: Scalars['String'];
 };
 
+export type GQLMenuVisitMutation = {
+    __typename?: 'MenuVisitMutation';
+    createOne: Scalars['Boolean'];
+};
+
+export type GQLMenuVisitMutationCreateOneArgs = {
+    menuId: Scalars['String'];
+};
+
+export type GQLMenuVisitStatistics = {
+    __typename?: 'MenuVisitStatistics';
+    visitCountLastMonth: Scalars['UInt'];
+    visitCountLastWeek: Scalars['UInt'];
+    visitCountTotal: Scalars['UInt'];
+    visits: Array<GQLMenuVisit>;
+};
+
 export type GQLMutation = {
     __typename?: 'Mutation';
     admins: GQLAdminMutation;
     allergies: GQLAllergyMutation;
     categories: GQLCategoryMutation;
     cookSpecificFees: GQLCookSpecificFeeMutation;
+    cookVisits: GQLCookVisitMutation;
     cooks: GQLCookMutation;
     customerFeeUpdates: GQLCustomerFeeUpdateMutation;
     giftCards: GQLGiftCardMutation;
     kitchens: GQLKitchenMutation;
     languages: GQLLanguageMutation;
+    menuVisits: GQLMenuVisitMutation;
     newsletterSubscriptions: GQLNewsletterSubscriptionMutation;
     notifications: GQLNotificationMutation;
     privacyPolicyUpdates: GQLPrivacyPolicyUpdateMutation;
@@ -2582,6 +2620,8 @@ export type GQLResolversTypes = {
     CookSpecificFeeQuery: ResolverTypeWrapper<GQLCookSpecificFeeQuery>;
     CookUserRatingQuery: ResolverTypeWrapper<GQLCookUserRatingQuery>;
     CookVisit: ResolverTypeWrapper<GQLCookVisit>;
+    CookVisitMutation: ResolverTypeWrapper<GQLCookVisitMutation>;
+    CookVisitStatistics: ResolverTypeWrapper<GQLCookVisitStatistics>;
     CouponCode: ResolverTypeWrapper<GQLResolversUnionTypes['CouponCode']>;
     CouponCodeQuery: ResolverTypeWrapper<Omit<GQLCouponCodeQuery, 'findOne'> & { findOne?: Maybe<GQLResolversTypes['CouponCode']> }>;
     Course: ResolverTypeWrapper<GQLCourse>;
@@ -2665,6 +2705,8 @@ export type GQLResolversTypes = {
     MenuConfiguration: ResolverTypeWrapper<GQLMenuConfiguration>;
     MenuConfigurationCourse: ResolverTypeWrapper<GQLMenuConfigurationCourse>;
     MenuVisit: ResolverTypeWrapper<GQLMenuVisit>;
+    MenuVisitMutation: ResolverTypeWrapper<GQLMenuVisitMutation>;
+    MenuVisitStatistics: ResolverTypeWrapper<GQLMenuVisitStatistics>;
     Mutation: ResolverTypeWrapper<{}>;
     NewsletterSubscriptionMutation: ResolverTypeWrapper<GQLNewsletterSubscriptionMutation>;
     Notification: ResolverTypeWrapper<GQLNotification>;
@@ -2794,6 +2836,8 @@ export type GQLResolversParentTypes = {
     CookSpecificFeeQuery: GQLCookSpecificFeeQuery;
     CookUserRatingQuery: GQLCookUserRatingQuery;
     CookVisit: GQLCookVisit;
+    CookVisitMutation: GQLCookVisitMutation;
+    CookVisitStatistics: GQLCookVisitStatistics;
     CouponCode: GQLResolversUnionParentTypes['CouponCode'];
     CouponCodeQuery: Omit<GQLCouponCodeQuery, 'findOne'> & { findOne?: Maybe<GQLResolversParentTypes['CouponCode']> };
     Course: GQLCourse;
@@ -2869,6 +2913,8 @@ export type GQLResolversParentTypes = {
     MenuConfiguration: GQLMenuConfiguration;
     MenuConfigurationCourse: GQLMenuConfigurationCourse;
     MenuVisit: GQLMenuVisit;
+    MenuVisitMutation: GQLMenuVisitMutation;
+    MenuVisitStatistics: GQLMenuVisitStatistics;
     Mutation: {};
     NewsletterSubscriptionMutation: GQLNewsletterSubscriptionMutation;
     Notification: GQLNotification;
@@ -3204,6 +3250,7 @@ export type GQLCookResolvers<ContextType = any, ParentType extends GQLResolversP
     ratingCount?: Resolver<GQLResolversTypes['UInt'], ParentType, ContextType>;
     travelExpenses?: Resolver<GQLResolversTypes['UInt'], ParentType, ContextType>;
     user?: Resolver<GQLResolversTypes['User'], ParentType, ContextType>;
+    visitStatistics?: Resolver<GQLResolversTypes['CookVisitStatistics'], ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3834,6 +3881,25 @@ export type GQLCookVisitResolvers<
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type GQLCookVisitMutationResolvers<
+    ContextType = any,
+    ParentType extends GQLResolversParentTypes['CookVisitMutation'] = GQLResolversParentTypes['CookVisitMutation'],
+> = {
+    createOne?: Resolver<GQLResolversTypes['Boolean'], ParentType, ContextType, RequireFields<GQLCookVisitMutationCreateOneArgs, 'cookId'>>;
+    __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GQLCookVisitStatisticsResolvers<
+    ContextType = any,
+    ParentType extends GQLResolversParentTypes['CookVisitStatistics'] = GQLResolversParentTypes['CookVisitStatistics'],
+> = {
+    visitCountLastMonth?: Resolver<GQLResolversTypes['UInt'], ParentType, ContextType>;
+    visitCountLastWeek?: Resolver<GQLResolversTypes['UInt'], ParentType, ContextType>;
+    visitCountTotal?: Resolver<GQLResolversTypes['UInt'], ParentType, ContextType>;
+    visits?: Resolver<Array<GQLResolversTypes['CookVisit']>, ParentType, ContextType>;
+    __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type GQLCouponCodeResolvers<
     ContextType = any,
     ParentType extends GQLResolversParentTypes['CouponCode'] = GQLResolversParentTypes['CouponCode'],
@@ -4208,6 +4274,7 @@ export type GQLMenuResolvers<ContextType = any, ParentType extends GQLResolversP
     pricePerAdult?: Resolver<GQLResolversTypes['UInt'], ParentType, ContextType>;
     pricePerChild?: Resolver<Maybe<GQLResolversTypes['UInt']>, ParentType, ContextType>;
     title?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;
+    visitStatistics?: Resolver<GQLResolversTypes['MenuVisitStatistics'], ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -4253,6 +4320,25 @@ export type GQLMenuVisitResolvers<
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type GQLMenuVisitMutationResolvers<
+    ContextType = any,
+    ParentType extends GQLResolversParentTypes['MenuVisitMutation'] = GQLResolversParentTypes['MenuVisitMutation'],
+> = {
+    createOne?: Resolver<GQLResolversTypes['Boolean'], ParentType, ContextType, RequireFields<GQLMenuVisitMutationCreateOneArgs, 'menuId'>>;
+    __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GQLMenuVisitStatisticsResolvers<
+    ContextType = any,
+    ParentType extends GQLResolversParentTypes['MenuVisitStatistics'] = GQLResolversParentTypes['MenuVisitStatistics'],
+> = {
+    visitCountLastMonth?: Resolver<GQLResolversTypes['UInt'], ParentType, ContextType>;
+    visitCountLastWeek?: Resolver<GQLResolversTypes['UInt'], ParentType, ContextType>;
+    visitCountTotal?: Resolver<GQLResolversTypes['UInt'], ParentType, ContextType>;
+    visits?: Resolver<Array<GQLResolversTypes['MenuVisit']>, ParentType, ContextType>;
+    __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type GQLMutationResolvers<
     ContextType = any,
     ParentType extends GQLResolversParentTypes['Mutation'] = GQLResolversParentTypes['Mutation'],
@@ -4261,11 +4347,13 @@ export type GQLMutationResolvers<
     allergies?: Resolver<GQLResolversTypes['AllergyMutation'], ParentType, ContextType>;
     categories?: Resolver<GQLResolversTypes['CategoryMutation'], ParentType, ContextType>;
     cookSpecificFees?: Resolver<GQLResolversTypes['CookSpecificFeeMutation'], ParentType, ContextType>;
+    cookVisits?: Resolver<GQLResolversTypes['CookVisitMutation'], ParentType, ContextType>;
     cooks?: Resolver<GQLResolversTypes['CookMutation'], ParentType, ContextType>;
     customerFeeUpdates?: Resolver<GQLResolversTypes['CustomerFeeUpdateMutation'], ParentType, ContextType>;
     giftCards?: Resolver<GQLResolversTypes['GiftCardMutation'], ParentType, ContextType>;
     kitchens?: Resolver<GQLResolversTypes['KitchenMutation'], ParentType, ContextType>;
     languages?: Resolver<GQLResolversTypes['LanguageMutation'], ParentType, ContextType>;
+    menuVisits?: Resolver<GQLResolversTypes['MenuVisitMutation'], ParentType, ContextType>;
     newsletterSubscriptions?: Resolver<GQLResolversTypes['NewsletterSubscriptionMutation'], ParentType, ContextType>;
     notifications?: Resolver<GQLResolversTypes['NotificationMutation'], ParentType, ContextType>;
     privacyPolicyUpdates?: Resolver<GQLResolversTypes['PrivacyPolicyUpdateMutation'], ParentType, ContextType>;
@@ -5560,6 +5648,8 @@ export type GQLResolvers<ContextType = any> = {
     CookSpecificFeeQuery?: GQLCookSpecificFeeQueryResolvers<ContextType>;
     CookUserRatingQuery?: GQLCookUserRatingQueryResolvers<ContextType>;
     CookVisit?: GQLCookVisitResolvers<ContextType>;
+    CookVisitMutation?: GQLCookVisitMutationResolvers<ContextType>;
+    CookVisitStatistics?: GQLCookVisitStatisticsResolvers<ContextType>;
     CouponCode?: GQLCouponCodeResolvers<ContextType>;
     CouponCodeQuery?: GQLCouponCodeQueryResolvers<ContextType>;
     Course?: GQLCourseResolvers<ContextType>;
@@ -5600,6 +5690,8 @@ export type GQLResolvers<ContextType = any> = {
     MenuConfiguration?: GQLMenuConfigurationResolvers<ContextType>;
     MenuConfigurationCourse?: GQLMenuConfigurationCourseResolvers<ContextType>;
     MenuVisit?: GQLMenuVisitResolvers<ContextType>;
+    MenuVisitMutation?: GQLMenuVisitMutationResolvers<ContextType>;
+    MenuVisitStatistics?: GQLMenuVisitStatisticsResolvers<ContextType>;
     Mutation?: GQLMutationResolvers<ContextType>;
     NewsletterSubscriptionMutation?: GQLNewsletterSubscriptionMutationResolvers<ContextType>;
     Notification?: GQLNotificationResolvers<ContextType>;
