@@ -40,7 +40,7 @@ export function createBookingRequestResolvers(
             user: async ({ userId }: GQLBookingRequest, _input: unknown, context: Authorization.Context): Promise<GQLPublicUser> =>
                 service.publicUser.findOne(context, userId) as any,
             cook: async ({ cookId }: GQLBookingRequest, _input: unknown, context: Authorization.Context): Promise<GQLPublicCook> =>
-                service.publicCook.findOne(context, cookId) as any,
+                service.cook.findOne(context, cookId) as any,
             configuredMenu: async (
                 { bookingRequestId }: GQLBookingRequest,
                 _input: unknown,
