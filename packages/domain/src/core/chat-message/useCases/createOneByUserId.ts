@@ -73,6 +73,8 @@ export async function createOneByUserId({
                 recipient: { firstName: cookUser.firstName },
                 sender: { firstName: customerUser.firstName },
                 message,
+                destination: 'COOK',
+                bookingRequestId,
             }),
         )
         .then((cookEmailSuccess: boolean) => {

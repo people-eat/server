@@ -1,6 +1,10 @@
 export interface BookingRequestNewMessageInput {
     webAppUrl: string;
 
+    destination: 'COOK' | 'CUSTOMER';
+
+    bookingRequestId: string;
+
     sender: {
         firstName: string;
     };
@@ -12,8 +16,15 @@ export interface BookingRequestNewMessageInput {
     message: string;
 }
 
-export function bookingRequestNewMessage({ webAppUrl, sender, recipient, message }: BookingRequestNewMessageInput): string {
-    const cookProfileBookingRequestsUrl: string = webAppUrl + '/chef-profile?tab=3';
+export function bookingRequestNewMessage({
+    webAppUrl,
+    sender,
+    recipient,
+    message,
+    destination,
+    bookingRequestId,
+}: BookingRequestNewMessageInput): string {
+    const bookingRequestsUrl: string = webAppUrl + (destination === 'COOK' ? '/chef-profile/' : '/profile/') + bookingRequestId;
 
     return `
     <!DOCTYPE html>
@@ -202,7 +213,7 @@ export function bookingRequestNewMessage({ webAppUrl, sender, recipient, message
                                                                         <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" style="height:52px;width:202px;v-text-anchor:middle;" arcsize="116%" stroke="false" fillcolor="#ff6433"><w:anchorlock/><v:textbox inset="0px,0px,0px,0px"><center style="color:#ffffff; font-family:Arial, sans-serif; font-size:16px"><![endif]-->
                                                                             <div style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#ff6433;border-radius:60px;width:auto;border-top:0px solid transparent;font-weight:undefined;border-right:0px solid transparent;border-bottom:0px solid transparent;border-left:0px solid transparent;padding-top:10px;padding-bottom:10px;font-family:Arial, Helvetica Neue, Helvetica, sans-serif;font-size:16px;text-align:center;mso-border-alt:none;word-break:keep-all;">
                                                                                 <span style="padding-left:60px;padding-right:60px;font-size:16px;display:inline-block;letter-spacing:normal;">
-                                                                                    <a href="${cookProfileBookingRequestsUrl}" style="word-break: break-word; line-height: 32px; text-decoration: none; color: #f8f8f8;">
+                                                                                    <a href="${bookingRequestsUrl}" style="word-break: break-word; line-height: 32px; text-decoration: none; color: #f8f8f8;">
                                                                                         Chat öffnen
                                                                                     </a>
                                                                                 </span>
@@ -217,7 +228,7 @@ export function bookingRequestNewMessage({ webAppUrl, sender, recipient, message
                                                                 <td class="pad" style="padding-bottom:20px;padding-left:5px;padding-right:5px;padding-top:30px;">
                                                                     <div style="font-family: sans-serif">
                                                                         <div class style="font-size: 12px; font-family: Arial, Helvetica Neue, Helvetica, sans-serif; mso-line-height-alt: 14.399999999999999px; color: #000000; line-height: 1.2;">
-                                                                            <p style="margin: 0; font-size: 14px; text-align: center; mso-line-height-alt: 16.8px;">© 2023| PeopleEat UG | Frankfurt am Main</p>
+                                                                            <p style="margin: 0; font-size: 14px; text-align: center; mso-line-height-alt: 16.8px;">© 2024 | PeopleEat UG | Frankfurt am Main</p>
                                                                         </div>
                                                                     </div>
                                                                 </td>
