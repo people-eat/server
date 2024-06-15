@@ -116,14 +116,13 @@ export function createPaymentAdapter({
                 }
             },
             createConnectedAccountOnboardingUrl: async ({
-                cookId,
                 accountId,
             }: PaymentProvider.CreateConnectedAccountOnboardingUrlInput): Promise<{ url: string } | undefined> => {
                 try {
                     const accountLink: Stripe.AccountLink = await client.accountLinks.create({
                         account: accountId,
-                        refresh_url: stripeConnectedAccountOnboarding.refreshUrl + '/' + cookId,
-                        return_url: stripeConnectedAccountOnboarding.returnUrl + '/' + cookId,
+                        refresh_url: stripeConnectedAccountOnboarding.refreshUrl,
+                        return_url: stripeConnectedAccountOnboarding.returnUrl,
                         type: 'account_onboarding',
                     });
 

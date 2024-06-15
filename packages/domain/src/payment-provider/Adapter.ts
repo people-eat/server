@@ -14,7 +14,6 @@ export interface CreateConnectedAccountInput {
 }
 
 export interface CreateConnectedAccountOnboardingUrlInput {
-    cookId: string;
     accountId: string;
 }
 
