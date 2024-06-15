@@ -8,15 +8,15 @@ export interface FindOnePublicCookInput {
     dataSourceAdapter: DataSource.Adapter;
     logger: Logger.Adapter;
     context: Authorization.Context;
-    request: { cookId: NanoId };
+    request: { cookId: NanoId; checkPublic: boolean };
 }
 
 export async function findOne({ dataSourceAdapter, request }: FindOnePublicCookInput): Promise<PublicCook | undefined> {
-    const { cookId } = request;
+    const { cookId, checkPublic } = request;
 
     const cook: DataSource.DBCook | undefined = await dataSourceAdapter.cookRepository.findOne({ cookId });
 
-    if (!cook || cook.isLocked || !cook.isVisible) return;
+    if (!cook || (checkPublic && (cook.isLocked || !cook.isVisible))) return;
 
     const user: DBUser | undefined = await dataSourceAdapter.userRepository.findOne({ userId: cook.cookId });
 

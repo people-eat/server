@@ -27,7 +27,7 @@ export function createPublicCookResolvers(service: Service): Resolvers<'PublicCo
                 _parent: GQLPublicCookQuery,
                 { cookId }: GQLPublicCookQueryFindOneArgs,
                 context: Authorization.Context,
-            ): Promise<GQLPublicCook | undefined> => service.publicCook.findOne(context, cookId) as any,
+            ): Promise<GQLPublicCook | undefined> => service.publicCook.findOne(context, cookId, true) as any,
 
             findMany: async (
                 _parent: GQLPublicCookQuery,
