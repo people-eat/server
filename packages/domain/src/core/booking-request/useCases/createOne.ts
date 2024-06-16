@@ -138,6 +138,8 @@ async function persistMenuBookingRequest(
         });
     }
 
+    configuredMenuCourses.sort(({ index: i1 }: ConfiguredMenuCourse, { index: i2 }: ConfiguredMenuCourse) => i1 - i2);
+
     const saveConfiguredMenuSuccess: boolean = await dataSourceAdapter.configuredMenuRepository.insertOne({
         bookingRequestId,
         menuId: publicMenu.menuId,

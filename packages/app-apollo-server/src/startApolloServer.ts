@@ -47,7 +47,12 @@ import { createCourseResolvers } from './course/createCourseResolvers';
 import { createCustomerFeeUpdateResolvers } from './customer-fee-update/createCustomerFeeUpdateResolvers';
 import { createEmailAddressUpdateResolvers } from './email-address-update/createEmailAddressUpdateResolvers';
 import { createFollowingResolvers } from './following/createFollowingResolvers';
-import { type GQLResolvers, type GQLSubscriptionBookingRequestChatMessageCreationsArgs } from './generated';
+import {
+    type GQLResolvers,
+    type GQLSubscriptionBookingRequestChatMessageCreationsArgs,
+    type GQLSubscriptionBookingRequestUpdatesByCookIdArgs,
+    type GQLSubscriptionBookingRequestUpdatesByUserIdArgs,
+} from './generated';
 import { createGiftCardPromoCodeResolvers } from './gift-card-promo-code/createGiftCardPromoCodeResolvers';
 import { createGiftCardResolvers } from './gift-card/createGiftCardResolvers';
 import { createGlobalBookingRequestResolvers } from './global-booking-request/createGlobalBookingRequestResolvers';
@@ -153,6 +158,16 @@ export async function startApolloServerApp({
                 subscribe: (_parent: unknown, { bookingRequestId }: GQLSubscriptionBookingRequestChatMessageCreationsArgs) => ({
                     [Symbol.asyncIterator]: () =>
                         service.publisher.asyncIterator(`booking-request-chat-message-creations-${bookingRequestId}`),
+                }),
+            },
+            bookingRequestUpdatesByUserId: {
+                subscribe: (_parent: unknown, { bookingRequestId }: GQLSubscriptionBookingRequestUpdatesByUserIdArgs) => ({
+                    [Symbol.asyncIterator]: () => service.publisher.asyncIterator(`booking-request-updates-by-user-id-${bookingRequestId}`),
+                }),
+            },
+            bookingRequestUpdatesByCookId: {
+                subscribe: (_parent: unknown, { bookingRequestId }: GQLSubscriptionBookingRequestUpdatesByCookIdArgs) => ({
+                    [Symbol.asyncIterator]: () => service.publisher.asyncIterator(`booking-request-updates-by-cook-id-${bookingRequestId}`),
                 }),
             },
         },

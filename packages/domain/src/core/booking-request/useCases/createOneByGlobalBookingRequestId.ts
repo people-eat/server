@@ -57,7 +57,7 @@ export async function createOneByGlobalBookingRequestId({ runtime, context, requ
         cookId,
         userId,
         cookAccepted: true,
-        userAccepted: true,
+        userAccepted: undefined,
         latitude,
         longitude,
         locationText,

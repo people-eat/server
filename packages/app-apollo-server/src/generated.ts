@@ -1845,9 +1845,19 @@ export type GQLSessionQuery = {
 export type GQLSubscription = {
     __typename?: 'Subscription';
     bookingRequestChatMessageCreations: GQLChatMessage;
+    bookingRequestUpdatesByCookId: GQLBookingRequest;
+    bookingRequestUpdatesByUserId: GQLBookingRequest;
 };
 
 export type GQLSubscriptionBookingRequestChatMessageCreationsArgs = {
+    bookingRequestId: Scalars['String'];
+};
+
+export type GQLSubscriptionBookingRequestUpdatesByCookIdArgs = {
+    bookingRequestId: Scalars['String'];
+};
+
+export type GQLSubscriptionBookingRequestUpdatesByUserIdArgs = {
     bookingRequestId: Scalars['String'];
 };
 
@@ -4812,6 +4822,20 @@ export type GQLSubscriptionResolvers<
         ParentType,
         ContextType,
         RequireFields<GQLSubscriptionBookingRequestChatMessageCreationsArgs, 'bookingRequestId'>
+    >;
+    bookingRequestUpdatesByCookId?: SubscriptionResolver<
+        GQLResolversTypes['BookingRequest'],
+        'bookingRequestUpdatesByCookId',
+        ParentType,
+        ContextType,
+        RequireFields<GQLSubscriptionBookingRequestUpdatesByCookIdArgs, 'bookingRequestId'>
+    >;
+    bookingRequestUpdatesByUserId?: SubscriptionResolver<
+        GQLResolversTypes['BookingRequest'],
+        'bookingRequestUpdatesByUserId',
+        ParentType,
+        ContextType,
+        RequireFields<GQLSubscriptionBookingRequestUpdatesByUserIdArgs, 'bookingRequestId'>
     >;
 };
 

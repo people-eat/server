@@ -106,6 +106,20 @@ export async function acceptOneByCookId({ runtime, context, request }: AcceptOne
         if (!customerEmailSuccess) logger.info('sending email failed');
     }
 
+    // pub sub
+
+    // await runtime.publisher.publish(
+    //     `booking-request-updates-by-user-id-${bookingRequestId}`,
+    //     await findOneByUserId({ runtime, context, request: { bookingRequestId, userId: bookingRequest.userId } }),
+    // );
+
+    // await runtime.publisher.publish(
+    //     `booking-request-updates-by-cook-id-${bookingRequestId}`,
+    //     await findOneByCookId({ runtime, context, request: { bookingRequestId, cookId: bookingRequest.cookId } }),
+    // );
+
+    // end of pub sub
+
     if (!bookingRequest.userAccepted) return true;
 
     // Pay if ready
