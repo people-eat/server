@@ -14,7 +14,7 @@ export async function canMutateUserData({ context, userId, dataSourceAdapter }: 
 
     if (context.userId === userId) return;
 
-    const admin: DBAdmin | undefined = await dataSourceAdapter.adminRepository.findOne({ adminId: userId });
+    const admin: DBAdmin | undefined = await dataSourceAdapter.adminRepository.findOne({ adminId: context.userId });
 
     if (admin) return;
 
