@@ -285,7 +285,9 @@ export type GQLCookBookingRequestMutationChatMessagesArgs = {
 };
 
 export type GQLCookBookingRequestMutationCreateOneArgs = {
+    configuredMenu?: InputMaybe<GQLCreateConfiguredMenuRequest>;
     globalBookingRequestId: Scalars['String'];
+    price?: InputMaybe<GQLPriceInput>;
 };
 
 export type GQLCookBookingRequestMutationDeclineArgs = {

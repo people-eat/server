@@ -26,8 +26,8 @@ export async function findManyByUserId({ runtime, context, request }: FindManyBo
 
     bookingRequests.sort((a: DBBookingRequest, b: DBBookingRequest) => b.createdAt.getTime() - a.createdAt.getTime());
 
+    // .filter((bookingRequest: DBBookingRequest) => bookingRequest.paymentData.confirmed)
     return bookingRequests
-        .filter((bookingRequest: DBBookingRequest) => bookingRequest.paymentData.confirmed)
         .map((bookingRequest: DBBookingRequest) => ({
             ...bookingRequest,
             status: toBookingRequestStatus(bookingRequest),

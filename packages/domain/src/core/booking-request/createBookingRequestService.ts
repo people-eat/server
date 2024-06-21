@@ -1,4 +1,5 @@
 import { type Authorization } from '../..';
+import { type CreateOneConfiguredMenuRequest } from '../configured-menu';
 import { type Runtime } from '../Runtime';
 import { type FindManyRequest, type NanoId, type Price } from '../shared';
 import { type BookingRequest } from './BookingRequest';
@@ -43,7 +44,7 @@ export interface BookingRequestService {
     }>;
     createOneByGlobalBookingRequestId(
         context: Authorization.Context,
-        request: { cookId: NanoId; globalBookingRequestId: NanoId },
+        request: { cookId: NanoId; globalBookingRequestId: NanoId; configuredMenu?: CreateOneConfiguredMenuRequest; price?: Price },
     ): Promise<boolean>;
     acceptOneByCookId(context: Authorization.Context, request: { cookId: NanoId; bookingRequestId: NanoId }): Promise<boolean>;
     declineOneByCookId(context: Authorization.Context, request: { cookId: NanoId; bookingRequestId: NanoId }): Promise<boolean>;
@@ -75,8 +76,15 @@ export function createBookingRequestService(runtime: Runtime): BookingRequestSer
             findManyByUserId({ runtime, context, request }),
         createOne: (context: Authorization.Context, request: CreateOneBookingRequestRequest & { userId: NanoId }) =>
             createOne({ runtime, context, request }),
-        createOneByGlobalBookingRequestId: (context: Authorization.Context, request: { cookId: NanoId; globalBookingRequestId: NanoId }) =>
-            createOneByGlobalBookingRequestId({ runtime, context, request }),
+        createOneByGlobalBookingRequestId: (
+            context: Authorization.Context,
+            request: {
+                cookId: NanoId;
+                globalBookingRequestId: NanoId;
+                configuredMenu?: CreateOneConfiguredMenuRequest;
+                price?: Price;
+            },
+        ) => createOneByGlobalBookingRequestId({ runtime, context, request }),
         acceptOneByCookId: (context: Authorization.Context, request: { cookId: NanoId; bookingRequestId: NanoId }) =>
             acceptOneByCookId({ runtime, context, request }),
         declineOneByCookId: (context: Authorization.Context, request: { cookId: NanoId; bookingRequestId: NanoId }) =>

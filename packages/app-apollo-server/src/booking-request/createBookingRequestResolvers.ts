@@ -106,9 +106,15 @@ export function createBookingRequestResolvers(
         CookBookingRequestMutation: {
             createOne: async (
                 { cookId }: GQLCookBookingRequestMutation,
-                { globalBookingRequestId }: GQLCookBookingRequestMutationCreateOneArgs,
+                { globalBookingRequestId, configuredMenu, price }: GQLCookBookingRequestMutationCreateOneArgs,
                 context: Authorization.Context,
-            ): Promise<boolean> => service.bookingRequest.createOneByGlobalBookingRequestId(context, { cookId, globalBookingRequestId }),
+            ): Promise<boolean> =>
+                service.bookingRequest.createOneByGlobalBookingRequestId(context, {
+                    cookId,
+                    globalBookingRequestId,
+                    configuredMenu,
+                    price,
+                }),
             accept: async (
                 { cookId }: GQLCookBookingRequestMutation,
                 { bookingRequestId }: GQLCookBookingRequestMutationAcceptArgs,

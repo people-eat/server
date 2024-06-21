@@ -111,7 +111,7 @@ type UserMutation {
 
 type CookBookingRequestMutation {
     cookId: String!
-    createOne(globalBookingRequestId: String!): Boolean!
+    createOne(globalBookingRequestId: String!, configuredMenu: CreateConfiguredMenuRequest, price: PriceInput): Boolean!
     accept(bookingRequestId: String!): Boolean!
     decline(bookingRequestId: String!): Boolean!
     updatePrice(bookingRequestId: String!, price: PriceInput!): Boolean!
