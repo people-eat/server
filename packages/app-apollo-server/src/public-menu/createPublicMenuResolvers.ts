@@ -1,10 +1,12 @@
 import { type Authorization, type Service } from '@people-eat/server-domain';
 import {
     type GQLCourse,
+    type GQLPrice,
     type GQLPublicMenu,
     type GQLPublicMenuQuery,
     type GQLPublicMenuQueryFindManyArgs,
     type GQLPublicMenuQueryFindOneArgs,
+    type GQLPublicMenuTotalPriceArgs,
 } from '../generated';
 import { type Resolvers } from '../Resolvers';
 
@@ -20,6 +22,24 @@ export function createPublicMenuResolvers(service: Service): Resolvers<'PublicMe
                 if (!courses) return 0;
                 return courses.length;
             },
+            totalPrice: async (
+                { basePrice, basePriceCustomers, pricePerAdult, pricePerChild, currencyCode, cook }: GQLPublicMenu,
+                { location, adults, children }: GQLPublicMenuTotalPriceArgs,
+            ): Promise<GQLPrice> =>
+                service.menu.calculateTotalPrice({
+                    eventLocation: location,
+                    cookLocation: cook.location,
+                    cookTravelExpenses: cook.travelExpenses,
+
+                    adults,
+                    children,
+
+                    basePrice,
+                    basePriceCustomers,
+                    pricePerAdult,
+                    pricePerChild,
+                    currencyCode,
+                }),
         },
         PublicMenuQuery: {
             findOne: async (

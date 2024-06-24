@@ -1,8 +1,9 @@
 import { type Authorization } from '../..';
 import { type Runtime } from '../Runtime';
-import { type CurrencyCode, type FindManyRequest, type NanoId } from '../shared';
+import { type CurrencyCode, type FindManyRequest, type Location, type NanoId, type Price } from '../shared';
 import { type CreateOneMenuRequest } from './CreateOneMenuRequest';
 import { type Menu } from './Menu';
+import { calculateTotalPrice } from './useCases/calculateTotalPrice';
 import { createOne } from './useCases/createOne';
 import { deleteOne } from './useCases/deleteOne';
 import { findImageUrls } from './useCases/findImageUrls';
@@ -30,6 +31,20 @@ export interface MenuService {
 
     findImageUrls(context: Authorization.Context, request: { menuId: NanoId }): Promise<string[]>;
     findKeyMealOptionImageUrl(context: Authorization.Context, request: { menuId: NanoId }): Promise<string | undefined>;
+    calculateTotalPrice(request: {
+        eventLocation?: Location;
+        cookLocation: Location;
+        cookTravelExpenses: number;
+
+        adults: number;
+        children: number;
+
+        basePrice: number;
+        basePriceCustomers: number;
+        pricePerAdult: number;
+        pricePerChild?: number;
+        currencyCode: CurrencyCode;
+    }): Promise<Price>;
 
     updateKeyMealOption(
         context: Authorization.Context,
@@ -82,6 +97,21 @@ export function createMenuService({ dataSourceAdapter, logger }: Runtime): MenuS
 
         findKeyMealOptionImageUrl: (context: Authorization.Context, request: { menuId: NanoId }) =>
             findKeyMealOptionImageUrl({ dataSourceAdapter, logger, context, request }),
+
+        calculateTotalPrice: (request: {
+            eventLocation?: Location;
+            cookLocation: Location;
+            cookTravelExpenses: number;
+
+            adults: number;
+            children: number;
+
+            basePrice: number;
+            basePriceCustomers: number;
+            pricePerAdult: number;
+            pricePerChild?: number;
+            currencyCode: CurrencyCode;
+        }) => calculateTotalPrice({ request }),
 
         updateKeyMealOption: (
             context: Authorization.Context,

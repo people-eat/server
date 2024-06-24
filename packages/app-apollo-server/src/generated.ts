@@ -1665,6 +1665,13 @@ export type GQLPublicMenu = {
     pricePerAdult: Scalars['UInt'];
     pricePerChild?: Maybe<Scalars['UInt']>;
     title: Scalars['String'];
+    totalPrice: GQLPrice;
+};
+
+export type GQLPublicMenuTotalPriceArgs = {
+    adults: Scalars['UInt'];
+    children: Scalars['UInt'];
+    location?: InputMaybe<GQLLocationInput>;
 };
 
 export type GQLPublicMenuQuery = {
@@ -4598,6 +4605,12 @@ export type GQLPublicMenuResolvers<
     pricePerAdult?: Resolver<GQLResolversTypes['UInt'], ParentType, ContextType>;
     pricePerChild?: Resolver<Maybe<GQLResolversTypes['UInt']>, ParentType, ContextType>;
     title?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;
+    totalPrice?: Resolver<
+        GQLResolversTypes['Price'],
+        ParentType,
+        ContextType,
+        RequireFields<GQLPublicMenuTotalPriceArgs, 'adults' | 'children'>
+    >;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

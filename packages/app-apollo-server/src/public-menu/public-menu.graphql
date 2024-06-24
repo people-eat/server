@@ -10,6 +10,7 @@ type PublicMenu {
     pricePerAdult: UInt!
     pricePerChild: UInt
     currencyCode: CurrencyCode!
+    totalPrice(location: LocationInput, adults: UInt!, children: UInt!): Price!
     createdAt: DateTime!
 
     cook: PublicCook!
