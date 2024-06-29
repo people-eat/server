@@ -1,5 +1,5 @@
 import { cookBookingRequestCookAcceptedNotification, customerPaymentAnnouncement } from '@people-eat/server-adapter-email-template';
-import moment from 'moment';
+import moment, { type Moment } from 'moment';
 import { Authorization, type ChatMessage } from '../../..';
 import { type DBBookingRequest, type DBCook, type DBUser } from '../../../data-source';
 import { createNanoId } from '../../../utils/createNanoId';
@@ -127,6 +127,8 @@ export async function acceptOneByCookId({ runtime, context, request }: AcceptOne
     const daysUntilEvent: number = moment(bookingRequest.dateTime).diff(moment(), 'days');
 
     if (daysUntilEvent === 15) {
+        const pullPaymentDate: Moment = moment(bookingRequest.dateTime).subtract(14, 'days');
+
         if (user.emailAddress) {
             await emailAdapter.sendToOne(
                 'PeopleEat',
@@ -147,11 +149,12 @@ export async function acceptOneByCookId({ runtime, context, request }: AcceptOne
                             currency: bookingRequest.currencyCode,
                         },
                     },
+                    pullPaymentDate: pullPaymentDate.format('L'),
                 }),
             );
         }
         await createOneTimeTriggeredTask(runtime, {
-            dueDate: moment(bookingRequest.dateTime).subtract(14, 'days').toDate(),
+            dueDate: pullPaymentDate.toDate(),
             task: { type: 'TIME_TRIGGERED_TASK_PULL_PAYMENT', bookingRequestId },
         });
 

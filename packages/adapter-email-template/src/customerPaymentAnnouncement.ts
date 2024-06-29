@@ -14,9 +14,11 @@ export interface CustomerPaymentAnnouncementInput {
             currency: string;
         };
     };
+
+    pullPaymentDate: string;
 }
 
-export function customerPaymentAnnouncement({ customer, bookingRequest }: CustomerPaymentAnnouncementInput): string {
+export function customerPaymentAnnouncement({ customer, bookingRequest, pullPaymentDate }: CustomerPaymentAnnouncementInput): string {
     const formatPrice = (amount: number, currencyCode: string): string => (amount / 100).toFixed(2) + ' ' + currencyCode;
 
     return `
@@ -164,11 +166,13 @@ export function customerPaymentAnnouncement({ customer, bookingRequest }: Custom
                                                                 <td class="pad">
                                                                     <div style="font-family: sans-serif">
                                                                         <div class style="font-size: 12px; font-family: Arial, Helvetica, sans-serif; mso-line-height-alt: 14.399999999999999px; color: #2f0808; line-height: 1.2;">
-                                                                            <p style="margin: 0; font-size: 14px; text-align: left; mso-line-height-alt: 16.8px;"><span style="font-size:16px;">Für deinen Anlass ${
-                                                                                bookingRequest.occasion
-                                                                            } haben wir eine Zahlung bei uns hinterlegt. Das bedeutet, dass wir deine Karte automatisch am ${
-        bookingRequest.date
-    }, ${bookingRequest.time} (MEZ) belasten.</span></p>
+                                                                            <p style="margin: 0; font-size: 14px; text-align: left; mso-line-height-alt: 16.8px;">
+                                                                                <span style="font-size:16px;">
+                                                                                    Für deinen Anlass "${
+                                                                                        bookingRequest.occasion
+                                                                                    }" haben wir eine Zahlung bei uns hinterlegt. Das bedeutet, dass wir deine Karte automatisch am ${pullPaymentDate} belasten.
+                                                                                </span>
+                                                                            </p>
                                                                         </div>
                                                                     </div>
                                                                 </td>

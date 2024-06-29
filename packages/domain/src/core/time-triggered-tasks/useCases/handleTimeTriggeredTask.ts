@@ -1,5 +1,5 @@
 import { customerPaymentAnnouncement, giftCardReceived } from '@people-eat/server-adapter-email-template';
-import moment from 'moment';
+import moment, { type Moment } from 'moment';
 import { type DBBookingRequest, type DBCook, type DBGiftCard, type DBUser } from '../../../data-source';
 import { type Runtime } from '../../Runtime';
 import { type NanoId } from '../../shared';
@@ -56,6 +56,8 @@ export async function handleTimeTriggeredTask(runtime: Runtime, timeTriggeredTas
 
         if (!user || !user.emailAddress) return;
 
+        const pullPaymentDate: Moment = moment(bookingRequest.dateTime).subtract(14, 'days');
+
         const emailSuccess: boolean = await emailAdapter.sendToOne(
             'PeopleEat',
             user.emailAddress,
@@ -68,6 +70,7 @@ export async function handleTimeTriggeredTask(runtime: Runtime, timeTriggeredTas
                 bookingRequest: {
                     bookingRequestId: bookingRequest.bookingRequestId,
                     occasion: bookingRequest.occasion,
+                    // todo: also pass the pull date
                     date: moment(bookingRequest.dateTime).format('L'),
                     time: moment(bookingRequest.dateTime).format('LT'),
                     price: {
@@ -75,6 +78,7 @@ export async function handleTimeTriggeredTask(runtime: Runtime, timeTriggeredTas
                         currency: bookingRequest.currencyCode,
                     },
                 },
+                pullPaymentDate: pullPaymentDate.format('L'),
             }),
         );
 
