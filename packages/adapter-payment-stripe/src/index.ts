@@ -65,6 +65,7 @@ export function createPaymentAdapter({
                         transfer_data: {
                             destination: destinationAccountId,
                         },
+                        automatic_payment_methods: { enabled: true },
                     });
 
                     await client.transfers.create({
