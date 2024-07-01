@@ -82,7 +82,7 @@ async function persistMenuBookingRequest(
         giftCardPromoCode && !bookingRequestWithPromoCode
             ? (menuPrice + menuPrice * 0.04 + travelExpensesAmount - giftCardPromoCode.amount + 25) / (1 - 0.015)
             : (menuPrice + menuPrice * 0.04 + travelExpensesAmount + 25) / (1 - 0.015);
-    const totalAmountCook: number = Math.trunc(menuPrice * ((100 - 18) / 100)) + travelExpensesAmount;
+    const totalAmountCook: number = Math.round(menuPrice * ((100 - 18) / 100)) + travelExpensesAmount;
 
     const success: boolean = await dataSourceAdapter.bookingRequestRepository.insertOne({
         bookingRequestId,
@@ -203,7 +203,7 @@ export async function createOne({ runtime, context, request }: CreateOneBookingR
               adultParticipants,
               children,
               totalAmountUser: request.price.amount + request.travelExpensesAmount,
-              totalAmountCook: Math.trunc((request.price.amount * (100 - fee)) / 100) + request.travelExpensesAmount,
+              totalAmountCook: Math.round((request.price.amount * (100 - fee)) / 100) + request.travelExpensesAmount,
               currencyCode: 'EUR',
               fee: 22,
               occasion: occasion.trim(),

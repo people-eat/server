@@ -19,7 +19,7 @@ export async function createOne({
     if (!userId && !buyer) return { failed: true };
 
     const { clientSecret, paymentIntentId } = await paymentAdapter.STRIPE.createPaymentIntent({
-        amount: Math.trunc((balance + 25) / 0.985),
+        amount: Math.round((balance + 25) / 0.985),
     });
 
     const giftCardId: NanoId = createNanoId();
