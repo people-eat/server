@@ -23,7 +23,7 @@ export function createPaymentAdapter({
                 try {
                     const setupIntent: Stripe.SetupIntent = await client.setupIntents.create({
                         usage: 'off_session',
-                        automatic_payment_methods: { enabled: true },
+                        automatic_payment_methods: { enabled: true, allow_redirects: 'never' },
                     });
 
                     if (!setupIntent.client_secret) return undefined;
@@ -65,7 +65,7 @@ export function createPaymentAdapter({
                         transfer_data: {
                             destination: destinationAccountId,
                         },
-                        automatic_payment_methods: { enabled: true },
+                        automatic_payment_methods: { enabled: true, allow_redirects: 'never' },
                     });
 
                     await client.transfers.create({
