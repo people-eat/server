@@ -31,6 +31,15 @@ export class GiftCardEntity implements DataSource.DBGiftCard {
         };
     };
 
+    @Column('json')
+    invoiceAddress!: {
+        country: string;
+        city: string;
+        postCode: string;
+        street: string;
+        houseNumber: string;
+    };
+
     @Column('varchar')
     message!: string;
 

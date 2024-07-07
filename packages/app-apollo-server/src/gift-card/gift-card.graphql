@@ -29,10 +29,19 @@ input CreateOneGiftCardRequestBuyer {
     lastName: String!
 }
 
+input CreateOneGiftCardRequestInvoiceAddress {
+    country: String!
+    city: String!
+    postCode: String!
+    street: String!
+    houseNumber: String!
+}
+
 input CreateOneGiftCardRequest {
     userId: String
     buyer: CreateOneGiftCardRequestBuyer
     recipient: GiftCardRecipient!
+    invoiceAddress: CreateOneGiftCardRequestInvoiceAddress!
 
     balance: UInt!
     message: String!

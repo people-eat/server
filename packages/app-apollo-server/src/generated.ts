@@ -972,6 +972,7 @@ export type GQLCreateOneGiftCardRequest = {
     buyer?: InputMaybe<GQLCreateOneGiftCardRequestBuyer>;
     /** The day the recipient should be notified about him receiving the gift card */
     deliveryDate?: InputMaybe<Scalars['DateTime']>;
+    invoiceAddress: GQLCreateOneGiftCardRequestInvoiceAddress;
     message: Scalars['String'];
     occasion: Scalars['String'];
     recipient: GQLGiftCardRecipient;
@@ -982,6 +983,14 @@ export type GQLCreateOneGiftCardRequestBuyer = {
     emailAddress: Scalars['EmailAddress'];
     firstName: Scalars['String'];
     lastName: Scalars['String'];
+};
+
+export type GQLCreateOneGiftCardRequestInvoiceAddress = {
+    city: Scalars['String'];
+    country: Scalars['String'];
+    houseNumber: Scalars['String'];
+    postCode: Scalars['String'];
+    street: Scalars['String'];
 };
 
 export type GQLCreateOneGiftCardResponse = GQLCreateOneGiftCardFailedResponse | GQLCreateOneGiftCardSuccessResponse;
@@ -2660,6 +2669,7 @@ export type GQLResolversTypes = {
     CreateOneGiftCardPromoCodeRequest: GQLCreateOneGiftCardPromoCodeRequest;
     CreateOneGiftCardRequest: GQLCreateOneGiftCardRequest;
     CreateOneGiftCardRequestBuyer: GQLCreateOneGiftCardRequestBuyer;
+    CreateOneGiftCardRequestInvoiceAddress: GQLCreateOneGiftCardRequestInvoiceAddress;
     CreateOneGiftCardResponse: ResolverTypeWrapper<GQLResolversUnionTypes['CreateOneGiftCardResponse']>;
     CreateOneGiftCardSuccessResponse: ResolverTypeWrapper<GQLCreateOneGiftCardSuccessResponse>;
     CreateOneGlobalBookingRequestRequest: GQLCreateOneGlobalBookingRequestRequest;
@@ -2876,6 +2886,7 @@ export type GQLResolversParentTypes = {
     CreateOneGiftCardPromoCodeRequest: GQLCreateOneGiftCardPromoCodeRequest;
     CreateOneGiftCardRequest: GQLCreateOneGiftCardRequest;
     CreateOneGiftCardRequestBuyer: GQLCreateOneGiftCardRequestBuyer;
+    CreateOneGiftCardRequestInvoiceAddress: GQLCreateOneGiftCardRequestInvoiceAddress;
     CreateOneGiftCardResponse: GQLResolversUnionParentTypes['CreateOneGiftCardResponse'];
     CreateOneGiftCardSuccessResponse: GQLCreateOneGiftCardSuccessResponse;
     CreateOneGlobalBookingRequestRequest: GQLCreateOneGlobalBookingRequestRequest;

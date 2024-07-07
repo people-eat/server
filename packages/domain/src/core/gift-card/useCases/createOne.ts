@@ -14,7 +14,7 @@ export async function createOne({
     runtime: { dataSourceAdapter, paymentAdapter },
     request,
 }: CreateOneGiftCardInput): Promise<{ stripeClientSecret: string; giftCardId: NanoId } | { failed: boolean }> {
-    const { balance, message, occasion, userId, buyer, recipient } = request;
+    const { balance, message, occasion, userId, buyer, recipient, invoiceAddress } = request;
 
     if (!userId && !buyer) return { failed: true };
 
@@ -34,6 +34,7 @@ export async function createOne({
         userId,
         buyer,
         recipient,
+        invoiceAddress,
 
         message,
         occasion,

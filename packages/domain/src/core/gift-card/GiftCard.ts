@@ -11,6 +11,14 @@ export interface GiftCard {
         emailAddress: string;
     };
 
+    invoiceAddress: {
+        country: string;
+        city: string;
+        postCode: string;
+        street: string;
+        houseNumber: string;
+    };
+
     recipient: {
         firstName: string;
         lastName: string;

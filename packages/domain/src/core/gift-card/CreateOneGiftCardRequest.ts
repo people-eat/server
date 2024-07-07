@@ -18,4 +18,11 @@ export interface CreateOneGiftCardRequest {
             emailAddress: string;
         };
     };
+    invoiceAddress: {
+        country: string;
+        city: string;
+        postCode: string;
+        street: string;
+        houseNumber: string;
+    };
 }

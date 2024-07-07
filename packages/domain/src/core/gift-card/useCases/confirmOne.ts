@@ -36,7 +36,7 @@ export async function confirmOne({ runtime, request }: ConfirmOneGiftCardInput):
 
     if (!persistingSuccess) return false;
 
-    const { redeemCode, initialBalanceAmount, occasion, message, userId, buyer, recipient, expiresAt } = giftCard;
+    const { redeemCode, initialBalanceAmount, occasion, message, userId, buyer, recipient, expiresAt, invoiceAddress } = giftCard;
 
     if (userId) {
         const user: DBUser | undefined = await dataSourceAdapter.userRepository.findOne({ userId });
@@ -120,7 +120,10 @@ export async function confirmOne({ runtime, request }: ConfirmOneGiftCardInput):
             'PeopleEat Bot',
             notificationEmailAddresses,
             'Ein Gutschein wurde gekauft',
-            `Es wurde ein Gutschein im Wert von ${initialBalanceAmount / 100} € gekauft.`,
+            `Es wurde ein Gutschein im Wert von ${initialBalanceAmount / 100} € gekauft.<br/>Rechnungsadresse: ${invoiceAddress.postCode} ${
+                invoiceAddress.city
+            }, ${invoiceAddress.street} ${invoiceAddress.houseNumber},  ${invoiceAddress.country}
+            `,
         )
         .then(() => undefined)
         .catch(() => undefined);
