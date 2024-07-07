@@ -74,6 +74,23 @@ export async function confirmOne({ runtime, request }: ConfirmOneGiftCardInput):
                 task: { type: 'TIME_TRIGGERED_TASK_SEND_GIFT_CARD', giftCardId },
             });
         }
+
+        // admin notification
+
+        emailAdapter
+            .sendToMany(
+                'PeopleEat Bot',
+                notificationEmailAddresses,
+                'Ein Gutschein wurde gekauft',
+                `Es wurde ein Gutschein im Wert von ${initialBalanceAmount / 100} € gekauft.<br />
+                Käufer: ${user.firstName} ${user.lastName}<br />
+                Rechnungsadresse: ${invoiceAddress.postCode} ${invoiceAddress.city}, ${invoiceAddress.street} ${
+                    invoiceAddress.houseNumber
+                },  ${invoiceAddress.country}
+        `,
+            )
+            .then(() => undefined)
+            .catch(() => undefined);
     }
 
     if (buyer) {
@@ -111,22 +128,24 @@ export async function confirmOne({ runtime, request }: ConfirmOneGiftCardInput):
                 task: { type: 'TIME_TRIGGERED_TASK_SEND_GIFT_CARD', giftCardId },
             });
         }
+
+        // admin notification
+
+        emailAdapter
+            .sendToMany(
+                'PeopleEat Bot',
+                notificationEmailAddresses,
+                'Ein Gutschein wurde gekauft',
+                `Es wurde ein Gutschein im Wert von ${initialBalanceAmount / 100} € gekauft.<br />
+                Käufer: ${buyer.firstName} ${buyer.lastName}<br />
+                Rechnungsadresse: ${invoiceAddress.postCode} ${invoiceAddress.city}, ${invoiceAddress.street} ${
+                    invoiceAddress.houseNumber
+                },  ${invoiceAddress.country}
+        `,
+            )
+            .then(() => undefined)
+            .catch(() => undefined);
     }
-
-    // admin notification
-
-    emailAdapter
-        .sendToMany(
-            'PeopleEat Bot',
-            notificationEmailAddresses,
-            'Ein Gutschein wurde gekauft',
-            `Es wurde ein Gutschein im Wert von ${initialBalanceAmount / 100} € gekauft.<br/>Rechnungsadresse: ${invoiceAddress.postCode} ${
-                invoiceAddress.city
-            }, ${invoiceAddress.street} ${invoiceAddress.houseNumber},  ${invoiceAddress.country}
-            `,
-        )
-        .then(() => undefined)
-        .catch(() => undefined);
 
     return true;
 }
