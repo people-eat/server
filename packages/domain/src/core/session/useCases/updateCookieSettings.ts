@@ -10,6 +10,7 @@ export interface UpdateCookieSettingsInput {
 export interface UpdateCookieSettingsRequest {
     sessionCookie?: boolean;
     googleAnalytics?: boolean;
+    clarity?: boolean;
 }
 
 export async function updateCookieSettings({

@@ -1808,11 +1808,13 @@ export type GQLSession = {
 
 export type GQLSessionCookieSettings = {
     __typename?: 'SessionCookieSettings';
+    clarity?: Maybe<Scalars['Boolean']>;
     googleAnalytics?: Maybe<Scalars['Boolean']>;
     sessionCookie?: Maybe<Scalars['Boolean']>;
 };
 
 export type GQLSessionCookieSettingsInput = {
+    clarity?: InputMaybe<Scalars['Boolean']>;
     googleAnalytics?: InputMaybe<Scalars['Boolean']>;
     sessionCookie?: InputMaybe<Scalars['Boolean']>;
 };
@@ -4782,6 +4784,7 @@ export type GQLSessionCookieSettingsResolvers<
     ContextType = any,
     ParentType extends GQLResolversParentTypes['SessionCookieSettings'] = GQLResolversParentTypes['SessionCookieSettings'],
 > = {
+    clarity?: Resolver<Maybe<GQLResolversTypes['Boolean']>, ParentType, ContextType>;
     googleAnalytics?: Resolver<Maybe<GQLResolversTypes['Boolean']>, ParentType, ContextType>;
     sessionCookie?: Resolver<Maybe<GQLResolversTypes['Boolean']>, ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

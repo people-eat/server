@@ -12,5 +12,6 @@ export interface Session {
     cookieSettings?: {
         sessionCookie?: boolean;
         googleAnalytics?: boolean;
+        clarity?: boolean;
     };
 }

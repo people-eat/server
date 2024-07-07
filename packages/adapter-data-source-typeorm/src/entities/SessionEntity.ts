@@ -32,6 +32,7 @@ export class SessionEntity implements DataSource.DBSession {
     cookieSettings?: {
         sessionCookie?: boolean;
         googleAnalytics?: boolean;
+        clarity?: boolean;
     };
 
     /* relations */

@@ -13,11 +13,13 @@ type Session {
 type SessionCookieSettings {
     sessionCookie: Boolean
     googleAnalytics: Boolean
+    clarity: Boolean
 }
 
 input SessionCookieSettingsInput {
     sessionCookie: Boolean
     googleAnalytics: Boolean
+    clarity: Boolean
 }
 
 type UserSessionQuery {
