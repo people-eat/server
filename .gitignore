@@ -44,12 +44,12 @@ Thumbs.db
 *.p8
 *.p12
 
-images/profile-pictures/*.png
-images/profile-pictures/*.jpg
-images/profile-pictures/*.jpeg
+images/profile-pictures/**/*.png
+images/profile-pictures/**/*.jpg
+images/profile-pictures/**/*.jpeg
 
-images/meal-images/*.png
-images/meal-images/*.jpg
-images/meal-images/*.jpeg
+images/meal-images/**/*.png
+images/meal-images/**/*.jpg
+images/meal-images/**/*.jpeg
 
 .nx

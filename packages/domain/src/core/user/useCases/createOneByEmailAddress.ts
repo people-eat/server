@@ -46,11 +46,12 @@ export async function createOneByEmailAddress({ runtime, context, request }: Cre
     let profilePictureUrl: string | undefined;
 
     if (profilePicture) {
+        // store different sizes right away
         const profilePictureId: NanoId = createNanoId();
         profilePictureUrl = serverUrl + '/profile-pictures/' + profilePictureId;
         await new Promise<boolean>((resolve: (success: boolean) => void, reject: (success: boolean) => void) =>
             profilePicture
-                .pipe(createWriteStream(join(process.cwd(), `images/profile-pictures/${profilePictureId}.png`)))
+                .pipe(createWriteStream(join(process.cwd(), `images/profile-pictures/original/${profilePictureId}.png`)))
                 .on('finish', () => resolve(true))
                 .on('error', () => reject(false)),
         );

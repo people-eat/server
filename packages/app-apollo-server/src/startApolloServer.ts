@@ -13,6 +13,7 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { type Express, type Request, type Response } from 'express';
+import { createWriteStream, existsSync } from 'fs';
 import { type GraphQLSchema } from 'graphql';
 import {
     DateResolver,
@@ -30,6 +31,7 @@ import { type Disposable } from 'graphql-ws';
 import { useServer } from 'graphql-ws/lib/use/ws';
 import { createServer as createHttpServer, type IncomingMessage, type Server as HttpServer } from 'http';
 import { join } from 'path';
+import sharp from 'sharp';
 import { WebSocketServer } from 'ws';
 import { createAddressResolvers } from './address/createAddressResolvers';
 import { createAdminResolvers } from './admin/createAdminResolvers';
@@ -333,14 +335,46 @@ export async function startApolloServerApp({
         }),
     );
 
-    expressApp.get('/profile-pictures/:profilePictureId', function (request: Request, response: Response): void {
+    expressApp.get('/profile-pictures/:profilePictureId', async function (request: Request, response: Response): Promise<void> {
         const { profilePictureId } = request.params;
-        response.sendFile(join(process.cwd(), `images/profile-pictures/${profilePictureId}.png`));
+        const edgeLength: string = (request.query.el as string) ?? '1024';
+        const filePath: string = join(process.cwd(), `images/profile-pictures/${edgeLength}x${edgeLength}/${profilePictureId}.png`);
+        const originalFilePath: string = join(process.cwd(), `images/profile-pictures/original/${profilePictureId}.png`);
+
+        if (!existsSync(filePath) && existsSync(originalFilePath)) {
+            await new Promise<boolean>((resolve: (success: boolean) => void, reject: (success: boolean) => void) =>
+                sharp(originalFilePath)
+                    .resize(Number(edgeLength))
+                    .pipe(
+                        createWriteStream(
+                            join(process.cwd(), `images/profile-pictures/${edgeLength}x${edgeLength}/${profilePictureId}.png`),
+                        ),
+                    )
+                    .on('finish', () => resolve(true))
+                    .on('error', () => reject(false)),
+            );
+        }
+
+        response.sendFile(filePath);
     });
 
-    expressApp.get('/meal-images/:mealImageId', function (request: Request, response: Response): void {
+    expressApp.get('/meal-images/:mealImageId', async function (request: Request, response: Response): Promise<void> {
         const { mealImageId } = request.params;
-        response.sendFile(join(process.cwd(), `images/meal-images/${mealImageId}.png`));
+        const edgeLength: string = (request.query.el as string) ?? '1024';
+        const filePath: string = join(process.cwd(), `images/meal-images/${edgeLength}x${edgeLength}/${mealImageId}.png`);
+        const originalFilePath: string = join(process.cwd(), `images/meal-images/original/${mealImageId}.png`);
+
+        if (!existsSync(filePath) && existsSync(originalFilePath)) {
+            await new Promise<boolean>((resolve: (success: boolean) => void, reject: (success: boolean) => void) =>
+                sharp(originalFilePath)
+                    .resize(Number(edgeLength))
+                    .pipe(createWriteStream(join(process.cwd(), `images/meal-images/${edgeLength}x${edgeLength}/${mealImageId}.png`)))
+                    .on('finish', () => resolve(true))
+                    .on('error', () => reject(false)),
+            );
+        }
+
+        response.sendFile(filePath);
     });
 
     httpServer.listen(port, () => undefined);
