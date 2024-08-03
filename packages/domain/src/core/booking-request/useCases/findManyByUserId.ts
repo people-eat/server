@@ -26,12 +26,19 @@ export async function findManyByUserId({ runtime, context, request }: FindManyBo
 
     bookingRequests.sort((a: DBBookingRequest, b: DBBookingRequest) => b.createdAt.getTime() - a.createdAt.getTime());
 
-    // .filter((bookingRequest: DBBookingRequest) => bookingRequest.paymentData.confirmed)
-    return bookingRequests
-        .map((bookingRequest: DBBookingRequest) => ({
-            ...bookingRequest,
-            status: toBookingRequestStatus(bookingRequest),
-            price: { amount: bookingRequest.totalAmountUser, currencyCode: bookingRequest.currencyCode },
-        }))
-        .map(packLocation);
+    return (
+        bookingRequests
+            .map((bookingRequest: DBBookingRequest) => ({
+                ...bookingRequest,
+                status: toBookingRequestStatus(bookingRequest),
+                price: { amount: bookingRequest.totalAmountUser, currencyCode: bookingRequest.currencyCode },
+            }))
+            // context: global booking requests matched in the administration don't have a setupIntentId, yet we want them to be displayed to
+            // the customers in their bookings, so it is okay that confirmed is not true yet
+            .filter(
+                (bookingRequest: DBBookingRequest) =>
+                    bookingRequest.paymentData.confirmed || bookingRequest.paymentData.setupIntentId === '',
+            )
+            .map(packLocation)
+    );
 }

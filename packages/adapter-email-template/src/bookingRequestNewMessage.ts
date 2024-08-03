@@ -24,7 +24,7 @@ export function bookingRequestNewMessage({
     destination,
     bookingRequestId,
 }: BookingRequestNewMessageInput): string {
-    const bookingRequestsUrl: string = webAppUrl + (destination === 'COOK' ? '/chef-profile/' : '/profile/') + bookingRequestId;
+    const bookingRequestsUrl: string = webAppUrl + (destination === 'COOK' ? '/profile/r/' : '/profile/s/') + bookingRequestId;
 
     return `
     <!DOCTYPE html>
