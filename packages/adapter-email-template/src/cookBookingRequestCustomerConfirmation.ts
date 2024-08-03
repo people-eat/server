@@ -12,6 +12,7 @@ export interface CookBookingBookingRequestCustomerConfirmationInput {
     };
 
     bookingRequest: {
+        bookingRequestId: string;
         occasion: string;
         children: number;
         adults: number;
@@ -35,7 +36,7 @@ export function cookBookingRequestCustomerConfirmation({
     bookingRequest,
     chatMessage,
 }: CookBookingBookingRequestCustomerConfirmationInput): string {
-    const customerProfileBookingRequestsUrl: string = webAppUrl + '/profile?tab=1';
+    const customerProfileBookingRequestsUrl: string = webAppUrl + '/profile/bookings/s/' + bookingRequest.bookingRequestId;
 
     const formatPrice = (amount: number, currencyCode: string): string => (amount / 100).toFixed(2) + ' ' + currencyCode;
 

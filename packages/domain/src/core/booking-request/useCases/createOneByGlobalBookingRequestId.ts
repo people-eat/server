@@ -11,6 +11,12 @@ import { findOne as findOnePublicMenu } from '../../public-menu/useCases/findOne
 import { type Runtime } from '../../Runtime';
 import { type NanoId, type Price } from '../../shared';
 
+interface PriceResult {
+    totalAmountUser: number;
+    totalAmountCook: number;
+    pricePerPerson: number;
+}
+
 async function persistMenuBookingRequest(
     runtime: Runtime,
     context: Context,
@@ -19,7 +25,7 @@ async function persistMenuBookingRequest(
     adultParticipants: number,
     children: number,
     price?: Price,
-): Promise<boolean> {
+): Promise<undefined | PriceResult> {
     const travelExpensesAmount: number = 0;
     const { dataSourceAdapter, logger } = runtime;
 
@@ -37,7 +43,7 @@ async function persistMenuBookingRequest(
         request: { menuId: configuredMenu.menuId },
     });
 
-    if (!publicMenu || !courses) return false;
+    if (!publicMenu || !courses) return undefined;
 
     const menuPrice: number = calculateMenuPrice(
         adultParticipants,
@@ -57,7 +63,7 @@ async function persistMenuBookingRequest(
             { totalAmountCook, totalAmountUser },
         );
 
-        if (!success) return false;
+        if (!success) return undefined;
     }
 
     const configuredMenuCourses: ConfiguredMenuCourse[] = [];
@@ -66,7 +72,7 @@ async function persistMenuBookingRequest(
         const course: Course | undefined = courses.find((c: Course) => c.courseId === configuredCourse.courseId);
         if (!course) {
             logger.info("Didn't find course");
-            return false;
+            return undefined;
         }
 
         const selectedMeal: MealOption | undefined = course.mealOptions?.find(
@@ -75,7 +81,7 @@ async function persistMenuBookingRequest(
 
         if (!selectedMeal) {
             logger.info("Didn't find selected meal");
-            return false;
+            return undefined;
         }
 
         configuredMenuCourses.push({
@@ -100,9 +106,13 @@ async function persistMenuBookingRequest(
         courses: configuredMenuCourses,
     });
 
-    if (!saveConfiguredMenuSuccess) return false;
+    if (!saveConfiguredMenuSuccess) return undefined;
 
-    return true;
+    return {
+        totalAmountUser,
+        totalAmountCook,
+        pricePerPerson: totalAmountUser / (adultParticipants + children),
+    };
 }
 
 export interface CreateOneBookingRequestInput {
@@ -184,8 +194,19 @@ export async function createOneByGlobalBookingRequestId({ runtime, context, requ
 
     if (!success) return false;
 
-    if (configuredMenu)
-        await persistMenuBookingRequest(runtime, context, bookingRequestId, configuredMenu, adultParticipants, children, price);
+    let priceResult: PriceResult | undefined;
+
+    if (configuredMenu) {
+        priceResult = await persistMenuBookingRequest(
+            runtime,
+            context,
+            bookingRequestId,
+            configuredMenu,
+            adultParticipants,
+            children,
+            price,
+        );
+    }
 
     const messageSuccess: boolean = await dataSourceAdapter.chatMessageRepository.insertMany([
         {
@@ -223,6 +244,7 @@ export async function createOneByGlobalBookingRequestId({ runtime, context, requ
                     profilePictureUrl: cookUser.profilePictureUrl ?? '',
                 },
                 bookingRequest: {
+                    bookingRequestId,
                     occasion,
                     children,
                     adults: adultParticipants,
@@ -230,12 +252,9 @@ export async function createOneByGlobalBookingRequestId({ runtime, context, requ
                     date: dateTime.toDateString(),
                     time: moment(dateTime).format('LT'),
                     price: {
-                        perPerson: 0,
-                        // amount / (children + adultParticipants),
-                        total: 0,
-                        // amount,
+                        perPerson: priceResult?.pricePerPerson ?? 0,
+                        total: priceResult?.totalAmountUser ?? 0,
                         currency: 'EUR',
-                        // currencyCode,
                     },
                 },
                 chatMessage: message.trim(),
@@ -264,12 +283,9 @@ export async function createOneByGlobalBookingRequestId({ runtime, context, requ
                     date: dateTime.toDateString(),
                     time: moment(dateTime).format('LT'),
                     price: {
-                        perPerson: 0,
-                        // amount / (children + adultParticipants),
-                        total: 0,
-                        // amount,
+                        perPerson: priceResult?.pricePerPerson ?? 0,
+                        total: priceResult?.totalAmountUser ?? 0,
                         currency: 'EUR',
-                        // currencyCode,
                     },
                 },
                 chatMessage: message,
