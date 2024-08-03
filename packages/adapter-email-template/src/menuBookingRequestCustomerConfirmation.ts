@@ -50,7 +50,7 @@ export function menuBookingRequestCustomerConfirmation({
 }: MenuBookingRequestCustomerConfirmationInput): string {
     const customerProfileGlobalBookingRequestsUrl: string = webAppUrl + `/profile/bookings/${bookingRequest.bookingRequestId}`;
 
-    const formatPrice = (amount: number, currencyCode: string): string => (amount / 100).toFixed(2) + ' ' + currencyCode;
+    const formatPrice = (amount: number, currencyCode: string): string => Math.round(amount / 100).toFixed(2) + ' ' + currencyCode;
 
     const kitchenLabel: string = bookingRequest.menu.kitchen?.title ?? 'Keine Angabe';
     const categoriesLabel: string =

@@ -19,7 +19,7 @@ export interface CustomerPaymentAnnouncementInput {
 }
 
 export function customerPaymentAnnouncement({ customer, bookingRequest, pullPaymentDate }: CustomerPaymentAnnouncementInput): string {
-    const formatPrice = (amount: number, currencyCode: string): string => (amount / 100).toFixed(2) + ' ' + currencyCode;
+    const formatPrice = (amount: number, currencyCode: string): string => Math.round(amount / 100).toFixed(2) + ' ' + currencyCode;
 
     return `
     <!DOCTYPE html>

@@ -24,7 +24,7 @@ export function giftCardPurchaseConfirmation({
     balance,
     automatedEmailDelivery,
 }: GiftCardPurchaseConfirmationInput): string {
-    const formatPrice = (amount: number, currencyCode: string): string => (amount / 100).toFixed(2) + ' ' + currencyCode;
+    const formatPrice = (amount: number, currencyCode: string): string => Math.round(amount / 100).toFixed(2) + ' ' + currencyCode;
 
     const messageSection: string = message ? `<div><span style="font-weight: bold;">Nachricht:</span> ${message}</div><div> </div>` : '';
 
