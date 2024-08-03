@@ -35,8 +35,8 @@ export async function findManyByCookId({ runtime, context, request }: FindManyBo
             // the customers in their bookings, so it is okay that confirmed is not true yet
             .filter(
                 (bookingRequest: DBBookingRequest) =>
-                    // bookingRequest.paymentData.confirmed || bookingRequest.paymentData.setupIntentId === '',
-                    bookingRequest.paymentData.confirmed,
+                    bookingRequest.paymentData.confirmed || bookingRequest.paymentData.setupIntentId === '',
+                // bookingRequest.paymentData.confirmed,
             )
             .map(packLocation)
     );
