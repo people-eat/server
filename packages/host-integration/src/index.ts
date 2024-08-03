@@ -32,7 +32,7 @@ async function bootstrap(): Promise<void> {
             databaseUser: environmentVariables.database.user,
         },
         logger,
-        reset: true,
+        reset: false,
     });
 
     const emailAdapter: Email.Adapter = createEmailAdapter({
