@@ -256,6 +256,7 @@ export async function createOneByGlobalBookingRequestId({ runtime, context, requ
                     firstName: user.firstName,
                 },
                 globalBookingRequest: {
+                    globalBookingRequestId,
                     occasion,
                     adults: adultParticipants,
                     children,
