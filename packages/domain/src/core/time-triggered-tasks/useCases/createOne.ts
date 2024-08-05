@@ -16,16 +16,20 @@ export async function createOneTimeTriggeredTask(runtime: Runtime, { dueDate, ta
 
     const success: boolean = await runtime.dataSourceAdapter.timeTriggeredTaskRepository.insertOne(timeTriggeredTask);
 
-    const job: CronJob = CronJob.from({
-        cronTime: dueDate,
-        start: true,
-        onTick: async function () {
-            const shouldTrigger: boolean = moment(timeTriggeredTask.dueDate).diff(moment()) < 0;
-            if (!shouldTrigger) return;
-            job.stop();
-            await handleTimeTriggeredTask(runtime, timeTriggeredTask);
-        },
-    });
+    try {
+        const job: CronJob = CronJob.from({
+            cronTime: dueDate,
+            start: true,
+            onTick: async function () {
+                const shouldTrigger: boolean = moment(timeTriggeredTask.dueDate).diff(moment()) < 0;
+                if (!shouldTrigger) return;
+                job.stop();
+                await handleTimeTriggeredTask(runtime, timeTriggeredTask);
+            },
+        });
+    } catch (error) {
+        runtime.logger.error(error);
+    }
 
     return success;
 }
