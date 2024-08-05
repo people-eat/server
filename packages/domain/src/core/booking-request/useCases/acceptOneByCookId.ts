@@ -160,6 +160,8 @@ export async function acceptOneByCookId({ runtime, context, request }: AcceptOne
             task: { type: 'TIME_TRIGGERED_TASK_PULL_PAYMENT', bookingRequestId },
         });
 
+        runtime.logger.info({ event: 'Created TIME_TRIGGERED_TASK_PULL_PAYMENT', bookingRequestId });
+
         return true;
     }
 
@@ -169,11 +171,14 @@ export async function acceptOneByCookId({ runtime, context, request }: AcceptOne
                 dueDate: moment(bookingRequest.dateTime).subtract(15, 'days').toDate(),
                 task: { type: 'TIME_TRIGGERED_TASK_PULL_PAYMENT_ANNOUNCEMENT', bookingRequestId },
             });
+            runtime.logger.info({ event: 'Created TIME_TRIGGERED_TASK_PULL_PAYMENT_ANNOUNCEMENT', bookingRequestId });
         }
         await createOneTimeTriggeredTask(runtime, {
             dueDate: moment(bookingRequest.dateTime).subtract(14, 'days').toDate(),
             task: { type: 'TIME_TRIGGERED_TASK_PULL_PAYMENT', bookingRequestId },
         });
+
+        runtime.logger.info({ event: 'Created TIME_TRIGGERED_TASK_PULL_PAYMENT', bookingRequestId });
 
         return true;
     }
@@ -186,6 +191,8 @@ export async function acceptOneByCookId({ runtime, context, request }: AcceptOne
         setupIntentId: bookingRequest.paymentData.setupIntentId,
         destinationAccountId: payoutMethod.stripeAccountId,
     });
+
+    runtime.logger.info({ event: 'Immediately transferred booking request costs', bookingRequestId, success: paymentSuccess });
 
     if (!paymentSuccess) return false;
 
