@@ -126,6 +126,8 @@ export async function acceptOneByCookId({ runtime, context, request }: AcceptOne
 
     const daysUntilEvent: number = moment(bookingRequest.dateTime).diff(moment(), 'days');
 
+    runtime.logger.info({ event: 'Cook accepted booking request which takes place in x days.', daysUntilEvent, bookingRequestId });
+
     if (daysUntilEvent === 15) {
         const pullPaymentDate: Moment = moment(bookingRequest.dateTime).subtract(14, 'days');
 
