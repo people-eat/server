@@ -12,10 +12,12 @@ export function toBookingRequestStatus({ userAccepted, cookAccepted, dateTime }:
     const daysUntilEventStart: number = moment(dateTime).diff(moment(), 'days');
 
     if (cookAccepted === false || userAccepted === false) return 'CANCELED';
-    if ((cookAccepted === null && userAccepted === true) || (cookAccepted === true && userAccepted === null)) return 'OPEN';
+    if ((cookAccepted === null && userAccepted === true) || (cookAccepted === true && userAccepted === null)) {
+        if (daysUntilEventStart > 2) return 'OPEN';
+        return 'CANCELED';
+    }
     if (cookAccepted === true && userAccepted === true && daysUntilEventStart > 0) return 'PENDING';
     if (cookAccepted === true && userAccepted === true && daysUntilEventStart <= 0) return 'COMPLETED';
-    // consider the case expired
 
     return 'COMPLETED';
 }
