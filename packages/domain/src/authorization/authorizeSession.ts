@@ -42,7 +42,7 @@ export async function authorizeSession({
     const session: Session | undefined = await dataSourceAdapter.sessionRepository.findOne({ sessionId });
 
     if (!session) {
-        logger.debug(`Received request with session id ${sessionId} without according session`);
+        // logger.debug(`Received request with session id ${sessionId} without according session`);
 
         const createdSessionId: string | undefined = await createOneSession({ dataSourceAdapter, logger });
         if (!createdSessionId) {
@@ -60,7 +60,7 @@ export async function authorizeSession({
     }
 
     if (!session.expired && new Date(session.lastExtendedAt.getTime() + sessionLifeTime) > new Date()) {
-        logger.debug(`Received request with session id ${sessionId} with according session that is not expired`);
+        // logger.debug(`Received request with session id ${sessionId} with according session that is not expired`);
 
         const success: boolean = await extendOneSession({ dataSourceAdapter, logger, sessionId });
         if (!success) {
@@ -77,7 +77,7 @@ export async function authorizeSession({
         };
     }
 
-    logger.debug(`Received request with session id ${sessionId} with according session that is expired`);
+    // logger.debug(`Received request with session id ${sessionId} with according session that is expired`);
 
     const createdSessionId: string | undefined = await createOneSession({ dataSourceAdapter, logger });
     if (!createdSessionId) return;
