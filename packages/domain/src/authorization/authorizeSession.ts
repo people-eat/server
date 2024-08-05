@@ -30,7 +30,7 @@ export async function authorizeSession({
             return;
         }
 
-        logger.debug(`Created a session with session id ${createdSessionId} for request without session id`);
+        // logger.debug(`Created a session with session id ${createdSessionId} for request without session id`);
 
         return {
             expirationDate: new Date(Date.now() + sessionLifeTime),
@@ -50,7 +50,7 @@ export async function authorizeSession({
             return;
         }
 
-        logger.debug(`Created a session with session id ${createdSessionId} for request with invalid session id`);
+        // logger.debug(`Created a session with session id ${createdSessionId} for request with invalid session id`);
 
         return {
             expirationDate: new Date(Date.now() + sessionLifeTime),
@@ -68,7 +68,7 @@ export async function authorizeSession({
             return;
         }
 
-        logger.debug(`Extended session with session id ${sessionId}`);
+        // logger.debug(`Extended session with session id ${sessionId}`);
 
         return {
             expirationDate: new Date(Date.now() + sessionLifeTime),
