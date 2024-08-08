@@ -1333,6 +1333,18 @@ export type GQLGlobalBookingRequestQueryFindOneArgs = {
     globalBookingRequestId: Scalars['String'];
 };
 
+export type GQLHeroCookGroup = {
+    __typename?: 'HeroCookGroup';
+    cooks: Array<GQLPublicCook>;
+    displayName: Scalars['String'];
+};
+
+export type GQLHeroMenuGroup = {
+    __typename?: 'HeroMenuGroup';
+    displayName: Scalars['String'];
+    menus: Array<GQLPublicMenu>;
+};
+
 export type GQLIdentityProvider = 'APPLE' | 'GOOGLE';
 
 export type GQLKitchen = {
@@ -1638,7 +1650,7 @@ export type GQLPublicCook = {
 export type GQLPublicCookQuery = {
     __typename?: 'PublicCookQuery';
     checkAvailability: Scalars['Boolean'];
-    findHeroes: Array<GQLPublicCook>;
+    findHeroGroups: Array<GQLHeroCookGroup>;
     findMany: Array<GQLPublicCook>;
     findOne?: Maybe<GQLPublicCook>;
 };
@@ -1687,7 +1699,7 @@ export type GQLPublicMenuTotalPriceArgs = {
 export type GQLPublicMenuQuery = {
     __typename?: 'PublicMenuQuery';
     checkAvailability: Scalars['Boolean'];
-    findHeroes: Array<GQLPublicMenu>;
+    findHeroGroups: Array<GQLHeroMenuGroup>;
     findMany: Array<GQLPublicMenu>;
     findOne?: Maybe<GQLPublicMenu>;
 };
@@ -2719,6 +2731,8 @@ export type GQLResolversTypes = {
     GlobalBookingRequestPriceClass: ResolverTypeWrapper<GQLGlobalBookingRequestPriceClass>;
     GlobalBookingRequestPriceClassType: GQLGlobalBookingRequestPriceClassType;
     GlobalBookingRequestQuery: ResolverTypeWrapper<GQLGlobalBookingRequestQuery>;
+    HeroCookGroup: ResolverTypeWrapper<GQLHeroCookGroup>;
+    HeroMenuGroup: ResolverTypeWrapper<GQLHeroMenuGroup>;
     IdentityProvider: GQLIdentityProvider;
     Kitchen: ResolverTypeWrapper<GQLKitchen>;
     KitchenMutation: ResolverTypeWrapper<GQLKitchenMutation>;
@@ -2930,6 +2944,8 @@ export type GQLResolversParentTypes = {
     GlobalBookingRequest: GQLGlobalBookingRequest;
     GlobalBookingRequestPriceClass: GQLGlobalBookingRequestPriceClass;
     GlobalBookingRequestQuery: GQLGlobalBookingRequestQuery;
+    HeroCookGroup: GQLHeroCookGroup;
+    HeroMenuGroup: GQLHeroMenuGroup;
     Kitchen: GQLKitchen;
     KitchenMutation: GQLKitchenMutation;
     KitchenQuery: GQLKitchenQuery;
@@ -4196,6 +4212,24 @@ export type GQLGlobalBookingRequestQueryResolvers<
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type GQLHeroCookGroupResolvers<
+    ContextType = any,
+    ParentType extends GQLResolversParentTypes['HeroCookGroup'] = GQLResolversParentTypes['HeroCookGroup'],
+> = {
+    cooks?: Resolver<Array<GQLResolversTypes['PublicCook']>, ParentType, ContextType>;
+    displayName?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;
+    __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GQLHeroMenuGroupResolvers<
+    ContextType = any,
+    ParentType extends GQLResolversParentTypes['HeroMenuGroup'] = GQLResolversParentTypes['HeroMenuGroup'],
+> = {
+    displayName?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;
+    menus?: Resolver<Array<GQLResolversTypes['PublicMenu']>, ParentType, ContextType>;
+    __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type GQLKitchenResolvers<
     ContextType = any,
     ParentType extends GQLResolversParentTypes['Kitchen'] = GQLResolversParentTypes['Kitchen'],
@@ -4581,7 +4615,7 @@ export type GQLPublicCookQueryResolvers<
         ContextType,
         RequireFields<GQLPublicCookQueryCheckAvailabilityArgs, 'request'>
     >;
-    findHeroes?: Resolver<Array<GQLResolversTypes['PublicCook']>, ParentType, ContextType>;
+    findHeroGroups?: Resolver<Array<GQLResolversTypes['HeroCookGroup']>, ParentType, ContextType>;
     findMany?: Resolver<
         Array<GQLResolversTypes['PublicCook']>,
         ParentType,
@@ -4638,7 +4672,7 @@ export type GQLPublicMenuQueryResolvers<
         ContextType,
         RequireFields<GQLPublicMenuQueryCheckAvailabilityArgs, 'request'>
     >;
-    findHeroes?: Resolver<Array<GQLResolversTypes['PublicMenu']>, ParentType, ContextType>;
+    findHeroGroups?: Resolver<Array<GQLResolversTypes['HeroMenuGroup']>, ParentType, ContextType>;
     findMany?: Resolver<
         Array<GQLResolversTypes['PublicMenu']>,
         ParentType,
@@ -5729,6 +5763,8 @@ export type GQLResolvers<ContextType = any> = {
     GlobalBookingRequest?: GQLGlobalBookingRequestResolvers<ContextType>;
     GlobalBookingRequestPriceClass?: GQLGlobalBookingRequestPriceClassResolvers<ContextType>;
     GlobalBookingRequestQuery?: GQLGlobalBookingRequestQueryResolvers<ContextType>;
+    HeroCookGroup?: GQLHeroCookGroupResolvers<ContextType>;
+    HeroMenuGroup?: GQLHeroMenuGroupResolvers<ContextType>;
     Kitchen?: GQLKitchenResolvers<ContextType>;
     KitchenMutation?: GQLKitchenMutationResolvers<ContextType>;
     KitchenQuery?: GQLKitchenQueryResolvers<ContextType>;

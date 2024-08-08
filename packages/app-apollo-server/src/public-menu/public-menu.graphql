@@ -38,8 +38,13 @@ input FindManyPublicMenusRequest {
     categoryIds: [String!]
 }
 
+type HeroMenuGroup {
+    displayName: String!
+    menus: [PublicMenu!]!
+}
+
 type PublicMenuQuery {
-    findHeroes: [PublicMenu!]!
+    findHeroGroups: [HeroMenuGroup!]!
     findMany(request: FindManyPublicMenusRequest!): [PublicMenu!]!
     findOne(menuId: String!): PublicMenu
     checkAvailability(request: FindManyPublicMenusRequest!): Boolean!

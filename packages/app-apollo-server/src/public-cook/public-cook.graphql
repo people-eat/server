@@ -33,8 +33,13 @@ input FindManyPublicCooksRequest {
     categoryIds: [String!]
 }
 
+type HeroCookGroup {
+    displayName: String!
+    cooks: [PublicCook!]!
+}
+
 type PublicCookQuery {
-    findHeroes: [PublicCook!]!
+    findHeroGroups: [HeroCookGroup!]!
     findMany(request: FindManyPublicCooksRequest!): [PublicCook!]!
     findOne(cookId: String!): PublicCook
     checkAvailability(request: FindManyPublicCooksRequest!): Boolean!

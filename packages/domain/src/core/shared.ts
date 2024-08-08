@@ -34,3 +34,16 @@ export interface FindManyRequest {
     skip?: number;
     take?: number;
 }
+
+export interface HeroCity {
+    displayName: string;
+    location: Location;
+}
+
+export const heroCities: HeroCity[] = [
+    { displayName: 'Frankfurt', location: { latitude: 50.109958, longitude: 8.679098 } },
+    { displayName: 'Berlin', location: { latitude: 52.519553, longitude: 13.404773 } },
+    { displayName: 'München', location: { latitude: 48.134631, longitude: 11.582123 } },
+    { displayName: 'Köln', location: { latitude: 50.936986, longitude: 6.959128 } },
+    { displayName: 'Heidelberg', location: { latitude: 49.399671, longitude: 8.673215 } },
+];
