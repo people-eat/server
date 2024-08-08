@@ -58,7 +58,8 @@ async function bootstrap(): Promise<void> {
         stripeSecretKey: environmentVariables.payment.stripeSecretKey,
         stripeConnectedAccountOnboarding: {
             refreshUrl: 'http://localhost:4200/profile',
-            returnUrl: 'http://localhost:4200/profile?update-wallet-status',
+            returnToProfileUrl: 'http://localhost:4200/profile?update-wallet-status',
+            returnToBookingUrl: 'http://localhost:4200/profile/bookings/r/:bookingRequestId?update-wallet-status',
         },
     });
 

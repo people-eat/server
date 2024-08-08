@@ -171,9 +171,9 @@ export function createCookResolvers(service: Service): Resolvers<'Cook' | 'CookM
 
             getStripeOnboardingUrl: async (
                 _parent: GQLCookQuery,
-                { cookId }: GQLCookQueryGetStripeOnboardingUrlArgs,
+                { cookId, returnBookingId }: GQLCookQueryGetStripeOnboardingUrlArgs,
                 context: Authorization.Context,
-            ): Promise<string | undefined> => service.cook.getStripeOnboardingUrl(context, cookId) as any,
+            ): Promise<string | undefined> => service.cook.getStripeOnboardingUrl(context, cookId, returnBookingId) as any,
 
             getStripeDashboardUrl: async (
                 _parent: GQLCookQuery,

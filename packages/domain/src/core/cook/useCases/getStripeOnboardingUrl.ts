@@ -7,12 +7,12 @@ import { type CookPayoutMethod } from '../CookPayoutMethod';
 export interface GetStripeOnboardingUrlInput {
     runtime: Runtime;
     context: Authorization.Context;
-    request: { cookId: NanoId };
+    request: { cookId: NanoId; returnBookingId?: NanoId };
 }
 
 export async function getStripeOnboardingUrl({ runtime, context, request }: GetStripeOnboardingUrlInput): Promise<string | undefined> {
     const { dataSourceAdapter, paymentAdapter, logger } = runtime;
-    const { cookId } = request;
+    const { cookId, returnBookingId } = request;
 
     await Authorization.canQueryUserData({ context, dataSourceAdapter, logger, userId: cookId });
 
@@ -46,6 +46,7 @@ export async function getStripeOnboardingUrl({ runtime, context, request }: GetS
 
     const onboardingUrlResult: { url: string } | undefined = await paymentAdapter.STRIPE.createConnectedAccountOnboardingUrl({
         accountId: stripeAccountId,
+        returnBookingId,
     });
 
     if (!onboardingUrlResult) return;

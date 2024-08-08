@@ -756,6 +756,7 @@ export type GQLCookQueryGetStripeDashboardUrlArgs = {
 
 export type GQLCookQueryGetStripeOnboardingUrlArgs = {
     cookId: Scalars['String'];
+    returnBookingId?: InputMaybe<Scalars['String']>;
 };
 
 export type GQLCookQueryGlobalBookingRequestsArgs = {

@@ -6,7 +6,8 @@ export interface CreatePaymentAdapterInput {
     stripeSecretKey: string;
     stripeConnectedAccountOnboarding: {
         refreshUrl: string;
-        returnUrl: string;
+        returnToProfileUrl: string;
+        returnToBookingUrl: string;
     };
 }
 
@@ -118,12 +119,15 @@ export function createPaymentAdapter({
             },
             createConnectedAccountOnboardingUrl: async ({
                 accountId,
+                returnBookingId,
             }: PaymentProvider.CreateConnectedAccountOnboardingUrlInput): Promise<{ url: string } | undefined> => {
                 try {
                     const accountLink: Stripe.AccountLink = await client.accountLinks.create({
                         account: accountId,
                         refresh_url: stripeConnectedAccountOnboarding.refreshUrl,
-                        return_url: stripeConnectedAccountOnboarding.returnUrl,
+                        return_url: returnBookingId
+                            ? stripeConnectedAccountOnboarding.returnToBookingUrl.replace(':bookingRequestId', returnBookingId)
+                            : stripeConnectedAccountOnboarding.returnToProfileUrl,
                         type: 'account_onboarding',
                     });
 

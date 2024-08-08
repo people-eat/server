@@ -1,10 +1,10 @@
-import { type CurrencyCode, type PaymentProvider, type Price } from '../core/shared';
+import { type CurrencyCode, type NanoId, type PaymentProvider, type Price } from '../core/shared';
 
 export interface CreatePaymentIntentInputFromSetupIntentInput {
     currencyCode: CurrencyCode;
     pullAmount: number;
     payoutAmount: number;
-    userId: string;
+    userId: NanoId;
     setupIntentId: string;
     destinationAccountId: string;
 }
@@ -15,6 +15,7 @@ export interface CreateConnectedAccountInput {
 
 export interface CreateConnectedAccountOnboardingUrlInput {
     accountId: string;
+    returnBookingId?: NanoId;
 }
 
 export interface IsConnectedAccountEnabledInput {
