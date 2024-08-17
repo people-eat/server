@@ -7,6 +7,7 @@ import {
     type GQLGlobalBookingRequestQuery,
     type GQLGlobalBookingRequestQueryFindOneArgs,
     type GQLPublicUser,
+    type GQLUser,
     type GQLUserGlobalBookingRequestMutation,
     type GQLUserGlobalBookingRequestMutationCreateOneArgs,
     type GQLUserGlobalBookingRequestQuery,
@@ -25,8 +26,10 @@ export function createGlobalBookingRequestResolvers(
 > {
     return {
         GlobalBookingRequest: {
-            user: async ({ userId }: GQLGlobalBookingRequest, _: unknown, context: Authorization.Context): Promise<GQLPublicUser> =>
+            publicUser: async ({ userId }: GQLGlobalBookingRequest, _: unknown, context: Authorization.Context): Promise<GQLPublicUser> =>
                 service.publicUser.findOne(context, userId) as any,
+            user: async ({ userId }: GQLGlobalBookingRequest, _: unknown, context: Authorization.Context): Promise<GQLUser> =>
+                service.user.findOneByUserId(context, { userId }) as any,
             priceClass: ({ priceClassType }: GQLGlobalBookingRequest): GQLGlobalBookingRequestPriceClass => {
                 switch (priceClassType) {
                     case 'SIMPLE':

@@ -24,7 +24,8 @@ type GlobalBookingRequest {
     message: String!
     createdAt: DateTime!
 
-    user: PublicUser!
+    publicUser: PublicUser!
+    user: User!
     allergies: [Allergy!]!
     priceClass: GlobalBookingRequestPriceClass!
 }

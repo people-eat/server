@@ -1309,7 +1309,8 @@ export type GQLGlobalBookingRequest = {
     occasion: Scalars['String'];
     priceClass: GQLGlobalBookingRequestPriceClass;
     priceClassType: GQLGlobalBookingRequestPriceClassType;
-    user: GQLPublicUser;
+    publicUser: GQLPublicUser;
+    user: GQLUser;
     userId: Scalars['String'];
 };
 
@@ -4182,7 +4183,8 @@ export type GQLGlobalBookingRequestResolvers<
     occasion?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;
     priceClass?: Resolver<GQLResolversTypes['GlobalBookingRequestPriceClass'], ParentType, ContextType>;
     priceClassType?: Resolver<GQLResolversTypes['GlobalBookingRequestPriceClassType'], ParentType, ContextType>;
-    user?: Resolver<GQLResolversTypes['PublicUser'], ParentType, ContextType>;
+    publicUser?: Resolver<GQLResolversTypes['PublicUser'], ParentType, ContextType>;
+    user?: Resolver<GQLResolversTypes['User'], ParentType, ContextType>;
     userId?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
