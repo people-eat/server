@@ -17,7 +17,7 @@ export function toBookingRequestStatus({ userAccepted, cookAccepted, dateTime }:
         return 'CANCELED';
     }
     if (cookAccepted === true && userAccepted === true && daysUntilEventStart > 0) return 'PENDING';
-    if (cookAccepted === true && userAccepted === true && daysUntilEventStart <= 0) return 'COMPLETED';
+    if (cookAccepted === true && userAccepted === true && daysUntilEventStart < 0) return 'COMPLETED';
 
     return 'COMPLETED';
 }
