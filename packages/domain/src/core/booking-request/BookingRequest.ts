@@ -14,9 +14,9 @@ export interface BookingRequest {
     adultParticipants: number;
     children: number;
 
-    price: Price;
-    priceUser?: Price;
-    priceCook?: Price;
+    travelExpenses: Price;
+    totalPriceCustomer: Price;
+    totalPriceCook: Price;
 
     fee: number;
     occasion: string;
@@ -41,4 +41,6 @@ export interface BookingRequest {
         usedAmountPeopleEat: number;
         usedAmountStripe: number;
     };
+
+    // costBreakdown: BookingRequestCostBreakdown;
 }

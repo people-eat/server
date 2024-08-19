@@ -147,8 +147,10 @@ export type GQLBookingRequest = {
     message: Scalars['String'];
     occasion: Scalars['String'];
     preparationTime: Scalars['UInt'];
-    price: GQLPrice;
     status: GQLBookingRequestStatus;
+    totalPriceCook: GQLPrice;
+    totalPriceCustomer: GQLPrice;
+    travelExpenses: GQLPrice;
     user: GQLPublicUser;
     userAccepted?: Maybe<Scalars['Boolean']>;
     userId: Scalars['String'];
@@ -3186,8 +3188,10 @@ export type GQLBookingRequestResolvers<
     message?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;
     occasion?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;
     preparationTime?: Resolver<GQLResolversTypes['UInt'], ParentType, ContextType>;
-    price?: Resolver<GQLResolversTypes['Price'], ParentType, ContextType>;
     status?: Resolver<GQLResolversTypes['BookingRequestStatus'], ParentType, ContextType>;
+    totalPriceCook?: Resolver<GQLResolversTypes['Price'], ParentType, ContextType>;
+    totalPriceCustomer?: Resolver<GQLResolversTypes['Price'], ParentType, ContextType>;
+    travelExpenses?: Resolver<GQLResolversTypes['Price'], ParentType, ContextType>;
     user?: Resolver<GQLResolversTypes['PublicUser'], ParentType, ContextType>;
     userAccepted?: Resolver<Maybe<GQLResolversTypes['Boolean']>, ParentType, ContextType>;
     userId?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;

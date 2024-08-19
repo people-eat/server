@@ -12,11 +12,14 @@ type BookingRequest {
     duration: UInt!
     adultParticipants: UInt!
     children: UInt!
-    price: Price!
     occasion: String!
     message: String!
     kitchenId: String
     createdAt: DateTime!
+
+    totalPriceCustomer: Price!
+    totalPriceCook: Price!
+    travelExpenses: Price!
 
     user: PublicUser!
     cook: PublicCook!

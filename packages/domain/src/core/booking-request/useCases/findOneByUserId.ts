@@ -27,6 +27,8 @@ export async function findOneByUserId({ runtime, context, request }: FindOneBook
     return {
         ...packLocation(bookingRequest),
         status: toBookingRequestStatus(bookingRequest),
-        price: { amount: bookingRequest.totalAmountUser, currencyCode: bookingRequest.currencyCode },
+        travelExpenses: { amount: bookingRequest.travelExpensesAmount, currencyCode: bookingRequest.currencyCode },
+        totalPriceCustomer: { amount: bookingRequest.totalAmountUser, currencyCode: bookingRequest.currencyCode },
+        totalPriceCook: { amount: bookingRequest.totalAmountCook, currencyCode: bookingRequest.currencyCode },
     };
 }

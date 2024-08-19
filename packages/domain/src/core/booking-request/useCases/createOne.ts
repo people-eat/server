@@ -106,6 +106,15 @@ async function persistMenuBookingRequest(
         createdAt: new Date(),
         giftCardPromoCodeId,
         paymentData: { ...paymentData, provider: 'STRIPE', confirmed: false, unlocked: false },
+        travelExpensesAmount,
+        // costBreakdown: {
+        //     lineItems: [
+        //         { type: 'MENU_PRICE', title: 'Menüpreis', price: { amount: menuPrice, currencyCode: 'EUR' } },
+        //         { type: 'TRAVEL_EXPENSES', title: 'Reisekosten', price: { amount: travelExpensesAmount, currencyCode: 'EUR' } },
+        //     ],
+        //     totalPriceCook: { amount: totalAmountCook, currencyCode: 'EUR' },
+        //     totalPriceUser: { amount: totalAmountUser, currencyCode: 'EUR' },
+        // },
     });
 
     if (!success) return false;
@@ -204,6 +213,7 @@ export async function createOne({ runtime, context, request }: CreateOneBookingR
               children,
               totalAmountUser: request.price.amount + request.travelExpensesAmount,
               totalAmountCook: Math.round((request.price.amount * (100 - fee)) / 100) + request.travelExpensesAmount,
+              travelExpensesAmount: request.travelExpensesAmount,
               currencyCode: 'EUR',
               fee: 22,
               occasion: occasion.trim(),

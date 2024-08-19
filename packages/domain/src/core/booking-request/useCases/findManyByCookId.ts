@@ -29,13 +29,14 @@ export async function findManyByCookId({ runtime, context, request }: FindManyBo
             .map((bookingRequest: DBBookingRequest) => ({
                 ...bookingRequest,
                 status: toBookingRequestStatus(bookingRequest),
-                price: { amount: bookingRequest.totalAmountUser, currencyCode: bookingRequest.currencyCode },
+                travelExpenses: { amount: bookingRequest.travelExpensesAmount, currencyCode: bookingRequest.currencyCode },
+                totalPriceCustomer: { amount: bookingRequest.totalAmountUser, currencyCode: bookingRequest.currencyCode },
+                totalPriceCook: { amount: bookingRequest.totalAmountCook, currencyCode: bookingRequest.currencyCode },
             }))
             // context: global booking requests matched in the administration don't have a setupIntentId, yet we want them to be displayed to
             // the customers in their bookings, so it is okay that confirmed is not true yet
             .filter(
-                (bookingRequest: DBBookingRequest) =>
-                    bookingRequest.paymentData.confirmed || bookingRequest.paymentData.setupIntentId === '',
+                (bookingRequest: any) => bookingRequest.paymentData.confirmed || bookingRequest.paymentData.setupIntentId === '',
                 // bookingRequest.paymentData.confirmed,
             )
             .map(packLocation)

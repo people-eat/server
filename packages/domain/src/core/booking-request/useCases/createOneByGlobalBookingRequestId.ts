@@ -182,6 +182,8 @@ export async function createOneByGlobalBookingRequestId({ runtime, context, requ
         occasion,
         kitchenId,
         globalBookingRequestId,
+        // @todo
+        travelExpensesAmount: 0,
         createdAt: new Date(),
         paymentData: {
             provider: 'STRIPE',
@@ -190,6 +192,17 @@ export async function createOneByGlobalBookingRequestId({ runtime, context, requ
             confirmed: false,
             unlocked: false,
         },
+        // costBreakdown: {
+        //     lineItems: [],
+        //     totalPriceCook: {
+        //         amount: price?.amount ?? 0,
+        //         currencyCode: 'EUR',
+        //     },
+        //     totalPriceUser: {
+        //         amount: price?.amount ?? 0,
+        //         currencyCode: 'EUR',
+        //     },
+        // },
     });
 
     if (!success) return false;

@@ -56,6 +56,9 @@ export class BookingRequestEntity implements DataSource.DBBookingRequest {
     @Column('int', { unsigned: true })
     totalAmountCook!: number;
 
+    @Column('int', { unsigned: true })
+    travelExpensesAmount!: number;
+
     @Column('enum', {
         enum: ['EUR', 'USD'],
         enumName: 'CurrencyCode',
