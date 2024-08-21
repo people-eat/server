@@ -33,7 +33,9 @@ export function cookBookingRequestCookAcceptedNotification({
     cook,
     bookingRequest,
 }: cookBookingRequestCookAcceptedNotificationInput): string {
-    const customerProfileGlobalBookingRequestsUrl: string = webAppUrl + `/profile/bookings/r/${bookingRequest.bookingRequestId}`;
+    const customerProfileGlobalBookingRequestsUrl: string =
+        webAppUrl + `/profile/bookings/s/${bookingRequest.bookingRequestId}?tab=EVENT_DETAILS`;
+    const customerProfileGlobalBookingRequestsChatUrl: string = webAppUrl + `/profile/bookings/s/${bookingRequest.bookingRequestId}`;
 
     const formatPrice = (amount: number, currencyCode: string): string => Math.round(amount / 100).toFixed(2) + ' ' + currencyCode;
 
@@ -361,7 +363,13 @@ export function cookBookingRequestCookAcceptedNotification({
                                                                         <p style="margin: 0; margin-bottom: 16px;">Setzte dich direkt mit ${
                                                                             cook.firstName
                                                                         } in Verbindung und stimme die letzten Einzelheiten ab.</p>
-                                                                        <p style="margin: 0;"><span style="color: #ff6433;"><u><strong>Nachricht an Privatkoch:in senden</strong></u></span></p>
+                                                                        <p style="margin: 0;">
+                                                                            <span style="color: #ff6433;">
+                                                                                <a href="${customerProfileGlobalBookingRequestsChatUrl}">
+                                                                                    <strong>Nachricht an Privatkoch:in senden</strong>
+                                                                                </a>
+                                                                            </span>
+                                                                        </p>
                                                                     </div>
                                                                 </td>
                                                             </tr>
@@ -425,7 +433,6 @@ export function cookBookingRequestCookAcceptedNotification({
                                                                 <td class="pad" style="padding-bottom:10px;padding-left:30px;padding-right:10px;padding-top:10px;">
                                                                     <div style="color:#101112;direction:ltr;font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:180%;text-align:left;mso-line-height-alt:28.8px;">
                                                                         <p style="margin: 0; margin-bottom: 16px;">Dein gebuchter Privatkoch:in wird in der Regel mindestens eine Stunde vor Beginn des Ereignisses ankommen. Denke daran dem Privatkoch:in über die aktuellen Parkmöglichkeiten zu informieren. Stimme dich frühzeitig über die finale Uhrzeit ab, damit der Zugang zu deiner Küche gewährleistet werden kann. Vergewissere dich, dass das Grundlegende Küchenausstattung vorhanden ist.</p>
-                                                                        <p style="margin: 0;"><span style="color: #ff6433;"><u><strong>Informationen anzeigen</strong></u></span></p>
                                                                     </div>
                                                                 </td>
                                                             </tr>

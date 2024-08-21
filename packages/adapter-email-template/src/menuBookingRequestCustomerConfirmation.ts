@@ -48,7 +48,7 @@ export function menuBookingRequestCustomerConfirmation({
     bookingRequest,
     chatMessage,
 }: MenuBookingRequestCustomerConfirmationInput): string {
-    const customerProfileGlobalBookingRequestsUrl: string = webAppUrl + `/profile/bookings/${bookingRequest.bookingRequestId}`;
+    const customerProfileGlobalBookingRequestsUrl: string = webAppUrl + `/profile/bookings/s/${bookingRequest.bookingRequestId}`;
 
     const formatPrice = (amount: number, currencyCode: string): string => Math.round(amount / 100).toFixed(2) + ' ' + currencyCode;
 

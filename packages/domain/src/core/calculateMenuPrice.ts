@@ -4,11 +4,12 @@ export function calculateMenuPrice(
     basePrice: number,
     basePriceCustomers: number,
     pricePerAdult: number,
-    pricePerUnderaged?: number,
+    pricePerUnderaged?: number | null,
 ): number {
     if (adultParticipants + underagedParticipants <= basePriceCustomers) return basePrice;
 
-    if (!pricePerUnderaged) return basePrice + (adultParticipants + underagedParticipants - basePriceCustomers) * pricePerAdult;
+    if (pricePerUnderaged === undefined || pricePerUnderaged === null)
+        return basePrice + (adultParticipants + underagedParticipants - basePriceCustomers) * pricePerAdult;
 
     if (adultParticipants - basePriceCustomers >= 0)
         return basePrice + (adultParticipants - basePriceCustomers) * pricePerAdult + underagedParticipants * pricePerUnderaged;
