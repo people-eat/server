@@ -1,4 +1,5 @@
-import { Authorization, type DataSource } from '../../..';
+import { Authorization } from '../../..';
+import { type DBGlobalBookingRequest } from '../../../data-source';
 import packLocation from '../../packLocation';
 import { type Runtime } from '../../Runtime';
 import { type FindManyRequest } from '../../shared';
@@ -16,10 +17,11 @@ export async function findMany({
 }: FindManyGlobalBookingRequestInput): Promise<GlobalBookingRequest[] | undefined> {
     await Authorization.isAdmin({ context, dataSourceAdapter, logger });
 
-    const globalBookingRequests: DataSource.DBGlobalBookingRequest[] | undefined =
-        await dataSourceAdapter.globalBookingRequestRepository.findMany({});
+    const globalBookingRequests: DBGlobalBookingRequest[] | undefined = await dataSourceAdapter.globalBookingRequestRepository.findMany({});
 
     if (!globalBookingRequests) return;
+
+    globalBookingRequests.sort((a: DBGlobalBookingRequest, b: DBGlobalBookingRequest) => b.createdAt.getTime() - a.createdAt.getTime());
 
     return globalBookingRequests.map(packLocation);
 }

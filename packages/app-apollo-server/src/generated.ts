@@ -133,7 +133,7 @@ export type GQLBookingRequest = {
     bookingRequestId: Scalars['String'];
     children: Scalars['UInt'];
     configuredMenu?: Maybe<GQLConfiguredMenu>;
-    cook: GQLPublicCook;
+    cook: GQLCook;
     cookAccepted?: Maybe<Scalars['Boolean']>;
     cookId: Scalars['String'];
     createdAt: Scalars['DateTime'];
@@ -147,11 +147,13 @@ export type GQLBookingRequest = {
     message: Scalars['String'];
     occasion: Scalars['String'];
     preparationTime: Scalars['UInt'];
+    publicCook: GQLPublicCook;
+    publicUser: GQLPublicUser;
     status: GQLBookingRequestStatus;
     totalPriceCook: GQLPrice;
     totalPriceCustomer: GQLPrice;
     travelExpenses: GQLPrice;
-    user: GQLPublicUser;
+    user: GQLUser;
     userAccepted?: Maybe<Scalars['Boolean']>;
     userId: Scalars['String'];
 };
@@ -3174,7 +3176,7 @@ export type GQLBookingRequestResolvers<
     bookingRequestId?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;
     children?: Resolver<GQLResolversTypes['UInt'], ParentType, ContextType>;
     configuredMenu?: Resolver<Maybe<GQLResolversTypes['ConfiguredMenu']>, ParentType, ContextType>;
-    cook?: Resolver<GQLResolversTypes['PublicCook'], ParentType, ContextType>;
+    cook?: Resolver<GQLResolversTypes['Cook'], ParentType, ContextType>;
     cookAccepted?: Resolver<Maybe<GQLResolversTypes['Boolean']>, ParentType, ContextType>;
     cookId?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;
     createdAt?: Resolver<GQLResolversTypes['DateTime'], ParentType, ContextType>;
@@ -3188,11 +3190,13 @@ export type GQLBookingRequestResolvers<
     message?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;
     occasion?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;
     preparationTime?: Resolver<GQLResolversTypes['UInt'], ParentType, ContextType>;
+    publicCook?: Resolver<GQLResolversTypes['PublicCook'], ParentType, ContextType>;
+    publicUser?: Resolver<GQLResolversTypes['PublicUser'], ParentType, ContextType>;
     status?: Resolver<GQLResolversTypes['BookingRequestStatus'], ParentType, ContextType>;
     totalPriceCook?: Resolver<GQLResolversTypes['Price'], ParentType, ContextType>;
     totalPriceCustomer?: Resolver<GQLResolversTypes['Price'], ParentType, ContextType>;
     travelExpenses?: Resolver<GQLResolversTypes['Price'], ParentType, ContextType>;
-    user?: Resolver<GQLResolversTypes['PublicUser'], ParentType, ContextType>;
+    user?: Resolver<GQLResolversTypes['User'], ParentType, ContextType>;
     userAccepted?: Resolver<Maybe<GQLResolversTypes['Boolean']>, ParentType, ContextType>;
     userId?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

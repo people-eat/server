@@ -21,8 +21,12 @@ type BookingRequest {
     totalPriceCook: Price!
     travelExpenses: Price!
 
-    user: PublicUser!
-    cook: PublicCook!
+    publicUser: PublicUser!
+    publicCook: PublicCook!
+
+    user: User!
+    cook: Cook!
+
     allergies: [Allergy!]!
 
     configuredMenu: ConfiguredMenu
