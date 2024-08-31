@@ -63,9 +63,6 @@
         "pnpm": "please-use-npm"
     },
     "optionalDependencies": {
-        "@nrwl/nx-darwin-arm64": "18.0.4",
-        "@nrwl/nx-darwin-x64": "18.0.4",
-        "@nrwl/nx-linux-x64-gnu": "18.0.4",
-        "@nrwl/nx-win32-x64-msvc": "18.0.4"
+        "fsevents": "*"
     }
 }
