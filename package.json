@@ -61,8 +61,5 @@
         "node": "^22.6.0",
         "yarn": "please-use-npm",
         "pnpm": "please-use-npm"
-    },
-    "optionalDependencies": {
-        "fsevents": "*"
     }
 }
