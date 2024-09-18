@@ -10,7 +10,7 @@
     "license": "UNLICENSED",
     "private": true,
     "scripts": {
-        "generate:graphql": "yarn workspace @people-eat/server-app-apollo-server generate:graphql",
+        "generate:graphql": "npm run generate:graphql --workspace=@people-eat/server-app-apollo-server",
         "build:host-integration": "nx build host-integration",
         "build:host-local": "nx build host-local",
         "build:host-mock": "nx build host-mock",
@@ -20,7 +20,7 @@
         "lint": "eslint . --ext js,cjs,mjs,ts,cts,mts --fix",
         "lint:check": "eslint . --ext js,cjs,mjs,ts,cts,mts",
         "spell:check": "cspell . --no-progress",
-        "verify": "nx run-many -t test && nx run-many -t build && yarn format:check && yarn lint:check && yarn spell:check"
+        "verify": "nx run-many -t test && nx run-many -t build && npm run format:check && npm run lint:check && npm run spell:check"
     },
     "dependencies": {
         "moment": "^2.29.4",
