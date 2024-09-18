@@ -111,7 +111,7 @@ export async function createOne({ runtime, context, request }: CreateOneGlobalBo
             'Bestätigung Deiner Buchungsanfrage',
             globalBookingRequestCustomerConfirmation({
                 webAppUrl,
-                customer: { firstName: user.firstName, profilePictureUrl: user.profilePictureUrl },
+                customer: { firstName: user.firstName },
                 globalBookingRequest: {
                     globalBookingRequestId,
                     occasion,
