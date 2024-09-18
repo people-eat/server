@@ -3,7 +3,6 @@ export interface GlobalBookingRequestCustomerConfirmationInput {
 
     customer: {
         firstName: string;
-        profilePictureUrl?: string;
     };
 
     globalBookingRequest: {

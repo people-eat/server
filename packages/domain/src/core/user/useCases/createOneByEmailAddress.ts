@@ -4,7 +4,7 @@ import { createWriteStream } from 'fs';
 import moment from 'moment';
 import { join } from 'path';
 import { type Authorization } from '../../..';
-import { type DBAllergy, type DBCategory, type DBKitchen } from '../../../data-source';
+import { type DBAllergy, type DBCategory, type DBEmailAddressUpdate, type DBKitchen, type DBUser } from '../../../data-source';
 import { createNanoId } from '../../../utils/createNanoId';
 import { createOne as createOneAddress } from '../../address/useCases/createOne';
 import { createOne as createOneCook } from '../../cook/useCases/createOne';
@@ -43,89 +43,108 @@ export async function createOneByEmailAddress({ runtime, context, request }: Cre
         return false;
     }
 
-    let profilePictureUrl: string | undefined;
+    let userId: NanoId = createNanoId();
 
-    if (profilePicture) {
-        // store different sizes right away
-        const profilePictureId: NanoId = createNanoId();
-        profilePictureUrl = serverUrl + '/profile-pictures/' + profilePictureId;
-        await new Promise<boolean>((resolve: (success: boolean) => void, reject: (success: boolean) => void) =>
-            profilePicture
-                .pipe(createWriteStream(join(process.cwd(), `images/profile-pictures/original/${profilePictureId}.png`)))
-                .on('finish', () => resolve(true))
-                .on('error', () => reject(false)),
-        );
-    }
-
-    const userId: NanoId = createNanoId();
-
-    const success: boolean = await dataSourceAdapter.userRepository.insertOne({
-        userId,
-        isLocked: false,
-        emailAddress: undefined,
-        phoneNumber: undefined,
-        password: password ? bcrypt.hashSync(password, bcrypt.genSaltSync()) : undefined,
-        failedSignInAttempts: 0,
-        firstName: firstName.trim(),
-        lastName: lastName.trim(),
-        language,
-        gender,
-        birthDate,
-        profilePictureUrl,
-        acceptedPrivacyPolicy: new Date(),
-        acceptedTerms: new Date(),
-        createdAt: new Date(),
+    const existingUserByEmailAddress: DBUser | undefined = await dataSourceAdapter.userRepository.findOne({ emailAddress });
+    const existingUserByPhoneNumber: DBUser | undefined = await dataSourceAdapter.userRepository.findOne({ phoneNumber });
+    const existingEmailAddressUpdate: DBEmailAddressUpdate | undefined = await dataSourceAdapter.emailAddressUpdateRepository.findOne({
+        emailAddress,
+    });
+    const existingPhoneNumberUpdate: DBEmailAddressUpdate | undefined = await dataSourceAdapter.emailAddressUpdateRepository.findOne({
+        emailAddress,
     });
 
-    if (!success) {
-        logger.warn('Persisting user did fail');
-        return false;
-    }
+    if (!existingUserByEmailAddress && !existingUserByPhoneNumber && !existingEmailAddressUpdate && !existingPhoneNumberUpdate) {
+        let profilePictureUrl: string | undefined;
 
-    // const { sessionId } = context;
+        if (profilePicture) {
+            // store different sizes right away
+            const profilePictureId: NanoId = createNanoId();
+            profilePictureUrl = serverUrl + '/profile-pictures/' + profilePictureId;
+            await new Promise<boolean>((resolve: (success: boolean) => void, reject: (success: boolean) => void) =>
+                profilePicture
+                    .pipe(createWriteStream(join(process.cwd(), `images/profile-pictures/original/${profilePictureId}.png`)))
+                    .on('finish', () => resolve(true))
+                    .on('error', () => reject(false)),
+            );
+        }
 
-    // await dataSourceAdapter.sessionRepository.updateOne({ sessionId }, { userId });
-
-    // maybe only use this line to get rif of all the userCreation flags. Will be unset after request is handled
-    context.userId = userId;
-
-    if (emailAddress) {
-        const emailSuccess: boolean = await createOneEmailAddressUpdate({
-            dataSourceAdapter,
-            emailAdapter,
-            logger,
-            webAppUrl,
-            context,
-            request: { userId, emailAddress: emailAddress.trim() },
+        const success: boolean = await dataSourceAdapter.userRepository.insertOne({
+            userId,
+            isLocked: false,
+            emailAddress: undefined,
+            phoneNumber: undefined,
+            password: password ? bcrypt.hashSync(password, bcrypt.genSaltSync()) : undefined,
+            failedSignInAttempts: 0,
+            firstName: firstName.trim(),
+            lastName: lastName.trim(),
+            language,
+            gender,
+            birthDate,
+            profilePictureUrl,
+            acceptedPrivacyPolicy: new Date(),
+            acceptedTerms: new Date(),
+            createdAt: new Date(),
         });
 
-        await emailAdapter.sendToOne('PeopleEat', emailAddress, 'Herzlich Willkommen', welcome({ webAppUrl }));
-
-        if (!emailSuccess) {
-            logger.error('Could not create email address update');
+        if (!success) {
+            logger.warn('Persisting user did fail');
             return false;
         }
-    }
 
-    if (phoneNumber) {
-        const smsSuccess: boolean = await createOnePhoneNumberUpdate({
-            dataSourceAdapter,
-            smsAdapter,
-            logger,
-            webAppUrl,
-            context,
-            request: { userId, phoneNumber: phoneNumber.trim() },
-        });
+        // const { sessionId } = context;
 
-        if (!smsSuccess) {
-            logger.error('Could not create phone number update');
-            return false;
+        // await dataSourceAdapter.sessionRepository.updateOne({ sessionId }, { userId });
+
+        // maybe only use this line to get rif of all the userCreation flags. Will be unset after request is handled
+        context.userId = userId;
+
+        if (emailAddress) {
+            const emailSuccess: boolean = await createOneEmailAddressUpdate({
+                dataSourceAdapter,
+                emailAdapter,
+                logger,
+                webAppUrl,
+                context,
+                request: { userId, emailAddress: emailAddress.trim() },
+            });
+
+            await emailAdapter.sendToOne('PeopleEat', emailAddress, 'Herzlich Willkommen', welcome({ webAppUrl }));
+
+            if (!emailSuccess) {
+                logger.error('Could not create email address update');
+                return false;
+            }
         }
+
+        if (phoneNumber) {
+            const smsSuccess: boolean = await createOnePhoneNumberUpdate({
+                dataSourceAdapter,
+                smsAdapter,
+                logger,
+                webAppUrl,
+                context,
+                request: { userId, phoneNumber: phoneNumber.trim() },
+            });
+
+            if (!smsSuccess) {
+                logger.error('Could not create phone number update');
+                return false;
+            }
+        }
+
+        if (addresses) for (const address of addresses) await createOneAddress({ runtime, context, request: { userId, ...address } });
+
+        if (cook) await createOneCook({ runtime, context, request: { cookId: userId, ...cook } });
+    } else {
+        logger.info('Created global booking request for existing user');
+        userId =
+            existingUserByEmailAddress?.userId ??
+            existingUserByPhoneNumber?.userId ??
+            existingEmailAddressUpdate?.userId ??
+            existingPhoneNumberUpdate?.userId ??
+            '';
     }
-
-    if (addresses) for (const address of addresses) await createOneAddress({ runtime, context, request: { userId, ...address } });
-
-    if (cook) await createOneCook({ runtime, context, request: { cookId: userId, ...cook } });
 
     if (globalBookingRequest) {
         const globalBookingRequestId: NanoId = createNanoId();
@@ -187,7 +206,7 @@ export async function createOneByEmailAddress({ runtime, context, request }: Cre
                 'Bestätigung Deiner Buchungsanfrage',
                 globalBookingRequestCustomerConfirmation({
                     webAppUrl,
-                    customer: { firstName, profilePictureUrl },
+                    customer: { firstName },
                     globalBookingRequest: {
                         globalBookingRequestId,
                         occasion: globalBookingRequest.occasion,
