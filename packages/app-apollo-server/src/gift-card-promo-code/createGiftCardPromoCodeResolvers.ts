@@ -3,6 +3,7 @@ import {
     type GQLAdminGiftCardPromoCodeMutation,
     type GQLAdminGiftCardPromoCodeMutationCreateOneArgs,
     type GQLAdminGiftCardPromoCodeMutationDeleteOneArgs,
+    type GQLAdminGiftCardPromoCodeMutationUpdateOneArgs,
     type GQLAdminGiftCardPromoCodeQuery,
     type GQLCouponCode,
     type GQLCouponCodeQueryFindOneArgs,
@@ -25,6 +26,11 @@ export function createGiftCardPromoCodeResolvers(
                 { giftCardPromoCodeId }: GQLAdminGiftCardPromoCodeMutationDeleteOneArgs,
                 context: Authorization.Context,
             ): Promise<boolean> => service.giftCardPromoCode.deleteOne(context, { giftCardPromoCodeId }),
+            updateOne: async (
+                _parent: GQLAdminGiftCardPromoCodeMutation,
+                { giftCardPromoCodeId, giftCardPromoCode }: GQLAdminGiftCardPromoCodeMutationUpdateOneArgs,
+                context: Authorization.Context,
+            ): Promise<boolean> => service.giftCardPromoCode.updateOne(context, { giftCardPromoCodeId, ...giftCardPromoCode }),
         },
         AdminGiftCardPromoCodeQuery: {
             findMany: async (

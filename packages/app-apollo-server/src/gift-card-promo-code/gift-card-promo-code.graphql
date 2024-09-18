@@ -31,6 +31,7 @@ input CreateOneGiftCardPromoCodeRequest {
 type AdminGiftCardPromoCodeMutation {
     createOne(giftCardPromoCode: CreateOneGiftCardPromoCodeRequest!): Boolean!
     deleteOne(giftCardPromoCodeId: String!): Boolean!
+    updateOne(giftCardPromoCodeId: String!, giftCardPromoCode: CreateOneGiftCardPromoCodeRequest!): Boolean!
 }
 
 type AdminMutation {

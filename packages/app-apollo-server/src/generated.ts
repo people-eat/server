@@ -49,6 +49,7 @@ export type GQLAdminGiftCardPromoCodeMutation = {
     __typename?: 'AdminGiftCardPromoCodeMutation';
     createOne: Scalars['Boolean'];
     deleteOne: Scalars['Boolean'];
+    updateOne: Scalars['Boolean'];
 };
 
 export type GQLAdminGiftCardPromoCodeMutationCreateOneArgs = {
@@ -56,6 +57,11 @@ export type GQLAdminGiftCardPromoCodeMutationCreateOneArgs = {
 };
 
 export type GQLAdminGiftCardPromoCodeMutationDeleteOneArgs = {
+    giftCardPromoCodeId: Scalars['String'];
+};
+
+export type GQLAdminGiftCardPromoCodeMutationUpdateOneArgs = {
+    giftCardPromoCode: GQLCreateOneGiftCardPromoCodeRequest;
     giftCardPromoCodeId: Scalars['String'];
 };
 
@@ -3083,6 +3089,12 @@ export type GQLAdminGiftCardPromoCodeMutationResolvers<
         ParentType,
         ContextType,
         RequireFields<GQLAdminGiftCardPromoCodeMutationDeleteOneArgs, 'giftCardPromoCodeId'>
+    >;
+    updateOne?: Resolver<
+        GQLResolversTypes['Boolean'],
+        ParentType,
+        ContextType,
+        RequireFields<GQLAdminGiftCardPromoCodeMutationUpdateOneArgs, 'giftCardPromoCode' | 'giftCardPromoCodeId'>
     >;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

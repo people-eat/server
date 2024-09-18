@@ -3,16 +3,19 @@ import { type Runtime } from '../Runtime';
 import { type FindManyRequest, type NanoId } from '../shared';
 import { type CreateOneGiftCardPromoCodeRequest } from './CreateOneGiftCardPromoCodeRequest';
 import { type GiftCardPromoCode } from './GiftCardPromoCode';
+import { type UpdateOneGiftCardPromoCodeRequest } from './UpdateOneGiftCardPromoCodeRequest';
 import { createOne } from './useCases/createOne';
 import { deleteOne } from './useCases/deleteOne';
 import { findMany } from './useCases/findMany';
 import { findOne } from './useCases/findOne';
+import { updateOne } from './useCases/updateOne';
 
 export interface GiftCardPromoCodeService {
     findOne(context: Authorization.Context, request: { giftCardPromoCodeId: NanoId }): Promise<GiftCardPromoCode | undefined>;
     findMany(context: Authorization.Context, request: FindManyRequest): Promise<GiftCardPromoCode[] | undefined>;
     createOne(context: Authorization.Context, request: CreateOneGiftCardPromoCodeRequest): Promise<boolean>;
     deleteOne(context: Authorization.Context, request: { giftCardPromoCodeId: NanoId }): Promise<boolean>;
+    updateOne(context: Authorization.Context, request: UpdateOneGiftCardPromoCodeRequest): Promise<boolean>;
 }
 
 export function createGiftCardPromoCodeService(runtime: Runtime): GiftCardPromoCodeService {
@@ -21,5 +24,6 @@ export function createGiftCardPromoCodeService(runtime: Runtime): GiftCardPromoC
         findMany: (context: Authorization.Context, request: FindManyRequest) => findMany({ runtime, context, request }),
         createOne: (context: Authorization.Context, request: CreateOneGiftCardPromoCodeRequest) => createOne({ runtime, context, request }),
         deleteOne: (context: Authorization.Context, request: { giftCardPromoCodeId: NanoId }) => deleteOne({ runtime, context, request }),
+        updateOne: (context: Authorization.Context, request: UpdateOneGiftCardPromoCodeRequest) => updateOne({ runtime, context, request }),
     };
 }
