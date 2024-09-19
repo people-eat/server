@@ -16,5 +16,8 @@ export async function findMany({ runtime: { dataSourceAdapter, logger }, context
 
     if (!users) return;
 
-    return users;
+    return users.map((user: DataSource.DBUser) => ({
+        ...user,
+        hasPasswordSetUp: Boolean(user.password),
+    }));
 }

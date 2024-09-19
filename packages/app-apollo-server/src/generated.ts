@@ -1984,6 +1984,7 @@ export type GQLUser = {
     followingCount: Scalars['UInt'];
     followings: Array<GQLFollowing>;
     gender: GQLGender;
+    hasPasswordSetUp: Scalars['Boolean'];
     isAdmin: Scalars['Boolean'];
     isCook: Scalars['Boolean'];
     isLocked: Scalars['Boolean'];
@@ -5033,6 +5034,7 @@ export type GQLUserResolvers<ContextType = any, ParentType extends GQLResolversP
     followingCount?: Resolver<GQLResolversTypes['UInt'], ParentType, ContextType>;
     followings?: Resolver<Array<GQLResolversTypes['Following']>, ParentType, ContextType>;
     gender?: Resolver<GQLResolversTypes['Gender'], ParentType, ContextType>;
+    hasPasswordSetUp?: Resolver<GQLResolversTypes['Boolean'], ParentType, ContextType>;
     isAdmin?: Resolver<GQLResolversTypes['Boolean'], ParentType, ContextType>;
     isCook?: Resolver<GQLResolversTypes['Boolean'], ParentType, ContextType>;
     isLocked?: Resolver<GQLResolversTypes['Boolean'], ParentType, ContextType>;

@@ -23,5 +23,8 @@ export async function findOneByUserId({
 
     if (!user) return undefined;
 
-    return user;
+    return {
+        ...user,
+        hasPasswordSetUp: Boolean(user.password),
+    };
 }

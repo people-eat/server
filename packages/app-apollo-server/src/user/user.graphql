@@ -1,6 +1,7 @@
 type User {
     userId: String!
     isLocked: Boolean!
+    hasPasswordSetUp: Boolean!
     emailAddress: EmailAddress
     phoneNumber: PhoneNumber
     firstName: String!
