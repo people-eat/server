@@ -1,29 +1,28 @@
-import { type Authorization, type DataSource, type Logger } from '../../..';
+import { type Authorization } from '../../..';
 import { type DBEmailAddressUpdate } from '../../../data-source';
+import { type Runtime } from '../../Runtime';
 import { type NanoId } from '../../shared';
 
 interface CreateOneEmailAddressUpdateInput {
-    dataSourceAdapter: DataSource.Adapter;
-    logger: Logger.Adapter;
+    runtime: Runtime;
     context: Authorization.Context & { userCreation?: boolean };
     request: { secret: NanoId };
 }
 
 export async function confirmOne({
-    dataSourceAdapter,
-    logger,
+    runtime: { dataSourceAdapter, logger },
     context,
     request: { secret },
-}: CreateOneEmailAddressUpdateInput): Promise<boolean> {
+}: CreateOneEmailAddressUpdateInput): Promise<{ success: boolean }> {
     const emailAddressUpdate: DBEmailAddressUpdate | undefined = await dataSourceAdapter.emailAddressUpdateRepository.findOne({ secret });
 
-    if (!emailAddressUpdate) return false;
+    if (!emailAddressUpdate) return { success: false };
 
     const { userId, emailAddress } = emailAddressUpdate;
 
     const userUpdateSuccess: boolean = await dataSourceAdapter.userRepository.updateOne({ userId }, { emailAddress });
 
-    if (!userUpdateSuccess) return false;
+    if (!userUpdateSuccess) return { success: false };
 
     const deletionSuccess: boolean = await dataSourceAdapter.emailAddressUpdateRepository.deleteOne({ secret });
 
@@ -31,7 +30,10 @@ export async function confirmOne({
 
     const { sessionId } = context;
 
+    // required for further resolving of fields like the user in the success result
+    context.userId = userId;
+
     await dataSourceAdapter.sessionRepository.updateOne({ sessionId }, { userId });
 
-    return true;
+    return { success: true };
 }

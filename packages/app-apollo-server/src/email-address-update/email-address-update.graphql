@@ -13,11 +13,24 @@ type UserQuery {
     emailAddressUpdate(userId: String!): UserEmailAddressUpdateQuery!
 }
 
+type UserEmailAddressUpdateMutationConfirmationSuccessResult {
+    success: Boolean!
+    user: User!
+}
+
+type UserEmailAddressUpdateMutationConfirmationFailedResult {
+    success: Boolean!
+}
+
+union UserEmailAddressUpdateMutationConfirmationResult =
+      UserEmailAddressUpdateMutationConfirmationSuccessResult
+    | UserEmailAddressUpdateMutationConfirmationFailedResult
+
 type UserEmailAddressUpdateMutation {
     userId: String!
     createOne(emailAddress: EmailAddress!): Boolean!
     deleteOne: Boolean!
-    confirm(secret: String!): Boolean!
+    confirm(secret: String!): UserEmailAddressUpdateMutationConfirmationResult!
 }
 
 type UserMutation {

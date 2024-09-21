@@ -1,17 +1,16 @@
-import { Authorization, type DataSource, type Logger } from '../../..';
+import { Authorization } from '../../..';
+import { type Runtime } from '../../Runtime';
 import { type NanoId } from '../../shared';
 import { type EmailAddressUpdate } from '../EmailAddressUpdate';
 
 export interface FindManyEmailAddressUpdatesInput {
-    dataSourceAdapter: DataSource.Adapter;
-    logger: Logger.Adapter;
+    runtime: Runtime;
     context: Authorization.Context;
     request: { userId: NanoId };
 }
 
 export async function findOneByUserId({
-    dataSourceAdapter,
-    logger,
+    runtime: { dataSourceAdapter, logger },
     context,
     request,
 }: FindManyEmailAddressUpdatesInput): Promise<EmailAddressUpdate | undefined> {

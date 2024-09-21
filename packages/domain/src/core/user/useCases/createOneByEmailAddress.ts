@@ -101,10 +101,7 @@ export async function createOneByEmailAddress({ runtime, context, request }: Cre
 
         if (emailAddress) {
             const emailSuccess: boolean = await createOneEmailAddressUpdate({
-                dataSourceAdapter,
-                emailAdapter,
-                logger,
-                webAppUrl,
+                runtime,
                 context,
                 request: { userId, emailAddress: emailAddress.trim() },
             });

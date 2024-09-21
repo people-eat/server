@@ -2134,7 +2134,7 @@ export type GQLUserCreateOneBookingRequestResponse = {
 
 export type GQLUserEmailAddressUpdateMutation = {
     __typename?: 'UserEmailAddressUpdateMutation';
-    confirm: Scalars['Boolean'];
+    confirm: GQLUserEmailAddressUpdateMutationConfirmationResult;
     createOne: Scalars['Boolean'];
     deleteOne: Scalars['Boolean'];
     userId: Scalars['String'];
@@ -2146,6 +2146,21 @@ export type GQLUserEmailAddressUpdateMutationConfirmArgs = {
 
 export type GQLUserEmailAddressUpdateMutationCreateOneArgs = {
     emailAddress: Scalars['EmailAddress'];
+};
+
+export type GQLUserEmailAddressUpdateMutationConfirmationFailedResult = {
+    __typename?: 'UserEmailAddressUpdateMutationConfirmationFailedResult';
+    success: Scalars['Boolean'];
+};
+
+export type GQLUserEmailAddressUpdateMutationConfirmationResult =
+    | GQLUserEmailAddressUpdateMutationConfirmationFailedResult
+    | GQLUserEmailAddressUpdateMutationConfirmationSuccessResult;
+
+export type GQLUserEmailAddressUpdateMutationConfirmationSuccessResult = {
+    __typename?: 'UserEmailAddressUpdateMutationConfirmationSuccessResult';
+    success: Scalars['Boolean'];
+    user: GQLUser;
 };
 
 export type GQLUserEmailAddressUpdateQuery = {
@@ -2616,6 +2631,9 @@ export type GQLResolversUnionTypes = {
     CouponCode: GQLGiftCard | GQLGiftCardPromoCode;
     CreateOneGiftCardResponse: GQLCreateOneGiftCardFailedResponse | GQLCreateOneGiftCardSuccessResponse;
     DeleteMealResult: GQLDeleteMealErrorResult | GQLDeleteMealRequiredForMenuResult | GQLDeleteMealSuccessResult;
+    UserEmailAddressUpdateMutationConfirmationResult:
+        | GQLUserEmailAddressUpdateMutationConfirmationFailedResult
+        | GQLUserEmailAddressUpdateMutationConfirmationSuccessResult;
 };
 
 /** Mapping of union parent types */
@@ -2623,6 +2641,9 @@ export type GQLResolversUnionParentTypes = {
     CouponCode: GQLGiftCard | GQLGiftCardPromoCode;
     CreateOneGiftCardResponse: GQLCreateOneGiftCardFailedResponse | GQLCreateOneGiftCardSuccessResponse;
     DeleteMealResult: GQLDeleteMealErrorResult | GQLDeleteMealRequiredForMenuResult | GQLDeleteMealSuccessResult;
+    UserEmailAddressUpdateMutationConfirmationResult:
+        | GQLUserEmailAddressUpdateMutationConfirmationFailedResult
+        | GQLUserEmailAddressUpdateMutationConfirmationSuccessResult;
 };
 
 /** Mapping between all available schema types and the resolvers types */
@@ -2824,7 +2845,16 @@ export type GQLResolversTypes = {
     UserCookRatingQuery: ResolverTypeWrapper<GQLUserCookRatingQuery>;
     UserCookVisitQuery: ResolverTypeWrapper<GQLUserCookVisitQuery>;
     UserCreateOneBookingRequestResponse: ResolverTypeWrapper<GQLUserCreateOneBookingRequestResponse>;
-    UserEmailAddressUpdateMutation: ResolverTypeWrapper<GQLUserEmailAddressUpdateMutation>;
+    UserEmailAddressUpdateMutation: ResolverTypeWrapper<
+        Omit<GQLUserEmailAddressUpdateMutation, 'confirm'> & {
+            confirm: GQLResolversTypes['UserEmailAddressUpdateMutationConfirmationResult'];
+        }
+    >;
+    UserEmailAddressUpdateMutationConfirmationFailedResult: ResolverTypeWrapper<GQLUserEmailAddressUpdateMutationConfirmationFailedResult>;
+    UserEmailAddressUpdateMutationConfirmationResult: ResolverTypeWrapper<
+        GQLResolversUnionTypes['UserEmailAddressUpdateMutationConfirmationResult']
+    >;
+    UserEmailAddressUpdateMutationConfirmationSuccessResult: ResolverTypeWrapper<GQLUserEmailAddressUpdateMutationConfirmationSuccessResult>;
     UserEmailAddressUpdateQuery: ResolverTypeWrapper<GQLUserEmailAddressUpdateQuery>;
     UserFollowingMutation: ResolverTypeWrapper<GQLUserFollowingMutation>;
     UserFollowingQuery: ResolverTypeWrapper<GQLUserFollowingQuery>;
@@ -3032,7 +3062,12 @@ export type GQLResolversParentTypes = {
     UserCookRatingQuery: GQLUserCookRatingQuery;
     UserCookVisitQuery: GQLUserCookVisitQuery;
     UserCreateOneBookingRequestResponse: GQLUserCreateOneBookingRequestResponse;
-    UserEmailAddressUpdateMutation: GQLUserEmailAddressUpdateMutation;
+    UserEmailAddressUpdateMutation: Omit<GQLUserEmailAddressUpdateMutation, 'confirm'> & {
+        confirm: GQLResolversParentTypes['UserEmailAddressUpdateMutationConfirmationResult'];
+    };
+    UserEmailAddressUpdateMutationConfirmationFailedResult: GQLUserEmailAddressUpdateMutationConfirmationFailedResult;
+    UserEmailAddressUpdateMutationConfirmationResult: GQLResolversUnionParentTypes['UserEmailAddressUpdateMutationConfirmationResult'];
+    UserEmailAddressUpdateMutationConfirmationSuccessResult: GQLUserEmailAddressUpdateMutationConfirmationSuccessResult;
     UserEmailAddressUpdateQuery: GQLUserEmailAddressUpdateQuery;
     UserFollowingMutation: GQLUserFollowingMutation;
     UserFollowingQuery: GQLUserFollowingQuery;
@@ -5219,7 +5254,7 @@ export type GQLUserEmailAddressUpdateMutationResolvers<
     ParentType extends GQLResolversParentTypes['UserEmailAddressUpdateMutation'] = GQLResolversParentTypes['UserEmailAddressUpdateMutation'],
 > = {
     confirm?: Resolver<
-        GQLResolversTypes['Boolean'],
+        GQLResolversTypes['UserEmailAddressUpdateMutationConfirmationResult'],
         ParentType,
         ContextType,
         RequireFields<GQLUserEmailAddressUpdateMutationConfirmArgs, 'secret'>
@@ -5232,6 +5267,34 @@ export type GQLUserEmailAddressUpdateMutationResolvers<
     >;
     deleteOne?: Resolver<GQLResolversTypes['Boolean'], ParentType, ContextType>;
     userId?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;
+    __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GQLUserEmailAddressUpdateMutationConfirmationFailedResultResolvers<
+    ContextType = any,
+    ParentType extends GQLResolversParentTypes['UserEmailAddressUpdateMutationConfirmationFailedResult'] = GQLResolversParentTypes['UserEmailAddressUpdateMutationConfirmationFailedResult'],
+> = {
+    success?: Resolver<GQLResolversTypes['Boolean'], ParentType, ContextType>;
+    __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GQLUserEmailAddressUpdateMutationConfirmationResultResolvers<
+    ContextType = any,
+    ParentType extends GQLResolversParentTypes['UserEmailAddressUpdateMutationConfirmationResult'] = GQLResolversParentTypes['UserEmailAddressUpdateMutationConfirmationResult'],
+> = {
+    __resolveType: TypeResolveFn<
+        'UserEmailAddressUpdateMutationConfirmationFailedResult' | 'UserEmailAddressUpdateMutationConfirmationSuccessResult',
+        ParentType,
+        ContextType
+    >;
+};
+
+export type GQLUserEmailAddressUpdateMutationConfirmationSuccessResultResolvers<
+    ContextType = any,
+    ParentType extends GQLResolversParentTypes['UserEmailAddressUpdateMutationConfirmationSuccessResult'] = GQLResolversParentTypes['UserEmailAddressUpdateMutationConfirmationSuccessResult'],
+> = {
+    success?: Resolver<GQLResolversTypes['Boolean'], ParentType, ContextType>;
+    user?: Resolver<GQLResolversTypes['User'], ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5859,6 +5922,9 @@ export type GQLResolvers<ContextType = any> = {
     UserCookVisitQuery?: GQLUserCookVisitQueryResolvers<ContextType>;
     UserCreateOneBookingRequestResponse?: GQLUserCreateOneBookingRequestResponseResolvers<ContextType>;
     UserEmailAddressUpdateMutation?: GQLUserEmailAddressUpdateMutationResolvers<ContextType>;
+    UserEmailAddressUpdateMutationConfirmationFailedResult?: GQLUserEmailAddressUpdateMutationConfirmationFailedResultResolvers<ContextType>;
+    UserEmailAddressUpdateMutationConfirmationResult?: GQLUserEmailAddressUpdateMutationConfirmationResultResolvers<ContextType>;
+    UserEmailAddressUpdateMutationConfirmationSuccessResult?: GQLUserEmailAddressUpdateMutationConfirmationSuccessResultResolvers<ContextType>;
     UserEmailAddressUpdateQuery?: GQLUserEmailAddressUpdateQueryResolvers<ContextType>;
     UserFollowingMutation?: GQLUserFollowingMutationResolvers<ContextType>;
     UserFollowingQuery?: GQLUserFollowingQueryResolvers<ContextType>;

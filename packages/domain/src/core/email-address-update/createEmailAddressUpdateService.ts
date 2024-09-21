@@ -8,22 +8,15 @@ import { findOneByUserId } from './useCases/findOneByUserId';
 
 export interface EmailAddressUpdateService {
     createOne(context: Authorization.Context, request: CreateOneEmailAddressUpdateRequest): Promise<boolean>;
-    confirmOne(context: Authorization.Context, request: { secret: NanoId }): Promise<boolean>;
+    confirmOne(context: Authorization.Context, request: { secret: NanoId }): Promise<{ success: boolean }>;
     findOneByUserId(context: Authorization.Context, request: { userId: NanoId }): Promise<EmailAddressUpdate | undefined>;
 }
 
-export function createEmailAddressUpdateService({
-    dataSourceAdapter,
-    emailAdapter,
-    logger,
-    webAppUrl,
-}: Runtime): EmailAddressUpdateService {
+export function createEmailAddressUpdateService(runtime: Runtime): EmailAddressUpdateService {
     return {
         createOne: (context: Authorization.Context, request: CreateOneEmailAddressUpdateRequest) =>
-            createOne({ dataSourceAdapter, emailAdapter, logger, webAppUrl, context, request }),
-        confirmOne: (context: Authorization.Context, request: { secret: NanoId }) =>
-            confirmOne({ dataSourceAdapter, logger, context, request }),
-        findOneByUserId: (context: Authorization.Context, request: { userId: NanoId }) =>
-            findOneByUserId({ dataSourceAdapter, logger, context, request }),
+            createOne({ runtime, context, request }),
+        confirmOne: (context: Authorization.Context, request: { secret: NanoId }) => confirmOne({ runtime, context, request }),
+        findOneByUserId: (context: Authorization.Context, request: { userId: NanoId }) => findOneByUserId({ runtime, context, request }),
     };
 }
