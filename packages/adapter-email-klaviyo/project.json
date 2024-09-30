@@ -1,0 +1,70 @@
+{
+    "name": "adapter-email-klaviyo",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "packages/adapter-email-klaviyo/src",
+    "projectType": "application",
+    "targets": {
+        "build": {
+            "executor": "@nrwl/esbuild:esbuild",
+            "outputs": ["{options.outputPath}"],
+            "defaultConfiguration": "production",
+            "options": {
+                "platform": "node",
+                "outputPath": "dist/packages/adapter-email-klaviyo",
+                "format": ["cjs"],
+                "bundle": false,
+                "main": "packages/adapter-email-klaviyo/src/index.ts",
+                "tsConfig": "packages/adapter-email-klaviyo/tsconfig.app.json",
+                "assets": ["packages/adapter-email-klaviyo/src/assets"],
+                "generatePackageJson": true,
+                "esbuildOptions": {
+                    "sourcemap": true,
+                    "outExtension": {
+                        ".js": ".js"
+                    }
+                }
+            },
+            "configurations": {
+                "development": {},
+                "production": {
+                    "esbuildOptions": {
+                        "sourcemap": false,
+                        "outExtension": {
+                            ".js": ".js"
+                        }
+                    }
+                }
+            }
+        },
+        "serve": {
+            "executor": "@nrwl/js:node",
+            "defaultConfiguration": "development",
+            "options": {
+                "buildTarget": "adapter-email-klaviyo:build"
+            },
+            "configurations": {
+                "development": {
+                    "buildTarget": "adapter-email-klaviyo:build:development"
+                },
+                "production": {
+                    "buildTarget": "adapter-email-klaviyo:build:production"
+                }
+            }
+        },
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+            "options": {
+                "jestConfig": "packages/adapter-email-klaviyo/jest.config.ts",
+                "passWithNoTests": true
+            },
+            "configurations": {
+                "ci": {
+                    "ci": true,
+                    "codeCoverage": true
+                }
+            }
+        }
+    },
+    "tags": []
+}

@@ -1,4 +1,5 @@
 import { createDataSourceAdapter } from '@people-eat/server-adapter-data-source-typeorm';
+import { createKlaviyoEmailAdapter } from '@people-eat/server-adapter-email-klaviyo';
 import { createEmailAdapter } from '@people-eat/server-adapter-email-nodemailer';
 import { createLogger } from '@people-eat/server-adapter-logger';
 import { createPaymentAdapter } from '@people-eat/server-adapter-payment-stripe';
@@ -9,6 +10,7 @@ import {
     type DataSource,
     type Email,
     type IdentityProvider,
+    type Klaviyo,
     type Logger,
     type PaymentProvider,
     type Service,
@@ -41,6 +43,11 @@ async function bootstrap(): Promise<void> {
         password: environmentVariables.email.password,
     });
 
+    const klaviyoEmailAdapter: Klaviyo.Adapter = createKlaviyoEmailAdapter({
+        logger,
+        apiKey: environmentVariables.klaviyo.apiKey,
+    });
+
     const smsAdapter: SMS.Adapter = createSMSAdapter({
         logger,
         accountSid: environmentVariables.sms.twilioAccountSid,
@@ -69,6 +76,7 @@ async function bootstrap(): Promise<void> {
         dataSourceAdapter,
         logger,
         emailAdapter,
+        klaviyoEmailAdapter,
         smsAdapter,
         identityProviderAdapter,
         paymentAdapter,

@@ -13,6 +13,7 @@ export function getEnvironmentVariables(): EnvironmentVariables {
     if (!process.env.TWILIO_PHONE_NUMBER) throw new Error(`Missing environment variable with key 'TWILIO_PHONE_NUMBER'`);
     if (!process.env.GOOGLE_IOS_CLIENT_ID) throw new Error(`Missing environment variable with key 'GOOGLE_IOS_CLIENT_ID'`);
     if (!process.env.IOS_BUNDLE_IDENTIFIER) throw new Error(`Missing environment variable with key 'IOS_BUNDLE_IDENTIFIER'`);
+    if (!process.env.KLAVIO_API_KEY) throw new Error(`Missing environment variable with key 'KLAVIO_API_KEY'`);
 
     return {
         database: {
@@ -39,6 +40,9 @@ export function getEnvironmentVariables(): EnvironmentVariables {
             twilioAccountSid: process.env.TWILIO_ACCOUNT_SID,
             twilioAuthToken: process.env.TWILIO_AUTH_TOKEN,
             twilioPhoneNumber: process.env.TWILIO_PHONE_NUMBER,
+        },
+        klaviyo: {
+            apiKey: process.env.KLAVIO_API_KEY,
         },
     };
 }

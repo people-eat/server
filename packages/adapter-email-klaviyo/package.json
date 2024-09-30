@@ -1,0 +1,17 @@
+{
+    "name": "@people-eat/server-adapter-email-klaviyo",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/people-eat/server.git",
+        "directory": "packages/adapter-email-klaviyo"
+    },
+    "bugs": {
+        "url": "https://github.com/people-eat/server/issues"
+    },
+    "license": "UNLICENSED",
+    "private": true,
+    "version": "0.0.0",
+    "dependencies": {
+        "@people-eat/server-domain": "*"
+    }
+}

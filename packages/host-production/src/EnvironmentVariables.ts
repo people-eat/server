@@ -24,4 +24,7 @@ export interface EnvironmentVariables {
         iosBundleIdentifier: string;
     };
     latestIosVersion: string;
+    klaviyo: {
+        apiKey: string;
+    };
 }

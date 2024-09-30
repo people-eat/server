@@ -196,6 +196,8 @@ export async function createOneByEmailAddress({ runtime, context, request }: Cre
 
         const formattedDateTime: string = moment(globalBookingRequest.dateTime).format('MMMM Do YYYY, h:mm a');
 
+        // await klaviyoEmailAdapter.sendBookingRequestMail({ recipient: user, data: {} });
+
         if (emailAddress) {
             const customerEmailSuccess: boolean = await emailAdapter.sendToOne(
                 'PeopleEat',

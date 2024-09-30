@@ -23,6 +23,7 @@
             "@people-eat/server-adapter-data-source-typeorm": ["packages/adapter-data-source-typeorm/src/index.ts"],
             "@people-eat/server-adapter-sms-twilio": ["packages/adapter-sms-twilio/src/index.ts"],
             "@people-eat/server-adapter-email-nodemailer": ["packages/adapter-email-nodemailer/src/index.ts"],
+            "@people-eat/server-adapter-email-klaviyo": ["packages/adapter-email-klaviyo/src/index.ts"],
             "@people-eat/server-adapter-payment-stripe": ["packages/adapter-payment-stripe/src/index.ts"],
             "@people-eat/server-adapter-email-template": ["packages/adapter-email-template/src/index.ts"],
             "@people-eat/server-app-apollo-server": ["packages/app-apollo-server/src/index.ts"],
