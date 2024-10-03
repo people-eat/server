@@ -1,1 +1,6 @@
-export { Adapter, KlaviyoAdapterSendGlobalBookingRequestWithEmailConfirmationRequest, KlaviyoAdapterSendRequest } from './Adapter';
+export {
+    Adapter,
+    type KlaviyoAdapterSendGiftCardPurchaseConfirmationRequest,
+    type KlaviyoAdapterSendGlobalBookingRequestWithEmailConfirmationRequest,
+    type KlaviyoAdapterSendRequest,
+} from './Adapter';

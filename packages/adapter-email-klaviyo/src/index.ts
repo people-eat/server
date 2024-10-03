@@ -18,28 +18,35 @@ export function createKlaviyoEmailAdapter({ logger, apiKey }: CreateEmailAdapter
         const { body: getResponseBody } = await profiles.getProfiles({ filter: `equals(external_id,"${user.userId}")` });
         const [existingProfile] = getResponseBody.data;
 
+        if (!existingProfile) {
+            logger.info(`Requested Klaviyo user for PeopleEat user with id '${user.userId}' and did not receive one.`);
+
+            try {
+                const { body: createResponseBody } = await profiles.createProfile({
+                    data: {
+                        type: 'profile',
+                        attributes: {
+                            externalId: user.userId,
+                            email: user.emailAddress,
+                            phoneNumber: user.phoneNumber,
+                            firstName: user.firstName,
+                            lastName: user.lastName,
+                        },
+                    },
+                });
+
+                logger.info(`Created Klaviyo user for PeopleEat user with id '${user.userId}'\n${JSON.stringify(createResponseBody.data)}`);
+
+                return createResponseBody.data.id ?? '';
+            } catch (error) {
+                logger.error(`Could not create Klaviyo profile for user data \n${JSON.stringify(user)}`);
+                return '';
+            }
+        }
+
         logger.info(
             `Requested Klaviyo user for PeopleEat user with id '${user.userId}' and did receive one:\n${JSON.stringify(existingProfile)}`,
         );
-
-        if (!existingProfile) {
-            const { body: createResponseBody } = await profiles.createProfile({
-                data: {
-                    type: 'profile',
-                    attributes: {
-                        externalId: user.userId,
-                        email: user.emailAddress,
-                        phoneNumber: user.phoneNumber,
-                        firstName: user.firstName,
-                        lastName: user.lastName,
-                    },
-                },
-            });
-
-            logger.info(`Created Klaviyo user for PeopleEat user with id '${user.userId}'\n${JSON.stringify(createResponseBody.data)}`);
-
-            return createResponseBody.data.id ?? '';
-        }
 
         return existingProfile.id ?? '';
     };
@@ -64,11 +71,17 @@ export function createKlaviyoEmailAdapter({ logger, apiKey }: CreateEmailAdapter
 
     return {
         send,
-        sendBookingRequestMail: async ({
+        sendGlobalBookingRequestWithEmailConfirmation: async ({
             recipient,
             data,
         }: Klaviyo.KlaviyoAdapterSendGlobalBookingRequestWithEmailConfirmationRequest): Promise<void> => {
-            await send({ recipient, metricId: '', data });
+            await send({ recipient, metricId: 'global-booking-request-with-sign-up', data });
+        },
+        sendGiftCardPurchaseConfirmation: async ({
+            recipient,
+            data,
+        }: Klaviyo.KlaviyoAdapterSendGiftCardPurchaseConfirmationRequest): Promise<void> => {
+            await send({ recipient, metricId: 'gift-card-purchase', data });
         },
     };
 }

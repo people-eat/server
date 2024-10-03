@@ -12,8 +12,9 @@ export interface ConfirmOneGiftCardInput {
     request: { giftCardId: NanoId };
 }
 
+// eslint-disable-next-line max-statements
 export async function confirmOne({ runtime, request }: ConfirmOneGiftCardInput): Promise<boolean> {
-    const { dataSourceAdapter, paymentAdapter, emailAdapter, notificationEmailAddresses } = runtime;
+    const { dataSourceAdapter, paymentAdapter, emailAdapter, klaviyoEmailAdapter, notificationEmailAddresses, logger } = runtime;
 
     const { giftCardId } = request;
 
@@ -21,39 +22,68 @@ export async function confirmOne({ runtime, request }: ConfirmOneGiftCardInput):
         giftCardId,
     });
 
-    if (!giftCard) return false;
+    if (!giftCard) {
+        logger.info(`During gift card purchase confirmation: Could not find gift card for giftCardId: ${giftCardId}`);
+        return false;
+    }
 
     const paymentIntentId: string = giftCard.paymentData.paymentIntentId;
 
     const paymentCompleted: boolean = await paymentAdapter.STRIPE.checkPaymentIntentCompleted(paymentIntentId);
 
-    if (!paymentCompleted) return false;
+    if (!paymentCompleted) {
+        logger.info(`During gift card purchase confirmation: Payment intent with id ${paymentIntentId} is not completed`);
+        return false;
+    }
 
     const persistingSuccess: boolean = await dataSourceAdapter.giftCardRepository.updateOne(
         { giftCardId },
         { paymentData: { ...giftCard.paymentData, confirmed: true } },
     );
 
-    if (!persistingSuccess) return false;
+    if (!persistingSuccess) {
+        logger.info(`During gift card purchase confirmation: Could not update gift card to status confirmed in own DB`);
+        return false;
+    }
 
     const { redeemCode, initialBalanceAmount, occasion, message, userId, buyer, recipient, expiresAt, invoiceAddress } = giftCard;
+
+    const formatPrice = (amount: number, currencyCode: string): string => Math.round(amount / 100).toFixed(2) + ' ' + currencyCode;
+    const formattedPrice: string = formatPrice(giftCard.initialBalanceAmount, '€');
 
     if (userId) {
         const user: DBUser | undefined = await dataSourceAdapter.userRepository.findOne({ userId });
         if (!user || !user.emailAddress) return false;
-        await emailAdapter.sendToOne(
-            'PeopleEat',
-            user.emailAddress,
-            'Bestellbestätigung Gutschein',
-            giftCardPurchaseConfirmation({
-                buyer: { firstName: user.firstName },
-                occasion,
-                message,
-                recipient,
-                balance: initialBalanceAmount,
-                automatedEmailDelivery: Boolean(recipient.deliveryInformation),
-            }),
-        );
+        await klaviyoEmailAdapter.sendGiftCardPurchaseConfirmation({
+            recipient: {
+                userId: user.userId,
+                emailAddress: user.emailAddress,
+                phoneNumber: user.phoneNumber,
+                firstName: user.firstName,
+                lastName: user.lastName,
+            },
+            data: {
+                occasion: giftCard.occasion,
+                recipient: {
+                    firstName: giftCard.recipient.firstName,
+                },
+                formattedPrice,
+                automaticDeliveryEnabledLabel: recipient.deliveryInformation ? 'Ja' : 'Nein',
+            },
+        });
+        // await emailAdapter.sendToOne(
+        //     'PeopleEat',
+        //     user.emailAddress,
+        //     'Bestellbestätigung Gutschein',
+        //     giftCardPurchaseConfirmation({
+        //         buyer: { firstName: user.firstName },
+        //         occasion,
+        //         message,
+        //         recipient,
+        //         balance: initialBalanceAmount,
+        //         automatedEmailDelivery: Boolean(recipient.deliveryInformation),
+        //     }),
+        // );
         await emailAdapter.sendToOne(
             'PeopleEat',
             user.emailAddress,

@@ -4,12 +4,17 @@ import { type NanoId } from '../shared';
 import { type CreateOneEmailAddressUpdateRequest } from './CreateOneEmailAddressUpdateRequest';
 import { confirmOne } from './useCases/confirmOne';
 import { createOne } from './useCases/createOne';
+import { createOneWithoutConfirmationEmail } from './useCases/createOneWithoutConfirmationEmail';
 import { findOneByUserId } from './useCases/findOneByUserId';
 
 export interface EmailAddressUpdateService {
     createOne(context: Authorization.Context, request: CreateOneEmailAddressUpdateRequest): Promise<boolean>;
     confirmOne(context: Authorization.Context, request: { secret: NanoId }): Promise<{ success: boolean }>;
     findOneByUserId(context: Authorization.Context, request: { userId: NanoId }): Promise<EmailAddressUpdate | undefined>;
+    createOneWithoutConfirmationEmail(
+        context: Authorization.Context,
+        request: CreateOneEmailAddressUpdateRequest,
+    ): Promise<{ confirmEmailAddressUrl: string } | undefined>;
 }
 
 export function createEmailAddressUpdateService(runtime: Runtime): EmailAddressUpdateService {
@@ -18,5 +23,7 @@ export function createEmailAddressUpdateService(runtime: Runtime): EmailAddressU
             createOne({ runtime, context, request }),
         confirmOne: (context: Authorization.Context, request: { secret: NanoId }) => confirmOne({ runtime, context, request }),
         findOneByUserId: (context: Authorization.Context, request: { userId: NanoId }) => findOneByUserId({ runtime, context, request }),
+        createOneWithoutConfirmationEmail: (context: Authorization.Context, request: CreateOneEmailAddressUpdateRequest) =>
+            createOneWithoutConfirmationEmail({ runtime, context, request }),
     };
 }

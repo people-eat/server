@@ -1,15 +1,16 @@
-import { globalBookingRequestCustomerConfirmation, welcome } from '@people-eat/server-adapter-email-template';
 import bcrypt from 'bcryptjs';
 import { createWriteStream } from 'fs';
 import moment from 'moment';
 import { join } from 'path';
-import { type Authorization } from '../../..';
+import { type Authorization, type GlobalBookingRequestPriceClassType } from '../../..';
 import { type DBAllergy, type DBCategory, type DBEmailAddressUpdate, type DBKitchen, type DBUser } from '../../../data-source';
 import { createNanoId } from '../../../utils/createNanoId';
 import { createOne as createOneAddress } from '../../address/useCases/createOne';
 import { createOne as createOneCook } from '../../cook/useCases/createOne';
-import { createOne as createOneEmailAddressUpdate } from '../../email-address-update/useCases/createOne';
+import { createOne } from '../../email-address-update/useCases/createOne';
+import { createOneWithoutConfirmationEmail } from '../../email-address-update/useCases/createOneWithoutConfirmationEmail';
 import { createOne as createOnePhoneNumberUpdate } from '../../phone-number-update/useCases/createOne';
+import { routeBuilders } from '../../routeBuilder';
 import { type Runtime } from '../../Runtime';
 import { type NanoId } from '../../shared';
 import { type CreateOneUserByEmailAddressRequest } from '../CreateOneUserRequest';
@@ -20,9 +21,15 @@ export interface CreateOneUserByEmailAddressInput {
     request: CreateOneUserByEmailAddressRequest;
 }
 
+const priceClassTitles: Record<GlobalBookingRequestPriceClassType, string> = Object.freeze({
+    ['SIMPLE']: 'Einfaches Menü: 70.00 - 90.00 EUR',
+    ['FINE']: 'Fine-Dining Menü: 90.00 - 130.00 EUR',
+    ['GOURMET']: 'Gourmet Menü: ab 130.00 EUR',
+});
+
 // eslint-disable-next-line max-statements
 export async function createOneByEmailAddress({ runtime, context, request }: CreateOneUserByEmailAddressInput): Promise<boolean> {
-    const { dataSourceAdapter, emailAdapter, smsAdapter, logger, serverUrl, webAppUrl } = runtime;
+    const { dataSourceAdapter, emailAdapter, klaviyoEmailAdapter, smsAdapter, logger, serverUrl, webAppUrl } = runtime;
     const {
         emailAddress,
         phoneNumber,
@@ -53,6 +60,11 @@ export async function createOneByEmailAddress({ runtime, context, request }: Cre
     const existingPhoneNumberUpdate: DBEmailAddressUpdate | undefined = await dataSourceAdapter.emailAddressUpdateRepository.findOne({
         emailAddress,
     });
+
+    // a bit ugly to have this here, but it works
+    const globalBookingRequestId: NanoId = createNanoId();
+
+    let confirmEmailAddressUrl: string | undefined;
 
     if (!existingUserByEmailAddress && !existingUserByPhoneNumber && !existingEmailAddressUpdate && !existingPhoneNumberUpdate) {
         let profilePictureUrl: string | undefined;
@@ -100,17 +112,36 @@ export async function createOneByEmailAddress({ runtime, context, request }: Cre
         context.userId = userId;
 
         if (emailAddress) {
-            const emailSuccess: boolean = await createOneEmailAddressUpdate({
-                runtime,
-                context,
-                request: { userId, emailAddress: emailAddress.trim() },
-            });
+            if (globalBookingRequest) {
+                const emailSuccess: { confirmEmailAddressUrl: string } | undefined = await createOneWithoutConfirmationEmail({
+                    runtime,
+                    context,
+                    request: {
+                        userId,
+                        emailAddress: emailAddress.trim(),
+                        returnTo: routeBuilders.profileGlobalBookingRequest({ globalBookingRequestId }),
+                    },
+                });
 
-            await emailAdapter.sendToOne('PeopleEat', emailAddress, 'Herzlich Willkommen', welcome({ webAppUrl }));
+                // eslint-disable-next-line max-depth
+                if (!emailSuccess) {
+                    logger.error('Could not create email address update');
+                    return false;
+                }
 
-            if (!emailSuccess) {
-                logger.error('Could not create email address update');
-                return false;
+                confirmEmailAddressUrl = emailSuccess.confirmEmailAddressUrl;
+            } else {
+                const emailSuccess: boolean = await createOne({
+                    runtime,
+                    context,
+                    request: { userId, emailAddress: emailAddress.trim() },
+                });
+
+                // eslint-disable-next-line max-depth
+                if (!emailSuccess) {
+                    logger.error('Could not create email address update');
+                    return false;
+                }
             }
         }
 
@@ -144,7 +175,6 @@ export async function createOneByEmailAddress({ runtime, context, request }: Cre
     }
 
     if (globalBookingRequest) {
-        const globalBookingRequestId: NanoId = createNanoId();
         const globalBookingRequestSuccess: boolean = await dataSourceAdapter.globalBookingRequestRepository.insertOne({
             globalBookingRequestId,
             userId,
@@ -196,34 +226,55 @@ export async function createOneByEmailAddress({ runtime, context, request }: Cre
 
         const formattedDateTime: string = moment(globalBookingRequest.dateTime).format('MMMM Do YYYY, h:mm a');
 
-        // await klaviyoEmailAdapter.sendBookingRequestMail({ recipient: user, data: {} });
-
         if (emailAddress) {
-            const customerEmailSuccess: boolean = await emailAdapter.sendToOne(
-                'PeopleEat',
-                emailAddress,
-                'Bestätigung Deiner Buchungsanfrage',
-                globalBookingRequestCustomerConfirmation({
-                    webAppUrl,
-                    customer: { firstName },
-                    globalBookingRequest: {
-                        globalBookingRequestId,
-                        occasion: globalBookingRequest.occasion,
-                        adults: globalBookingRequest.adultParticipants,
-                        children: globalBookingRequest.children,
-                        location: globalBookingRequest.location.text,
-                        date: globalBookingRequest.dateTime.toDateString(),
-                        time: moment(globalBookingRequest.dateTime).format('LT'),
-                        priceClassType: globalBookingRequest.priceClassType,
-                    },
-                    chatMessage: globalBookingRequest.message.trim(),
-                    categories: categoryTitles,
-                    allergies: allergyTitles,
-                    kitchen: kitchen?.title,
-                }),
-            );
+            // const customerEmailSuccess: boolean = await emailAdapter.sendToOne(
+            //     'PeopleEat',
+            //     emailAddress,
+            //     'Bestätigung Deiner Buchungsanfrage',
+            //     globalBookingRequestCustomerConfirmation({
+            //         webAppUrl,
+            //         customer: { firstName },
+            //         globalBookingRequest: {
+            //             globalBookingRequestId,
+            //             occasion: globalBookingRequest.occasion,
+            //             adults: globalBookingRequest.adultParticipants,
+            //             children: globalBookingRequest.children,
+            //             location: globalBookingRequest.location.text,
+            //             date: globalBookingRequest.dateTime.toDateString(),
+            //             time: moment(globalBookingRequest.dateTime).format('LT'),
+            //             priceClassType: globalBookingRequest.priceClassType,
+            //         },
+            //         chatMessage: globalBookingRequest.message.trim(),
+            //         categories: categoryTitles,
+            //         allergies: allergyTitles,
+            //         kitchen: kitchen?.title,
+            //     }),
+            // );
 
-            if (!customerEmailSuccess) logger.info('sending email failed');
+            // if (!customerEmailSuccess) logger.info('sending email failed');
+
+            await klaviyoEmailAdapter.sendGlobalBookingRequestWithEmailConfirmation({
+                recipient: {
+                    userId,
+                    firstName,
+                    lastName,
+                    emailAddress,
+                    phoneNumber,
+                },
+                data: {
+                    globalBookingRequestId,
+                    totalParticipants: globalBookingRequest.adultParticipants + globalBookingRequest.children,
+                    adults: globalBookingRequest.adultParticipants,
+                    children: globalBookingRequest.children,
+                    priceClassTypeLabel: priceClassTitles[globalBookingRequest.priceClassType],
+                    timeLabel: moment(globalBookingRequest.dateTime).format('LT'),
+                    dateLabel: globalBookingRequest.dateTime.toDateString(),
+                    locationText: globalBookingRequest.location.text ?? '',
+                    occasion: globalBookingRequest.occasion,
+                    message: globalBookingRequest.message,
+                    confirmEmailAddressUrl: confirmEmailAddressUrl ?? '',
+                },
+            });
         }
 
         // @todo: create one time access token for setting password right after sign up

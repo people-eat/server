@@ -1,4 +1,5 @@
-import { type GlobalBookingRequestPriceClassType, type User } from '../core';
+import { type User } from '../core';
+import { type NanoId } from '../core/shared';
 
 type Recipient = Pick<User, 'userId' | 'firstName' | 'lastName' | 'emailAddress' | 'phoneNumber'>;
 
@@ -11,19 +12,36 @@ export interface KlaviyoAdapterSendRequest {
 export interface KlaviyoAdapterSendGlobalBookingRequestWithEmailConfirmationRequest {
     recipient: Recipient;
     data: {
-        adultParticipants: number;
+        globalBookingRequestId: NanoId;
+        totalParticipants: number;
+        adults: number;
         children: number;
-        priceClassType: GlobalBookingRequestPriceClassType;
-        dateTime: Date;
-        duration: number;
+        priceClassTypeLabel: string;
+        timeLabel: string;
+        dateLabel: string;
+        locationText: string;
         occasion: string;
         message: string;
-        location: Location;
-        createdAt: Date;
+        confirmEmailAddressUrl: string;
+    };
+}
+
+export interface KlaviyoAdapterSendGiftCardPurchaseConfirmationRequest {
+    recipient: Recipient;
+    data: {
+        occasion: string;
+        recipient: {
+            firstName: string;
+        };
+        formattedPrice: string;
+        automaticDeliveryEnabledLabel: string;
     };
 }
 
 export interface Adapter {
     send(request: KlaviyoAdapterSendRequest): Promise<boolean>;
-    sendBookingRequestMail(request: KlaviyoAdapterSendGlobalBookingRequestWithEmailConfirmationRequest): Promise<void>;
+    sendGlobalBookingRequestWithEmailConfirmation(
+        request: KlaviyoAdapterSendGlobalBookingRequestWithEmailConfirmationRequest,
+    ): Promise<void>;
+    sendGiftCardPurchaseConfirmation(request: KlaviyoAdapterSendGiftCardPurchaseConfirmationRequest): Promise<void>;
 }
