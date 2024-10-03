@@ -272,7 +272,8 @@ export async function createOneByEmailAddress({ runtime, context, request }: Cre
                     locationText: globalBookingRequest.location.text ?? '',
                     occasion: globalBookingRequest.occasion,
                     message: globalBookingRequest.message,
-                    confirmEmailAddressUrl: confirmEmailAddressUrl ?? '',
+                    confirmEmailAddressUrl:
+                        confirmEmailAddressUrl ?? webAppUrl + routeBuilders.profileGlobalBookingRequest({ globalBookingRequestId }),
                 },
             });
         }
