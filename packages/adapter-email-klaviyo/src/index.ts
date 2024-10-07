@@ -28,7 +28,7 @@ export function createKlaviyoEmailAdapter({ logger, apiKey }: CreateEmailAdapter
                         attributes: {
                             externalId: user.userId,
                             email: user.emailAddress,
-                            phoneNumber: user.phoneNumber,
+                            // phoneNumber: user.phoneNumber,
                             firstName: user.firstName,
                             lastName: user.lastName,
                         },
