@@ -1,11 +1,17 @@
-import { globalBookingRequestCustomerConfirmation } from '@people-eat/server-adapter-email-template';
 import moment from 'moment';
-import { Authorization } from '../../..';
+import { Authorization, type GlobalBookingRequestPriceClassType } from '../../..';
 import { type DBAllergy, type DBCategory, type DBKitchen, type DBUser } from '../../../data-source';
 import { createNanoId } from '../../../utils/createNanoId';
+import { routeBuilders } from '../../routeBuilder';
 import { type Runtime } from '../../Runtime';
 import { type NanoId } from '../../shared';
 import { type CreateOneGlobalBookingRequestRequest } from '../CreateOneGlobalBookingRequestRequest';
+
+const priceClassTitles: Record<GlobalBookingRequestPriceClassType, string> = Object.freeze({
+    ['SIMPLE']: 'Einfaches Menü: 70.00 - 90.00 EUR',
+    ['FINE']: 'Fine-Dining Menü: 90.00 - 130.00 EUR',
+    ['GOURMET']: 'Gourmet Menü: ab 130.00 EUR',
+});
 
 export interface CreateOneGlobalBookingRequestInput {
     runtime: Runtime;
@@ -15,7 +21,7 @@ export interface CreateOneGlobalBookingRequestInput {
 
 // eslint-disable-next-line max-statements
 export async function createOne({ runtime, context, request }: CreateOneGlobalBookingRequestInput): Promise<boolean> {
-    const { dataSourceAdapter, emailAdapter, webAppUrl, logger } = runtime;
+    const { dataSourceAdapter, emailAdapter, webAppUrl, logger, klaviyoEmailAdapter } = runtime;
     const {
         adultParticipants,
         children,
@@ -105,31 +111,30 @@ export async function createOne({ runtime, context, request }: CreateOneGlobalBo
     if (!emailSuccess) logger.info('sending email failed');
 
     if (user.emailAddress) {
-        const customerEmailSuccess: boolean = await emailAdapter.sendToOne(
-            'PeopleEat',
-            user.emailAddress,
-            'Bestätigung Deiner Buchungsanfrage',
-            globalBookingRequestCustomerConfirmation({
-                webAppUrl,
-                customer: { firstName: user.firstName },
-                globalBookingRequest: {
-                    globalBookingRequestId,
-                    occasion,
-                    adults: adultParticipants,
-                    children,
-                    location: location.text,
-                    date: dateTime.toDateString(),
-                    time: moment(dateTime).format('LT'),
-                    priceClassType,
-                },
-                chatMessage: message.trim(),
-                categories: categoryTitles,
-                allergies: allergyTitles,
-                kitchen: kitchen?.title,
-            }),
-        );
+        await klaviyoEmailAdapter.sendGlobalBookingRequestWithEmailConfirmation({
+            recipient: {
+                userId,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                emailAddress: user.emailAddress,
+                phoneNumber: user.phoneNumber,
+            },
+            data: {
+                globalBookingRequestId,
+                totalParticipants: adultParticipants + children,
+                adults: adultParticipants,
+                children: children,
+                priceClassTypeLabel: priceClassTitles[priceClassType],
+                timeLabel: moment(dateTime).format('LT'),
+                dateLabel: dateTime.toDateString(),
+                locationText: location.text ?? '',
+                occasion: occasion,
+                message: message,
+                confirmEmailAddressUrl: webAppUrl + routeBuilders.profileGlobalBookingRequest({ globalBookingRequestId }),
+            },
+        });
 
-        if (!customerEmailSuccess) logger.info('sending email failed');
+        // if (!customerEmailSuccess) logger.info('sending email failed');
     }
 
     return true;
