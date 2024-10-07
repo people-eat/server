@@ -112,7 +112,7 @@ export async function createOne({ runtime, context, request }: CreateOneUserByEm
     }
 
     // STEP - set current request to signed in state
-    // maybe only use this line to get rif of all the userCreation flags. Will be unset after request is handled
+    // maybe only use this line to get rid of all the userCreation flags. Will be unset after request is handled
     // const { sessionId } = context;
     // await dataSourceAdapter.sessionRepository.updateOne({ sessionId }, { userId });
     context.userId = userId;

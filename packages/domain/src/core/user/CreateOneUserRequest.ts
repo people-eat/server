@@ -5,7 +5,7 @@ import { type CreateOneGlobalBookingRequestRequest } from '../global-booking-req
 import { type IdentityProvider } from '../shared';
 import { type User } from './User';
 
-export interface CreateOneUserRequest
+export interface CreateOneUserBaseRequest
     extends Pick<User, 'firstName' | 'lastName' | 'language' | 'gender' | 'birthDate' | 'profilePictureUrl'> {
     cook?: CreateOneCookRequest;
     addresses?: CreateOneAddressRequest[];
@@ -13,8 +13,17 @@ export interface CreateOneUserRequest
     profilePicture?: ReadStream;
 }
 
-export type CreateOneUserByEmailAddressRequest = CreateOneUserRequest & { emailAddress?: string; phoneNumber?: string; password?: string };
+export type CreateOneUserByEmailAddressRequest = CreateOneUserBaseRequest & {
+    emailAddress: string;
+    password?: string;
+};
 
-export type CreateOneUserByPhoneNumberRequest = CreateOneUserRequest & { phoneNumber: string; password: string };
+export type CreateOneUserByPhoneNumberRequest = CreateOneUserBaseRequest & { phoneNumber: string; password: string };
 
-export type CreateOneUserByIdentityProviderRequest = CreateOneUserRequest & { identityProvider: IdentityProvider; idToken: string };
+export type CreateOneUserByIdentityProviderRequest = CreateOneUserBaseRequest & { identityProvider: IdentityProvider; idToken: string };
+
+export type CreateOneUserRequest = CreateOneUserBaseRequest & {
+    emailAddress: string;
+    phoneNumber: string;
+    password?: string;
+};

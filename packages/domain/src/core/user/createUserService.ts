@@ -6,7 +6,9 @@ import {
     type CreateOneUserByEmailAddressRequest,
     type CreateOneUserByIdentityProviderRequest,
     type CreateOneUserByPhoneNumberRequest,
+    type CreateOneUserRequest,
 } from './CreateOneUserRequest';
+import { createOne } from './useCases/createOne';
 import { createOneByEmailAddress } from './useCases/createOneByEmailAddress';
 import { createOneByIdentityProvider } from './useCases/createOneByIdentityProvider';
 import { createOneByPhoneNumber } from './useCases/createOneByPhoneNumber';
@@ -20,6 +22,7 @@ import { type User } from './User';
 export interface UserService {
     findOneByUserId(context: Authorization.Context, request: FindOneUserByUserIdRequest): Promise<User | undefined>;
     findMany(context: Authorization.Context, request: FindManyRequest): Promise<User[] | undefined>;
+    createOne(context: Authorization.Context, request: CreateOneUserRequest): Promise<boolean>;
     createOneByEmailAddress(context: Authorization.Context, request: CreateOneUserByEmailAddressRequest): Promise<boolean>;
     createOneByPhoneNumber(context: Authorization.Context, request: CreateOneUserByPhoneNumberRequest): Promise<boolean>;
     createOneByIdentityProvider(context: Authorization.Context, request: CreateOneUserByIdentityProviderRequest): Promise<boolean>;
@@ -33,12 +36,9 @@ export function createUserService(runtime: Runtime): UserService {
         findOneByUserId: (context: Authorization.Context, request: FindOneUserByUserIdRequest) =>
             findOneByUserId({ runtime, context, request }),
         findMany: (context: Authorization.Context, request: FindManyRequest) => findMany({ runtime, context, request }),
+        createOne: (context: Authorization.Context, request: CreateOneUserRequest) => createOne({ runtime, context, request }),
         createOneByEmailAddress: (context: Authorization.Context, request: CreateOneUserByEmailAddressRequest) =>
-            createOneByEmailAddress({
-                runtime,
-                context,
-                request,
-            }),
+            createOneByEmailAddress({ runtime, context, request }),
         createOneByPhoneNumber: (context: Authorization.Context, request: CreateOneUserByPhoneNumberRequest) =>
             createOneByPhoneNumber({ runtime, context, request }),
         createOneByIdentityProvider: (context: Authorization.Context, request: CreateOneUserByIdentityProviderRequest) =>

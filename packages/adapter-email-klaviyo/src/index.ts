@@ -39,6 +39,7 @@ export function createKlaviyoEmailAdapter({ logger, apiKey }: CreateEmailAdapter
 
                 return createResponseBody.data.id ?? '';
             } catch (error) {
+                logger.error(error);
                 logger.error(`Could not create Klaviyo profile for user data \n${JSON.stringify(user)}`);
                 return '';
             }
