@@ -21,7 +21,8 @@ export class UserEntity implements DataSource.DBUser {
     @Column('varchar', { nullable: true, unique: true })
     emailAddress?: string;
 
-    @Column('varchar', { nullable: true, unique: true })
+    // unique: true
+    @Column('varchar', { nullable: true })
     phoneNumber?: string;
 
     @Column('varchar', { nullable: true })
