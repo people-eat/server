@@ -15,6 +15,16 @@ import { type Runtime } from '../../Runtime';
 import { type NanoId } from '../../shared';
 import { type CreateOneUserRequest } from '../CreateOneUserRequest';
 
+interface CreateOneUserSuccessResult {
+    succeeded: true;
+}
+
+interface CreateOneUserFailedAlreadyExistsResult {
+    succeeded: false;
+}
+
+type CreateOneUserResult = CreateOneUserFailedAlreadyExistsResult | CreateOneUserSuccessResult;
+
 export interface CreateOneUserByEmailAddressInput {
     runtime: Runtime;
     context: Authorization.Context;
@@ -28,7 +38,7 @@ const priceClassTitles: Record<GlobalBookingRequestPriceClassType, string> = Obj
 });
 
 // eslint-disable-next-line max-statements
-export async function createOne({ runtime, context, request }: CreateOneUserByEmailAddressInput): Promise<boolean> {
+export async function createOne({ runtime, context, request }: CreateOneUserByEmailAddressInput): Promise<CreateOneUserResult> {
     const { dataSourceAdapter, emailAdapter, klaviyoEmailAdapter, smsAdapter, logger, serverUrl, webAppUrl } = runtime;
     const {
         emailAddress,
@@ -45,13 +55,6 @@ export async function createOne({ runtime, context, request }: CreateOneUserByEm
         globalBookingRequest,
     } = request;
 
-    if (!emailAddress && !phoneNumber) {
-        logger.error('Received create user request with neither email address not phone number');
-        return false;
-    }
-
-    const userId: NanoId = createNanoId();
-
     const existingUserByEmailAddress: DBUser | undefined = await dataSourceAdapter.userRepository.findOne({ emailAddress });
     const existingEmailAddressUpdate: DBEmailAddressUpdate | undefined = await dataSourceAdapter.emailAddressUpdateRepository.findOne({
         emailAddress,
@@ -64,14 +67,10 @@ export async function createOne({ runtime, context, request }: CreateOneUserByEm
                 existingEmailAddressUpdate,
             })}`,
         );
-        return false;
+        return { succeeded: false };
     }
 
-    // a bit ugly to have this here, but it works
-    const globalBookingRequestId: NanoId = createNanoId();
-
-    let confirmEmailAddressUrl: string | undefined;
-
+    // STEP - profile picture
     let profilePictureUrl: string | undefined;
 
     if (profilePicture) {
@@ -85,6 +84,9 @@ export async function createOne({ runtime, context, request }: CreateOneUserByEm
                 .on('error', () => reject(false)),
         );
     }
+
+    // STEP - user
+    const userId: NanoId = createNanoId();
 
     const success: boolean = await dataSourceAdapter.userRepository.insertOne({
         userId,
@@ -109,12 +111,17 @@ export async function createOne({ runtime, context, request }: CreateOneUserByEm
         return false;
     }
 
-    // const { sessionId } = context;
-
-    // await dataSourceAdapter.sessionRepository.updateOne({ sessionId }, { userId });
-
+    // STEP - set current request to signed in state
     // maybe only use this line to get rif of all the userCreation flags. Will be unset after request is handled
+    // const { sessionId } = context;
+    // await dataSourceAdapter.sessionRepository.updateOne({ sessionId }, { userId });
     context.userId = userId;
+
+    // STEP - email address confirmation
+    let confirmEmailAddressUrl: string | undefined;
+
+    // a bit ugly to have this here, but it works
+    const globalBookingRequestId: NanoId = createNanoId();
 
     if (globalBookingRequest) {
         const emailSuccess: { confirmEmailAddressUrl: string } | undefined = await createOneWithoutConfirmationEmail({
@@ -148,6 +155,7 @@ export async function createOne({ runtime, context, request }: CreateOneUserByEm
         }
     }
 
+    // STEP - phone number
     const smsSuccess: boolean = await createOnePhoneNumberUpdate({
         dataSourceAdapter,
         smsAdapter,
@@ -162,10 +170,13 @@ export async function createOne({ runtime, context, request }: CreateOneUserByEm
         return false;
     }
 
+    // STEP - addresses
     if (addresses) for (const address of addresses) await createOneAddress({ runtime, context, request: { userId, ...address } });
 
+    // STEP - cook
     if (cook) await createOneCook({ runtime, context, request: { cookId: userId, ...cook } });
 
+    // STEP - booking request
     if (globalBookingRequest) {
         const globalBookingRequestSuccess: boolean = await dataSourceAdapter.globalBookingRequestRepository.insertOne({
             globalBookingRequestId,
@@ -218,60 +229,28 @@ export async function createOne({ runtime, context, request }: CreateOneUserByEm
 
         const formattedDateTime: string = moment(globalBookingRequest.dateTime).format('MMMM Do YYYY, h:mm a');
 
-        if (emailAddress) {
-            // const customerEmailSuccess: boolean = await emailAdapter.sendToOne(
-            //     'PeopleEat',
-            //     emailAddress,
-            //     'Bestätigung Deiner Buchungsanfrage',
-            //     globalBookingRequestCustomerConfirmation({
-            //         webAppUrl,
-            //         customer: { firstName },
-            //         globalBookingRequest: {
-            //             globalBookingRequestId,
-            //             occasion: globalBookingRequest.occasion,
-            //             adults: globalBookingRequest.adultParticipants,
-            //             children: globalBookingRequest.children,
-            //             location: globalBookingRequest.location.text,
-            //             date: globalBookingRequest.dateTime.toDateString(),
-            //             time: moment(globalBookingRequest.dateTime).format('LT'),
-            //             priceClassType: globalBookingRequest.priceClassType,
-            //         },
-            //         chatMessage: globalBookingRequest.message.trim(),
-            //         categories: categoryTitles,
-            //         allergies: allergyTitles,
-            //         kitchen: kitchen?.title,
-            //     }),
-            // );
-
-            // if (!customerEmailSuccess) logger.info('sending email failed');
-
-            await klaviyoEmailAdapter.sendGlobalBookingRequestWithEmailConfirmation({
-                recipient: {
-                    userId,
-                    firstName,
-                    lastName,
-                    emailAddress,
-                    phoneNumber,
-                },
-                data: {
-                    globalBookingRequestId,
-                    totalParticipants: globalBookingRequest.adultParticipants + globalBookingRequest.children,
-                    adults: globalBookingRequest.adultParticipants,
-                    children: globalBookingRequest.children,
-                    priceClassTypeLabel: priceClassTitles[globalBookingRequest.priceClassType],
-                    timeLabel: moment(globalBookingRequest.dateTime).format('LT'),
-                    dateLabel: globalBookingRequest.dateTime.toDateString(),
-                    locationText: globalBookingRequest.location.text ?? '',
-                    occasion: globalBookingRequest.occasion,
-                    message: globalBookingRequest.message,
-                    confirmEmailAddressUrl:
-                        confirmEmailAddressUrl ?? webAppUrl + routeBuilders.profileGlobalBookingRequest({ globalBookingRequestId }),
-                },
-            });
-        }
-
-        // @todo: create one time access token for setting password right after sign up
-        // createOneForEmailAddress
+        await klaviyoEmailAdapter.sendGlobalBookingRequestWithEmailConfirmation({
+            recipient: {
+                userId,
+                firstName,
+                lastName,
+                emailAddress,
+            },
+            data: {
+                globalBookingRequestId,
+                totalParticipants: globalBookingRequest.adultParticipants + globalBookingRequest.children,
+                adults: globalBookingRequest.adultParticipants,
+                children: globalBookingRequest.children,
+                priceClassTypeLabel: priceClassTitles[globalBookingRequest.priceClassType],
+                timeLabel: moment(globalBookingRequest.dateTime).format('LT'),
+                dateLabel: globalBookingRequest.dateTime.toDateString(),
+                locationText: globalBookingRequest.location.text ?? '',
+                occasion: globalBookingRequest.occasion,
+                message: globalBookingRequest.message,
+                confirmEmailAddressUrl:
+                    confirmEmailAddressUrl ?? webAppUrl + routeBuilders.profileGlobalBookingRequest({ globalBookingRequestId }),
+            },
+        });
 
         const globalBookingRequestEmailSuccess: boolean = await emailAdapter.sendToMany(
             'Booking Request',
@@ -285,7 +264,7 @@ export async function createOne({ runtime, context, request }: CreateOneUserByEm
                 globalBookingRequest.priceClassType
             }<br/><br/><b>Message:</b><br/>${
                 globalBookingRequest.message
-            }<br/><br/><br/><b>Contact:</b><br/>Email Address: ${emailAddress}<br/>Phone Number: ${phoneNumber}<br/><br/>Kitchen: ${
+            }<br/><br/><br/><b>Contact:</b><br/>Email Address: ${emailAddress}<br/>Phone Number: -<br/><br/>Kitchen: ${
                 kitchen?.title ?? 'any'
             }<br/><br/>Allergies: ${allergyTitles.join(', ')}<br/><br/>Categories: ${categoryTitles.join(', ')}`,
         );
@@ -293,5 +272,5 @@ export async function createOne({ runtime, context, request }: CreateOneUserByEm
         if (!globalBookingRequestEmailSuccess) return false;
     }
 
-    return true;
+    return { succeeded: true };
 }
