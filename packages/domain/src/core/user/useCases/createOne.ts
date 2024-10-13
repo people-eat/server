@@ -173,11 +173,8 @@ export async function createOne({ runtime, context, request }: CreateOneUserByEm
         request: { userId, phoneNumber: phoneNumber.trim() },
     });
 
-    if (!smsSuccess) {
-        logger.error('Could not create phone number update');
-        // return { failed: true };
-        return true;
-    }
+    if (!smsSuccess) logger.error('Could not create phone number update');
+    // return { failed: true };
 
     // STEP - addresses
     if (addresses) for (const address of addresses) await createOneAddress({ runtime, context, request: { userId, ...address } });
