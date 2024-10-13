@@ -29,6 +29,7 @@ export async function getStripeOnboardingUrl({ runtime, context, request }: GetS
 
         const connectedAccountResult: { accountId: string } | undefined = await paymentAdapter.STRIPE.createConnectedAccount({
             emailAddress: user.emailAddress,
+            cookId,
         });
 
         if (!connectedAccountResult) return;

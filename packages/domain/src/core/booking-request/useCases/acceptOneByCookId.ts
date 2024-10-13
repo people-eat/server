@@ -189,6 +189,7 @@ export async function acceptOneByCookId({ runtime, context, request }: AcceptOne
         payoutAmount: bookingRequest.totalAmountCook,
         setupIntentId: bookingRequest.paymentData.setupIntentId,
         destinationAccountId: payoutMethod.stripeAccountId,
+        bookingRequestId,
         user: {
             userId: user.userId,
             firstName: user.firstName,

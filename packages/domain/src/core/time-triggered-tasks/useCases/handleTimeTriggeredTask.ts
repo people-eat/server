@@ -60,6 +60,7 @@ export async function handleTimeTriggeredTask(runtime: Runtime, timeTriggeredTas
             payoutAmount: bookingRequest.totalAmountCook,
             setupIntentId: bookingRequest.paymentData.setupIntentId,
             destinationAccountId: payoutMethod.stripeAccountId,
+            bookingRequestId: timeTriggeredTask.task.bookingRequestId,
             user: {
                 userId: user.userId,
                 firstName: user.firstName,

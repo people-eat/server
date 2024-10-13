@@ -11,11 +11,13 @@ export interface CreatePaymentIntentInputFromSetupIntentInput {
     payoutAmount: number;
     setupIntentId: string;
     destinationAccountId: string;
+    bookingRequestId: NanoId;
     user: Pick<User, 'userId' | 'firstName' | 'lastName'>;
 }
 
 export interface CreateConnectedAccountInput {
     emailAddress: string;
+    cookId: NanoId;
 }
 
 export interface CreateConnectedAccountOnboardingUrlInput {

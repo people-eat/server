@@ -77,6 +77,7 @@ export function createPaymentAdapter({
                 pullAmount,
                 payoutAmount,
                 destinationAccountId,
+                bookingRequestId,
                 user,
             }: PaymentProvider.CreatePaymentIntentInputFromSetupIntentInput): Promise<boolean> => {
                 try {
@@ -102,6 +103,7 @@ export function createPaymentAdapter({
                         automatic_payment_methods: { enabled: true, allow_redirects: 'never' },
                         // payment_method_options: { card: { request_three_d_secure: 'any' } },
                         setup_future_usage: 'off_session',
+                        metadata: { bookingRequestId },
                     });
 
                     // check payment intent status
@@ -121,6 +123,7 @@ export function createPaymentAdapter({
             },
             createConnectedAccount: async ({
                 emailAddress,
+                cookId,
             }: PaymentProvider.CreateConnectedAccountInput): Promise<{ accountId: string } | undefined> => {
                 try {
                     const account: Stripe.Account = await client.accounts.create({
@@ -133,6 +136,7 @@ export function createPaymentAdapter({
                                 },
                             },
                         },
+                        metadata: { cookId },
                     });
 
                     return { accountId: account.id };
