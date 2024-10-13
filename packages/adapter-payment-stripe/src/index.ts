@@ -56,6 +56,7 @@ export function createPaymentAdapter({
                     const customer: Stripe.Customer = await client.customers.create({
                         name: `${firstName} ${lastName}`,
                         metadata: { userId },
+                        // payment_method: paymentMethodId
                     });
 
                     await client.paymentMethods.attach(paymentMethodId, { customer: customer.id });
