@@ -224,16 +224,20 @@ export async function createOne({ runtime, context, request }: CreateOneBookingR
 
     if (!persistSuccess) return { success: false, clientSecret, bookingRequestId };
 
-    const messageSuccess: boolean = await dataSourceAdapter.chatMessageRepository.insertOne({
-        chatMessageId: createNanoId(),
-        bookingRequestId,
-        message: message.trim(),
-        generated: false,
-        createdBy: userId,
-        createdAt: new Date(),
-    });
+    const clearedMessage: string = message.trim();
 
-    if (!messageSuccess) logger.info('creating message did fail');
+    if (clearedMessage) {
+        const messageSuccess: boolean = await dataSourceAdapter.chatMessageRepository.insertOne({
+            chatMessageId: createNanoId(),
+            bookingRequestId,
+            message: clearedMessage,
+            generated: false,
+            createdBy: userId,
+            createdAt: new Date(),
+        });
+
+        if (!messageSuccess) logger.error('Creating message did fail for booking request with id: ' + bookingRequestId);
+    }
 
     return { success: true, clientSecret, bookingRequestId };
 }

@@ -122,7 +122,6 @@ export async function createOneByEmailAddress({ runtime, context, request }: Cre
             },
         });
 
-        // eslint-disable-next-line max-depth
         if (!emailSuccess) {
             logger.error('Could not create email address update');
             return false;

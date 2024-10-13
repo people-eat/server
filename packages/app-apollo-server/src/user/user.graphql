@@ -52,7 +52,7 @@ type Query {
 }
 
 input CreateOneUserByEmailAddressRequest {
-    emailAddress: EmailAddress
+    emailAddress: EmailAddress!
     phoneNumber: PhoneNumber
     password: String
     firstName: String!
@@ -93,10 +93,37 @@ input CreateOneUserByIdentityProviderRequest {
     globalBookingRequest: CreateOneGlobalBookingRequestRequest
 }
 
+input CreateOneUserRequest {
+    emailAddress: EmailAddress!
+    phoneNumber: PhoneNumber!
+    password: String
+    firstName: String!
+    lastName: String!
+    language: UserLanguage!
+    gender: Gender!
+    birthDate: Date
+    profilePictureUrl: Url
+
+    addresses: [CreateOneAddressRequest!]
+    cook: CreateOneCookRequest
+    globalBookingRequest: CreateOneGlobalBookingRequestRequest
+}
+
+# type CreateOneUserFailedAlreadyExistsResult {
+
+# }
+
+# type CreateOneUserSuccessResult {
+#     succeeded: Boolean!
+# }
+
+# union CreateOneUserResult = CreateOneUserSuccessResult
+
 type UserMutation {
     acceptLatestPrivacyPolicy: Boolean!
     acceptLatestTerms: Boolean!
 
+    createOne(request: CreateOneUserRequest!, profilePicture: Upload): Boolean!
     createOneByEmailAddress(request: CreateOneUserByEmailAddressRequest!, profilePicture: Upload): Boolean!
     createOneByPhoneNumber(request: CreateOneUserByPhoneNumberRequest!): Boolean!
     createOneByIdentityProvider(request: CreateOneUserByIdentityProviderRequest!): Boolean!

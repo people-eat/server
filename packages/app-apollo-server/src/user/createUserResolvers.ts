@@ -5,6 +5,7 @@ import {
     type GQLUserMutation,
     type GQLUserMutationAddressesArgs,
     type GQLUserMutationBookingRequestsArgs,
+    type GQLUserMutationCreateOneArgs,
     type GQLUserMutationCreateOneByEmailAddressArgs,
     type GQLUserMutationCreateOneByIdentityProviderArgs,
     type GQLUserMutationCreateOneByPhoneNumberArgs,
@@ -61,6 +62,16 @@ export function createUserResolvers(service: Service): Resolvers<'User' | 'UserM
                 context: Authorization.Context,
             ): Promise<boolean> =>
                 service.user.createOneByEmailAddress(context, {
+                    ...request,
+                    profilePicture: profilePicture && (await profilePicture).createReadStream(),
+                }),
+
+            createOne: async (
+                _parent: GQLUserMutation,
+                { request, profilePicture }: GQLUserMutationCreateOneArgs,
+                context: Authorization.Context,
+            ): Promise<boolean> =>
+                service.user.createOne(context, {
                     ...request,
                     profilePicture: profilePicture && (await profilePicture).createReadStream(),
                 }),

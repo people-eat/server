@@ -67,7 +67,11 @@ export function createPaymentAdapter({
                             destination: destinationAccountId,
                         },
                         automatic_payment_methods: { enabled: true, allow_redirects: 'never' },
+                        payment_method_options: { card: { request_three_d_secure: 'any' } },
                     });
+
+                    // check payment intent status
+                    // paymentIntent.amount
 
                     await client.transfers.create({
                         amount: payoutAmount,

@@ -1112,7 +1112,7 @@ export type GQLCreateOneUserByEmailAddressRequest = {
     addresses?: InputMaybe<Array<GQLCreateOneAddressRequest>>;
     birthDate?: InputMaybe<Scalars['Date']>;
     cook?: InputMaybe<GQLCreateOneCookRequest>;
-    emailAddress?: InputMaybe<Scalars['EmailAddress']>;
+    emailAddress: Scalars['EmailAddress'];
     firstName: Scalars['String'];
     gender: GQLGender;
     globalBookingRequest?: InputMaybe<GQLCreateOneGlobalBookingRequestRequest>;
@@ -1145,6 +1145,21 @@ export type GQLCreateOneUserByPhoneNumberRequest = {
     language: GQLUserLanguage;
     lastName: Scalars['String'];
     password: Scalars['String'];
+    phoneNumber: Scalars['PhoneNumber'];
+    profilePictureUrl?: InputMaybe<Scalars['Url']>;
+};
+
+export type GQLCreateOneUserRequest = {
+    addresses?: InputMaybe<Array<GQLCreateOneAddressRequest>>;
+    birthDate?: InputMaybe<Scalars['Date']>;
+    cook?: InputMaybe<GQLCreateOneCookRequest>;
+    emailAddress: Scalars['EmailAddress'];
+    firstName: Scalars['String'];
+    gender: GQLGender;
+    globalBookingRequest?: InputMaybe<GQLCreateOneGlobalBookingRequestRequest>;
+    language: GQLUserLanguage;
+    lastName: Scalars['String'];
+    password?: InputMaybe<Scalars['String']>;
     phoneNumber: Scalars['PhoneNumber'];
     profilePictureUrl?: InputMaybe<Scalars['Url']>;
 };
@@ -2258,6 +2273,7 @@ export type GQLUserMutation = {
     acceptLatestTerms: Scalars['Boolean'];
     addresses: GQLUserAddressMutation;
     bookingRequests: GQLUserBookingRequestMutation;
+    createOne: Scalars['Boolean'];
     createOneByEmailAddress: Scalars['Boolean'];
     createOneByIdentityProvider: Scalars['Boolean'];
     createOneByPhoneNumber: Scalars['Boolean'];
@@ -2282,6 +2298,11 @@ export type GQLUserMutationAddressesArgs = {
 
 export type GQLUserMutationBookingRequestsArgs = {
     userId: Scalars['String'];
+};
+
+export type GQLUserMutationCreateOneArgs = {
+    profilePicture?: InputMaybe<Scalars['Upload']>;
+    request: GQLCreateOneUserRequest;
 };
 
 export type GQLUserMutationCreateOneByEmailAddressArgs = {
@@ -2733,6 +2754,7 @@ export type GQLResolversTypes = {
     CreateOneUserByEmailAddressRequest: GQLCreateOneUserByEmailAddressRequest;
     CreateOneUserByIdentityProviderRequest: GQLCreateOneUserByIdentityProviderRequest;
     CreateOneUserByPhoneNumberRequest: GQLCreateOneUserByPhoneNumberRequest;
+    CreateOneUserRequest: GQLCreateOneUserRequest;
     CurrencyCode: GQLCurrencyCode;
     CustomerFeeUpdate: ResolverTypeWrapper<GQLCustomerFeeUpdate>;
     CustomerFeeUpdateMutation: ResolverTypeWrapper<GQLCustomerFeeUpdateMutation>;
@@ -2961,6 +2983,7 @@ export type GQLResolversParentTypes = {
     CreateOneUserByEmailAddressRequest: GQLCreateOneUserByEmailAddressRequest;
     CreateOneUserByIdentityProviderRequest: GQLCreateOneUserByIdentityProviderRequest;
     CreateOneUserByPhoneNumberRequest: GQLCreateOneUserByPhoneNumberRequest;
+    CreateOneUserRequest: GQLCreateOneUserRequest;
     CustomerFeeUpdate: GQLCustomerFeeUpdate;
     CustomerFeeUpdateMutation: GQLCustomerFeeUpdateMutation;
     CustomerFeeUpdateQuery: GQLCustomerFeeUpdateQuery;
@@ -5422,6 +5445,7 @@ export type GQLUserMutationResolvers<
         ContextType,
         RequireFields<GQLUserMutationBookingRequestsArgs, 'userId'>
     >;
+    createOne?: Resolver<GQLResolversTypes['Boolean'], ParentType, ContextType, RequireFields<GQLUserMutationCreateOneArgs, 'request'>>;
     createOneByEmailAddress?: Resolver<
         GQLResolversTypes['Boolean'],
         ParentType,

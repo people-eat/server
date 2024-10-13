@@ -107,6 +107,8 @@ async function bootstrap(): Promise<void> {
         stripePublishableKey: environmentVariables.payment.stripePublishableKey,
     });
 
+    console.log('called');
+
     logger.info(`🚀 Apollo server started at ${path}`);
 }
 

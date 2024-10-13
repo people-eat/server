@@ -15,15 +15,19 @@ import { type Runtime } from '../../Runtime';
 import { type NanoId } from '../../shared';
 import { type CreateOneUserRequest } from '../CreateOneUserRequest';
 
-interface CreateOneUserSuccessResult {
-    succeeded: true;
-}
+// interface CreateOneUserSuccessResult {
+//     succeeded: true;
+// }
 
-interface CreateOneUserFailedAlreadyExistsResult {
-    succeeded: false;
-}
+// interface CreateOneUserFailedResult {
+//     failed: true;
+// }
 
-type CreateOneUserResult = CreateOneUserFailedAlreadyExistsResult | CreateOneUserSuccessResult;
+// interface CreateOneUserFailedAlreadyExistsResult {
+//     alreadyExists: true;
+// }
+
+// type CreateOneUserResult = CreateOneUserSuccessResult | CreateOneUserFailedResult | CreateOneUserFailedAlreadyExistsResult;
 
 export interface CreateOneUserByEmailAddressInput {
     runtime: Runtime;
@@ -38,7 +42,7 @@ const priceClassTitles: Record<GlobalBookingRequestPriceClassType, string> = Obj
 });
 
 // eslint-disable-next-line max-statements
-export async function createOne({ runtime, context, request }: CreateOneUserByEmailAddressInput): Promise<CreateOneUserResult> {
+export async function createOne({ runtime, context, request }: CreateOneUserByEmailAddressInput): Promise<boolean> {
     const { dataSourceAdapter, emailAdapter, klaviyoEmailAdapter, smsAdapter, logger, serverUrl, webAppUrl } = runtime;
     const {
         emailAddress,
@@ -67,8 +71,11 @@ export async function createOne({ runtime, context, request }: CreateOneUserByEm
                 existingEmailAddressUpdate,
             })}`,
         );
-        return { succeeded: false };
+        // return { alreadyExists: true };
+        return false;
     }
+
+    const userId: NanoId = createNanoId();
 
     // STEP - profile picture
     let profilePictureUrl: string | undefined;
@@ -77,17 +84,17 @@ export async function createOne({ runtime, context, request }: CreateOneUserByEm
         // store different sizes right away
         const profilePictureId: NanoId = createNanoId();
         profilePictureUrl = serverUrl + '/profile-pictures/' + profilePictureId;
-        await new Promise<boolean>((resolve: (success: boolean) => void, reject: (success: boolean) => void) =>
-            profilePicture
-                .pipe(createWriteStream(join(process.cwd(), `images/profile-pictures/original/${profilePictureId}.png`)))
-                .on('finish', () => resolve(true))
-                .on('error', () => reject(false)),
+        const profilePictureSuccess: boolean = await new Promise<boolean>(
+            (resolve: (success: boolean) => void, reject: (success: boolean) => void) =>
+                profilePicture
+                    .pipe(createWriteStream(join(process.cwd(), `images/profile-pictures/original/${profilePictureId}.png`)))
+                    .on('finish', () => resolve(true))
+                    .on('error', () => reject(false)),
         );
+        if (!profilePictureSuccess) logger.info(`createOneUser - failed to persist profile picture for user ${userId}`);
     }
 
     // STEP - user
-    const userId: NanoId = createNanoId();
-
     const success: boolean = await dataSourceAdapter.userRepository.insertOne({
         userId,
         isLocked: false,
@@ -108,7 +115,8 @@ export async function createOne({ runtime, context, request }: CreateOneUserByEm
 
     if (!success) {
         logger.warn('Persisting user did fail');
-        return false;
+        // return { failed: true };
+        return true;
     }
 
     // STEP - set current request to signed in state
@@ -134,10 +142,10 @@ export async function createOne({ runtime, context, request }: CreateOneUserByEm
             },
         });
 
-        // eslint-disable-next-line max-depth
         if (!emailSuccess) {
             logger.error('Could not create email address update');
-            return false;
+            // return { failed: true };
+            return true;
         }
 
         confirmEmailAddressUrl = emailSuccess.confirmEmailAddressUrl;
@@ -148,10 +156,10 @@ export async function createOne({ runtime, context, request }: CreateOneUserByEm
             request: { userId, emailAddress: emailAddress.trim() },
         });
 
-        // eslint-disable-next-line max-depth
         if (!emailSuccess) {
             logger.error('Could not create email address update');
-            return false;
+            // return { failed: true };
+            return true;
         }
     }
 
@@ -167,7 +175,8 @@ export async function createOne({ runtime, context, request }: CreateOneUserByEm
 
     if (!smsSuccess) {
         logger.error('Could not create phone number update');
-        return false;
+        // return { failed: true };
+        return true;
     }
 
     // STEP - addresses
@@ -196,7 +205,10 @@ export async function createOne({ runtime, context, request }: CreateOneUserByEm
             createdAt: new Date(),
         });
 
-        if (!globalBookingRequestSuccess) return false;
+        if (!globalBookingRequestSuccess) {
+            // return { failed: true };
+            return true;
+        }
 
         let kitchen: DBKitchen | undefined;
 
@@ -269,8 +281,12 @@ export async function createOne({ runtime, context, request }: CreateOneUserByEm
             }<br/><br/>Allergies: ${allergyTitles.join(', ')}<br/><br/>Categories: ${categoryTitles.join(', ')}`,
         );
 
-        if (!globalBookingRequestEmailSuccess) return false;
+        if (!globalBookingRequestEmailSuccess) {
+            // return { failed: true };
+            return true;
+        }
     }
 
-    return { succeeded: true };
+    // return { succeeded: true };
+    return true;
 }
