@@ -189,7 +189,9 @@ export async function createOne({ runtime, context, request }: CreateOneBookingR
 
     if (!cookUser) return { success: false, clientSecret: '', bookingRequestId };
 
-    const paymentData: { setupIntentId: string; clientSecret: string } | undefined = await paymentAdapter.STRIPE.createSetupIntent();
+    const paymentData: { setupIntentId: string; clientSecret: string } | undefined = await paymentAdapter.STRIPE.createSetupIntent({
+        user,
+    });
 
     if (!paymentData) return { success: false, clientSecret: JSON.stringify(paymentData), bookingRequestId };
 

@@ -1,4 +1,4 @@
-import { type Logger, type PaymentProvider } from '@people-eat/server-domain';
+import { type Logger, type PaymentProvider, type User } from '@people-eat/server-domain';
 import { Stripe } from 'stripe';
 
 export interface CreatePaymentAdapterInput {
@@ -18,18 +18,52 @@ export function createPaymentAdapter({
 }: CreatePaymentAdapterInput): PaymentProvider.Adapter {
     const client: Stripe = new Stripe(stripeSecretKey, { apiVersion: '2022-11-15' });
 
+    async function getStripeCustomerId({ userId, firstName, lastName }: Pick<User, 'userId' | 'firstName' | 'lastName'>): Promise<string> {
+        const {
+            data: [existingCustomer],
+        } = await client.customers.search({
+            query: `metadata['userId']:'${userId}'`,
+        });
+
+        if (!existingCustomer) {
+            logger.info(`Requested Stripe user for PeopleEat user with id '${userId}' and did not receive one.`);
+
+            const createdCustomer: Stripe.Customer = await client.customers.create({
+                name: `${firstName} ${lastName}`,
+                metadata: { userId },
+            });
+
+            logger.info(`Created Stripe customer for PeopleEat user with id '${userId}'\n${JSON.stringify(createdCustomer)}`);
+
+            return createdCustomer.id;
+        }
+
+        return existingCustomer.id;
+    }
+
     return {
         STRIPE: {
-            createSetupIntent: async (): Promise<{ setupIntentId: string; clientSecret: string } | undefined> => {
+            createSetupIntent: async ({
+                user,
+            }: PaymentProvider.CreateSetupIntentInput): Promise<
+                { customerId: string; setupIntentId: string; clientSecret: string } | undefined
+            > => {
                 try {
+                    const customerId: string = await getStripeCustomerId(user);
+
                     const setupIntent: Stripe.SetupIntent = await client.setupIntents.create({
                         usage: 'off_session',
                         automatic_payment_methods: { enabled: true, allow_redirects: 'never' },
+                        customer: customerId,
                     });
 
-                    if (!setupIntent.client_secret) return undefined;
+                    if (!setupIntent.client_secret) {
+                        logger.error(`Created setup intent without client_secret property: ${setupIntent}`);
+                        return undefined;
+                    }
 
                     return {
+                        customerId,
                         setupIntentId: setupIntent.id,
                         clientSecret: setupIntent.client_secret,
                     };
@@ -52,17 +86,10 @@ export function createPaymentAdapter({
 
                     if (typeof paymentMethodId !== 'string') return false;
 
-                    const { userId, firstName, lastName } = user;
-                    const customer: Stripe.Customer = await client.customers.create({
-                        name: `${firstName} ${lastName}`,
-                        metadata: { userId },
-                        // payment_method: paymentMethodId
-                    });
-
-                    await client.paymentMethods.attach(paymentMethodId, { customer: customer.id });
+                    const customerId: string = await getStripeCustomerId(user);
 
                     const paymentIntent: Stripe.PaymentIntent = await client.paymentIntents.create({
-                        customer: customer.id,
+                        customer: customerId,
                         payment_method: paymentMethodId,
                         amount: pullAmount,
                         currency: 'eur',
@@ -73,7 +100,8 @@ export function createPaymentAdapter({
                             destination: destinationAccountId,
                         },
                         automatic_payment_methods: { enabled: true, allow_redirects: 'never' },
-                        payment_method_options: { card: { request_three_d_secure: 'any' } },
+                        // payment_method_options: { card: { request_three_d_secure: 'any' } },
+                        setup_future_usage: 'off_session',
                     });
 
                     // check payment intent status
