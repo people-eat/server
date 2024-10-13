@@ -43,6 +43,7 @@ export function createPaymentAdapter({
                 pullAmount,
                 payoutAmount,
                 destinationAccountId,
+                user,
             }: PaymentProvider.CreatePaymentIntentInputFromSetupIntentInput): Promise<boolean> => {
                 try {
                     const setupIntent: Stripe.SetupIntent = await client.setupIntents.retrieve(setupIntentId);
@@ -51,7 +52,11 @@ export function createPaymentAdapter({
 
                     if (typeof paymentMethodId !== 'string') return false;
 
-                    const customer: Stripe.Customer = await client.customers.create({});
+                    const { userId, firstName, lastName } = user;
+                    const customer: Stripe.Customer = await client.customers.create({
+                        name: `${firstName} ${lastName}`,
+                        metadata: { userId },
+                    });
 
                     await client.paymentMethods.attach(paymentMethodId, { customer: customer.id });
 

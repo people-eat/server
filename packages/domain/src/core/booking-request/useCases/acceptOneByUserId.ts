@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { Authorization, type ChatMessage } from '../../..';
-import { type DBBookingRequest, type DBCook } from '../../../data-source';
+import { type DBBookingRequest, type DBCook, type DBUser } from '../../../data-source';
 import { createNanoId } from '../../../utils/createNanoId';
 import { type Runtime } from '../../Runtime';
 import { type NanoId } from '../../shared';
@@ -25,6 +25,10 @@ export async function acceptOneByUserId({ runtime, context, request }: AcceptOne
     });
 
     if (!bookingRequest) return false;
+
+    const user: DBUser | undefined = await dataSourceAdapter.userRepository.findOne({ userId: bookingRequest.userId });
+
+    if (!user) return false;
 
     const cook: DBCook | undefined = await dataSourceAdapter.cookRepository.findOne({
         cookId: bookingRequest.cookId,
@@ -97,9 +101,13 @@ export async function acceptOneByUserId({ runtime, context, request }: AcceptOne
         currencyCode: bookingRequest.currencyCode,
         pullAmount: bookingRequest.totalAmountUser,
         payoutAmount: bookingRequest.totalAmountCook,
-        userId: bookingRequest.userId,
         setupIntentId: bookingRequest.paymentData.setupIntentId,
         destinationAccountId: payoutMethod.stripeAccountId,
+        user: {
+            userId: user.userId,
+            firstName: user.firstName,
+            lastName: user.lastName,
+        },
     });
 
     if (!paymentSuccess) return false;

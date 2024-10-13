@@ -187,9 +187,13 @@ export async function acceptOneByCookId({ runtime, context, request }: AcceptOne
         currencyCode: bookingRequest.currencyCode,
         pullAmount: bookingRequest.totalAmountUser,
         payoutAmount: bookingRequest.totalAmountCook,
-        userId: bookingRequest.userId,
         setupIntentId: bookingRequest.paymentData.setupIntentId,
         destinationAccountId: payoutMethod.stripeAccountId,
+        user: {
+            userId: user.userId,
+            firstName: user.firstName,
+            lastName: user.lastName,
+        },
     });
 
     runtime.logger.info({ event: 'Immediately transferred booking request costs', bookingRequestId, success: paymentSuccess });

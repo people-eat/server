@@ -1,12 +1,13 @@
+import { type User } from '../core';
 import { type CurrencyCode, type NanoId, type PaymentProvider, type Price } from '../core/shared';
 
 export interface CreatePaymentIntentInputFromSetupIntentInput {
     currencyCode: CurrencyCode;
     pullAmount: number;
     payoutAmount: number;
-    userId: NanoId;
     setupIntentId: string;
     destinationAccountId: string;
+    user: Pick<User, 'userId' | 'firstName' | 'lastName'>;
 }
 
 export interface CreateConnectedAccountInput {

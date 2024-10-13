@@ -5,9 +5,29 @@ import { type Runtime } from '../../Runtime';
 import { type NanoId } from '../../shared';
 import { type TimeTriggeredTask } from '../TimeTriggeredTask';
 
+// const handlers: Record<string, (runtime: Runtime, task: TimeTriggeredTaskVariation) => Promise<void>> = {
+//     TIME_TRIGGERED_TASK_PULL_PAYMENT: async (runtime: Runtime, task: TimeTriggeredTaskPullPayment) => {
+//         runtime;
+//         task;
+//         console.log('');
+//     },
+//     TIME_TRIGGERED_TASK_PULL_PAYMENT_ANNOUNCEMENT: async (runtime: Runtime, task: TimeTriggeredTaskPullPaymentAnnouncement) => {
+//         runtime;
+//         task;
+//         console.log('');
+//     },
+//     TIME_TRIGGERED_TASK_SEND_GIFT_CARD: async (runtime: Runtime, task: TimeTriggeredTaskSendGiftCard) => {
+//         runtime;
+//         task;
+//         console.log('');
+//     },
+// };
+
 // eslint-disable-next-line max-statements
 export async function handleTimeTriggeredTask(runtime: Runtime, timeTriggeredTask: TimeTriggeredTask): Promise<void> {
     const { dataSourceAdapter, paymentAdapter, emailAdapter } = runtime;
+
+    // await handlers[timeTriggeredTask.task.type]?.(runtime, timeTriggeredTask.task);
 
     if (timeTriggeredTask.task.type === 'TIME_TRIGGERED_TASK_PULL_PAYMENT') {
         runtime.logger.debug('Pull payment trigger was called');
@@ -16,6 +36,10 @@ export async function handleTimeTriggeredTask(runtime: Runtime, timeTriggeredTas
         });
 
         if (!bookingRequest) return;
+
+        const user: DBUser | undefined = await dataSourceAdapter.userRepository.findOne({ userId: bookingRequest.userId });
+
+        if (!user) return;
 
         const cook: DBCook | undefined = await dataSourceAdapter.cookRepository.findOne({
             cookId: bookingRequest.cookId,
@@ -34,9 +58,13 @@ export async function handleTimeTriggeredTask(runtime: Runtime, timeTriggeredTas
             currencyCode: bookingRequest.currencyCode,
             pullAmount: bookingRequest.totalAmountUser,
             payoutAmount: bookingRequest.totalAmountCook,
-            userId: bookingRequest.userId,
             setupIntentId: bookingRequest.paymentData.setupIntentId,
             destinationAccountId: payoutMethod.stripeAccountId,
+            user: {
+                userId: user.userId,
+                firstName: user.firstName,
+                lastName: user.lastName,
+            },
         });
 
         if (!paymentSuccess) return;
