@@ -25,6 +25,7 @@ export function createAdminResolvers(service: Service): Resolvers<'Admin' | 'Adm
                 context: Authorization.Context,
             ): Promise<boolean> => service.bookingRequest.unlockPayment(context, { bookingRequestId }),
             giftCardPromoCodes: () => ({} as any),
+            featureToggles: () => ({} as any),
         },
         AdminQuery: {
             findOne: async (
@@ -38,6 +39,7 @@ export function createAdminResolvers(service: Service): Resolvers<'Admin' | 'Adm
                 context: Authorization.Context,
             ): Promise<GQLAdmin[]> => service.admin.findMany(context, {}) as any,
             giftCardPromoCodes: () => ({} as any),
+            featureToggles: () => ({} as any),
         },
     };
 }
