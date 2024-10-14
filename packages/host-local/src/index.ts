@@ -34,7 +34,7 @@ async function bootstrap(): Promise<void> {
             databaseUser: environmentVariables.database.user,
         },
         logger,
-        reset: false,
+        reset: true,
     });
 
     const emailAdapter: Email.Adapter = createEmailAdapter({

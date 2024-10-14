@@ -1,0 +1,30 @@
+type FeatureToggle {
+    featureToggleId: String!
+    key: String!
+    activityLevel: UInt!
+    createdAt: DateTime!
+
+    admin: Admin! @resolved
+}
+
+type AdminFeatureToggleQuery {
+    findMany(keys: [String!]!): [FeatureToggle!]!
+}
+
+type AdminQuery {
+    featureToggles: AdminFeatureToggleQuery!
+}
+
+input CreateOneFeatureToggleRequest {
+    key: String!
+    activityLevel: UInt!
+}
+
+type AdminFeatureToggleMutation {
+    createOne(request: CreateOneFeatureToggleRequest!): Boolean!
+    updateOne(featureToggleId: String!, key: String!, activityLevel: UInt!): Boolean!
+}
+
+type AdminMutation {
+    featureToggles: AdminFeatureToggleMutation!
+}

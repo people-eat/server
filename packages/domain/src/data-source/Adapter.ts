@@ -20,6 +20,7 @@ import {
     type DBCourse,
     type DBCustomerFeeUpdate,
     type DBFavoriteCook,
+    type DBFeatureToggle,
     type DBGiftCard,
     type DBKitchen,
     type DBLanguage,
@@ -63,6 +64,7 @@ export interface Adapter {
     cookSpecificFeeRepository: Repository<DBCookSpecificFee>;
     customerFeeUpdateRepository: Repository<DBCustomerFeeUpdate>;
     searchRequestRepository: Repository<DBSearchRequest>;
+    featureToggleRepository: Repository<DBFeatureToggle>;
 
     cookRepository: Repository<DBCook>;
     languageRepository: Repository<DBLanguage>;

@@ -45,6 +45,31 @@ export type GQLAdmin = {
     user: GQLPublicUser;
 };
 
+export type GQLAdminFeatureToggleMutation = {
+    __typename?: 'AdminFeatureToggleMutation';
+    createOne: Scalars['Boolean'];
+    updateOne: Scalars['Boolean'];
+};
+
+export type GQLAdminFeatureToggleMutationCreateOneArgs = {
+    request: GQLCreateOneFeatureToggleRequest;
+};
+
+export type GQLAdminFeatureToggleMutationUpdateOneArgs = {
+    activityLevel: Scalars['UInt'];
+    featureToggleId: Scalars['String'];
+    key: Scalars['String'];
+};
+
+export type GQLAdminFeatureToggleQuery = {
+    __typename?: 'AdminFeatureToggleQuery';
+    findMany: Array<GQLFeatureToggle>;
+};
+
+export type GQLAdminFeatureToggleQueryFindManyArgs = {
+    keys: Array<Scalars['String']>;
+};
+
 export type GQLAdminGiftCardPromoCodeMutation = {
     __typename?: 'AdminGiftCardPromoCodeMutation';
     createOne: Scalars['Boolean'];
@@ -73,6 +98,7 @@ export type GQLAdminGiftCardPromoCodeQuery = {
 export type GQLAdminMutation = {
     __typename?: 'AdminMutation';
     createOne: Scalars['Boolean'];
+    featureToggles: GQLAdminFeatureToggleMutation;
     giftCardPromoCodes: GQLAdminGiftCardPromoCodeMutation;
     unlockBookingRequestPayment: Scalars['Boolean'];
 };
@@ -87,6 +113,7 @@ export type GQLAdminMutationUnlockBookingRequestPaymentArgs = {
 
 export type GQLAdminQuery = {
     __typename?: 'AdminQuery';
+    featureToggles: GQLAdminFeatureToggleQuery;
     findMany: Array<GQLAdmin>;
     findOne?: Maybe<GQLAdmin>;
     giftCardPromoCodes: GQLAdminGiftCardPromoCodeQuery;
@@ -967,6 +994,11 @@ export type GQLCreateOneCourseRequest = {
     title: Scalars['String'];
 };
 
+export type GQLCreateOneFeatureToggleRequest = {
+    activityLevel: Scalars['UInt'];
+    key: Scalars['String'];
+};
+
 export type GQLCreateOneGiftCardFailedResponse = {
     __typename?: 'CreateOneGiftCardFailedResponse';
     failed: Scalars['Boolean'];
@@ -1219,6 +1251,15 @@ export type GQLEmailAddressUpdate = {
 export type GQLExpireOneSessionRequest = {
     sessionId: Scalars['String'];
     userId: Scalars['String'];
+};
+
+export type GQLFeatureToggle = {
+    __typename?: 'FeatureToggle';
+    activityLevel: Scalars['UInt'];
+    admin: GQLAdmin;
+    createdAt: Scalars['DateTime'];
+    featureToggleId: Scalars['String'];
+    key: Scalars['String'];
 };
 
 export type GQLFindManyPublicCooksRequest = {
@@ -2671,6 +2712,8 @@ export type GQLResolversUnionParentTypes = {
 export type GQLResolversTypes = {
     Address: ResolverTypeWrapper<GQLAddress>;
     Admin: ResolverTypeWrapper<GQLAdmin>;
+    AdminFeatureToggleMutation: ResolverTypeWrapper<GQLAdminFeatureToggleMutation>;
+    AdminFeatureToggleQuery: ResolverTypeWrapper<GQLAdminFeatureToggleQuery>;
     AdminGiftCardPromoCodeMutation: ResolverTypeWrapper<GQLAdminGiftCardPromoCodeMutation>;
     AdminGiftCardPromoCodeQuery: ResolverTypeWrapper<GQLAdminGiftCardPromoCodeQuery>;
     AdminMutation: ResolverTypeWrapper<GQLAdminMutation>;
@@ -2732,6 +2775,7 @@ export type GQLResolversTypes = {
     CreateOneAdminRequest: GQLCreateOneAdminRequest;
     CreateOneCookRequest: GQLCreateOneCookRequest;
     CreateOneCourseRequest: GQLCreateOneCourseRequest;
+    CreateOneFeatureToggleRequest: GQLCreateOneFeatureToggleRequest;
     CreateOneGiftCardFailedResponse: ResolverTypeWrapper<GQLCreateOneGiftCardFailedResponse>;
     CreateOneGiftCardPromoCodeRequest: GQLCreateOneGiftCardPromoCodeRequest;
     CreateOneGiftCardRequest: GQLCreateOneGiftCardRequest;
@@ -2768,6 +2812,7 @@ export type GQLResolversTypes = {
     EmailAddress: ResolverTypeWrapper<Scalars['EmailAddress']>;
     EmailAddressUpdate: ResolverTypeWrapper<GQLEmailAddressUpdate>;
     ExpireOneSessionRequest: GQLExpireOneSessionRequest;
+    FeatureToggle: ResolverTypeWrapper<GQLFeatureToggle>;
     FindManyPublicCooksRequest: GQLFindManyPublicCooksRequest;
     FindManyPublicMenusRequest: GQLFindManyPublicMenusRequest;
     FindManyRequest: GQLFindManyRequest;
@@ -2902,6 +2947,8 @@ export type GQLResolversTypes = {
 export type GQLResolversParentTypes = {
     Address: GQLAddress;
     Admin: GQLAdmin;
+    AdminFeatureToggleMutation: GQLAdminFeatureToggleMutation;
+    AdminFeatureToggleQuery: GQLAdminFeatureToggleQuery;
     AdminGiftCardPromoCodeMutation: GQLAdminGiftCardPromoCodeMutation;
     AdminGiftCardPromoCodeQuery: GQLAdminGiftCardPromoCodeQuery;
     AdminMutation: GQLAdminMutation;
@@ -2961,6 +3008,7 @@ export type GQLResolversParentTypes = {
     CreateOneAdminRequest: GQLCreateOneAdminRequest;
     CreateOneCookRequest: GQLCreateOneCookRequest;
     CreateOneCourseRequest: GQLCreateOneCourseRequest;
+    CreateOneFeatureToggleRequest: GQLCreateOneFeatureToggleRequest;
     CreateOneGiftCardFailedResponse: GQLCreateOneGiftCardFailedResponse;
     CreateOneGiftCardPromoCodeRequest: GQLCreateOneGiftCardPromoCodeRequest;
     CreateOneGiftCardRequest: GQLCreateOneGiftCardRequest;
@@ -2996,6 +3044,7 @@ export type GQLResolversParentTypes = {
     EmailAddress: Scalars['EmailAddress'];
     EmailAddressUpdate: GQLEmailAddressUpdate;
     ExpireOneSessionRequest: GQLExpireOneSessionRequest;
+    FeatureToggle: GQLFeatureToggle;
     FindManyPublicCooksRequest: GQLFindManyPublicCooksRequest;
     FindManyPublicMenusRequest: GQLFindManyPublicMenusRequest;
     FindManyRequest: GQLFindManyRequest;
@@ -3133,6 +3182,38 @@ export type GQLAdminResolvers<ContextType = any, ParentType extends GQLResolvers
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type GQLAdminFeatureToggleMutationResolvers<
+    ContextType = any,
+    ParentType extends GQLResolversParentTypes['AdminFeatureToggleMutation'] = GQLResolversParentTypes['AdminFeatureToggleMutation'],
+> = {
+    createOne?: Resolver<
+        GQLResolversTypes['Boolean'],
+        ParentType,
+        ContextType,
+        RequireFields<GQLAdminFeatureToggleMutationCreateOneArgs, 'request'>
+    >;
+    updateOne?: Resolver<
+        GQLResolversTypes['Boolean'],
+        ParentType,
+        ContextType,
+        RequireFields<GQLAdminFeatureToggleMutationUpdateOneArgs, 'activityLevel' | 'featureToggleId' | 'key'>
+    >;
+    __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GQLAdminFeatureToggleQueryResolvers<
+    ContextType = any,
+    ParentType extends GQLResolversParentTypes['AdminFeatureToggleQuery'] = GQLResolversParentTypes['AdminFeatureToggleQuery'],
+> = {
+    findMany?: Resolver<
+        Array<GQLResolversTypes['FeatureToggle']>,
+        ParentType,
+        ContextType,
+        RequireFields<GQLAdminFeatureToggleQueryFindManyArgs, 'keys'>
+    >;
+    __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type GQLAdminGiftCardPromoCodeMutationResolvers<
     ContextType = any,
     ParentType extends GQLResolversParentTypes['AdminGiftCardPromoCodeMutation'] = GQLResolversParentTypes['AdminGiftCardPromoCodeMutation'],
@@ -3171,6 +3252,7 @@ export type GQLAdminMutationResolvers<
     ParentType extends GQLResolversParentTypes['AdminMutation'] = GQLResolversParentTypes['AdminMutation'],
 > = {
     createOne?: Resolver<GQLResolversTypes['Boolean'], ParentType, ContextType, RequireFields<GQLAdminMutationCreateOneArgs, 'request'>>;
+    featureToggles?: Resolver<GQLResolversTypes['AdminFeatureToggleMutation'], ParentType, ContextType>;
     giftCardPromoCodes?: Resolver<GQLResolversTypes['AdminGiftCardPromoCodeMutation'], ParentType, ContextType>;
     unlockBookingRequestPayment?: Resolver<
         GQLResolversTypes['Boolean'],
@@ -3185,6 +3267,7 @@ export type GQLAdminQueryResolvers<
     ContextType = any,
     ParentType extends GQLResolversParentTypes['AdminQuery'] = GQLResolversParentTypes['AdminQuery'],
 > = {
+    featureToggles?: Resolver<GQLResolversTypes['AdminFeatureToggleQuery'], ParentType, ContextType>;
     findMany?: Resolver<Array<GQLResolversTypes['Admin']>, ParentType, ContextType, Partial<GQLAdminQueryFindManyArgs>>;
     findOne?: Resolver<Maybe<GQLResolversTypes['Admin']>, ParentType, ContextType, RequireFields<GQLAdminQueryFindOneArgs, 'adminId'>>;
     giftCardPromoCodes?: Resolver<GQLResolversTypes['AdminGiftCardPromoCodeQuery'], ParentType, ContextType>;
@@ -4173,6 +4256,18 @@ export type GQLEmailAddressUpdateResolvers<
     createdAt?: Resolver<GQLResolversTypes['DateTime'], ParentType, ContextType>;
     emailAddress?: Resolver<GQLResolversTypes['EmailAddress'], ParentType, ContextType>;
     userId?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;
+    __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GQLFeatureToggleResolvers<
+    ContextType = any,
+    ParentType extends GQLResolversParentTypes['FeatureToggle'] = GQLResolversParentTypes['FeatureToggle'],
+> = {
+    activityLevel?: Resolver<GQLResolversTypes['UInt'], ParentType, ContextType>;
+    admin?: Resolver<GQLResolversTypes['Admin'], ParentType, ContextType>;
+    createdAt?: Resolver<GQLResolversTypes['DateTime'], ParentType, ContextType>;
+    featureToggleId?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;
+    key?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5804,6 +5899,8 @@ export type GQLUserUserRatingQueryResolvers<
 export type GQLResolvers<ContextType = any> = {
     Address?: GQLAddressResolvers<ContextType>;
     Admin?: GQLAdminResolvers<ContextType>;
+    AdminFeatureToggleMutation?: GQLAdminFeatureToggleMutationResolvers<ContextType>;
+    AdminFeatureToggleQuery?: GQLAdminFeatureToggleQueryResolvers<ContextType>;
     AdminGiftCardPromoCodeMutation?: GQLAdminGiftCardPromoCodeMutationResolvers<ContextType>;
     AdminGiftCardPromoCodeQuery?: GQLAdminGiftCardPromoCodeQueryResolvers<ContextType>;
     AdminMutation?: GQLAdminMutationResolvers<ContextType>;
@@ -5866,6 +5963,7 @@ export type GQLResolvers<ContextType = any> = {
     DeleteMealSuccessResult?: GQLDeleteMealSuccessResultResolvers<ContextType>;
     EmailAddress?: GraphQLScalarType;
     EmailAddressUpdate?: GQLEmailAddressUpdateResolvers<ContextType>;
+    FeatureToggle?: GQLFeatureToggleResolvers<ContextType>;
     Following?: GQLFollowingResolvers<ContextType>;
     GiftCard?: GQLGiftCardResolvers<ContextType>;
     GiftCardMutation?: GQLGiftCardMutationResolvers<ContextType>;

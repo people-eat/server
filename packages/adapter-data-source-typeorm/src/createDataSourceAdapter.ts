@@ -58,6 +58,7 @@ export async function createDataSourceAdapter({ logger, connection, reset }: Cre
         cookSpecificFeeRepository: createGenericRepository(AppDataSource.getRepository(entities.CookSpecificFeeEntity), logger),
         customerFeeUpdateRepository: createGenericRepository(AppDataSource.getRepository(entities.CustomerFeeUpdateEntity), logger),
         searchRequestRepository: createGenericRepository(AppDataSource.getRepository(entities.SearchRequestEntity), logger),
+        featureToggleRepository: createGenericRepository(AppDataSource.getRepository(entities.FeatureToggleEntity), logger),
 
         cookRepository: createGenericRepository(AppDataSource.getRepository(entities.CookEntity), logger),
         languageRepository: createGenericRepository(AppDataSource.getRepository(entities.LanguageEntity), logger),
