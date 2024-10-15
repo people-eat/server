@@ -9,7 +9,7 @@ import {
 } from '../generated';
 import { type Resolvers } from '../Resolvers';
 
-type FeatureToggleR = Omit<GQLFeatureToggle, 'admin'>;
+// type FeatureToggleR = Omit<GQLFeatureToggle, 'admin'>; @resolved for on graph
 
 export function createFeatureToggleResolvers(
     service: Service,
@@ -35,7 +35,7 @@ export function createFeatureToggleResolvers(
                 _parent: GQLAdminFeatureToggleQuery,
                 { keys }: GQLAdminFeatureToggleQueryFindManyArgs,
                 context: Authorization.Context,
-            ): Promise<FeatureToggleR[]> => (await service.featureToggle.findMany(context, { keys })) ?? [],
+            ): Promise<GQLFeatureToggle[]> => ((await service.featureToggle.findMany(context, { keys })) as any) ?? [],
         },
     };
 }

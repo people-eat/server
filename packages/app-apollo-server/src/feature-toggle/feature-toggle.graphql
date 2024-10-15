@@ -4,7 +4,7 @@ type FeatureToggle {
     activityLevel: UInt!
     createdAt: DateTime!
 
-    admin: Admin! @resolved
+    admin: Admin!
 }
 
 type AdminFeatureToggleQuery {
