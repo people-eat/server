@@ -34,7 +34,7 @@ async function bootstrap(): Promise<void> {
             databaseUser: environmentVariables.database.user,
         },
         logger,
-        reset: true,
+        reset: false,
     });
 
     const emailAdapter: Email.Adapter = createEmailAdapter({
@@ -50,13 +50,13 @@ async function bootstrap(): Promise<void> {
 
     // await klaviyoEmailAdapter.send({
     //     recipient: {
-    //         userId: 'yVXUSzZ4as4dciQICx5N',
+    //         userId: 'HDkc79KUaYsVeB1vSfwS',
     //         firstName: 'Daniel (Test 0001)',
     //         lastName: 'Merkel',
     //         phoneNumber: undefined,
     //         emailAddress: 'merkel.1996@t-online.de',
     //     },
-    //     metricId: 'global-booking-request-with-sign-up',
+    //     metricId: 'booking-request-with-menu-accepted-by-cook',
     //     data: {},
     // });
 

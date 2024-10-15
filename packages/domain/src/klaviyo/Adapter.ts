@@ -26,6 +26,41 @@ export interface KlaviyoAdapterSendGlobalBookingRequestWithEmailConfirmationRequ
     };
 }
 
+export interface KlaviyoAdapterSendBookingRequestWithMenuCreatedRequest {
+    recipient: Recipient;
+    data: {
+        bookingRequestId: NanoId;
+        user: {
+            firstName: string;
+            lastName: string;
+            formattedPrice: string;
+            url: string;
+        };
+        cook: {
+            user: {
+                firstName: string;
+                lastName: string;
+            };
+            formattedPrice: string;
+            url: string;
+        };
+        configuredMenu: {
+            title: string;
+        };
+
+        totalParticipants: number;
+        adults: number;
+        children: number;
+
+        timeLabel: string;
+        dateLabel: string;
+        locationText: string;
+        occasion: string;
+
+        message: string;
+    };
+}
+
 export interface KlaviyoAdapterSendGiftCardPurchaseConfirmationRequest {
     recipient: Recipient;
     data: {
@@ -43,5 +78,6 @@ export interface Adapter {
     sendGlobalBookingRequestWithEmailConfirmation(
         request: KlaviyoAdapterSendGlobalBookingRequestWithEmailConfirmationRequest,
     ): Promise<void>;
+    sendBookingRequestWithMenuCreatedToCustomer(request: KlaviyoAdapterSendBookingRequestWithMenuCreatedRequest): Promise<void>;
     sendGiftCardPurchaseConfirmation(request: KlaviyoAdapterSendGiftCardPurchaseConfirmationRequest): Promise<void>;
 }

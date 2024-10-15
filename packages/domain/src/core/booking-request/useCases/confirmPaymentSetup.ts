@@ -2,6 +2,7 @@ import { menuBookingRequestCookConfirmation, menuBookingRequestCustomerConfirmat
 import moment from 'moment';
 import { Authorization } from '../../..';
 import { type DBBookingRequest, type DBChatMessage, type DBConfiguredMenu, type DBUser } from '../../../data-source';
+import { routeBuilders } from '../../routeBuilder';
 import { type Runtime } from '../../Runtime';
 import { type NanoId } from '../../shared';
 
@@ -13,7 +14,7 @@ export interface ConfirmPaymentSetupInput {
 
 // eslint-disable-next-line max-statements
 export async function confirmPaymentSetup({ runtime, context, request }: ConfirmPaymentSetupInput): Promise<boolean> {
-    const { dataSourceAdapter, logger, emailAdapter, webAppUrl } = runtime;
+    const { dataSourceAdapter, logger, emailAdapter, webAppUrl, klaviyoEmailAdapter } = runtime;
     const { userId, bookingRequestId } = request;
 
     await Authorization.canMutateUserData({ context, dataSourceAdapter, logger, userId });
@@ -94,6 +95,49 @@ export async function confirmPaymentSetup({ runtime, context, request }: Confirm
 
     if (cookUser.emailAddress) {
         if (!configuredMenu) return true;
+
+        const formatPrice = (amount: number, cc: string): string => Math.round(amount / 100).toFixed(2) + ' ' + cc;
+
+        await klaviyoEmailAdapter.sendBookingRequestWithMenuCreatedToCustomer({
+            recipient: {
+                userId,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                emailAddress: user.emailAddress,
+                phoneNumber: user.phoneNumber,
+            },
+            data: {
+                bookingRequestId,
+                user: {
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    formattedPrice: formatPrice(bookingRequest.totalAmountUser, '€'),
+                    url: webAppUrl + routeBuilders.profileBookingRequest({ bookingRequestId }),
+                },
+                cook: {
+                    user: {
+                        firstName: cookUser.firstName,
+                        lastName: cookUser.lastName,
+                    },
+                    formattedPrice: formatPrice(bookingRequest.totalAmountCook, '€'),
+                    url: webAppUrl + routeBuilders.profileBookingRequest({ bookingRequestId }),
+                },
+                configuredMenu: {
+                    title: configuredMenu.title,
+                },
+
+                totalParticipants: adultParticipants + children,
+                adults: adultParticipants,
+                children: children,
+
+                timeLabel: moment(dateTime).format('LT'),
+                dateLabel: dateTime.toDateString(),
+                locationText: bookingRequest.locationText,
+                occasion: occasion,
+
+                message: '',
+            },
+        });
 
         const customerEmailSuccess: boolean = await emailAdapter.sendToOne(
             'PeopleEat',
