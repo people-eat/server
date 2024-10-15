@@ -10,8 +10,8 @@ export type UserMetricCountType =
     | 'SESSIONS'
     | 'USER_SESSIONS'
     | 'SEARCH_REQUESTS'
-    | 'HOME_SEARCH_REQUEST'
-    | 'COOK_SEARCH_REQUEST'
+    | 'HOME_SEARCH_REQUESTS'
+    | 'COOK_SEARCH_REQUESTS'
     | 'MENU_SEARCH_REQUESTS'
     | 'GLOBAL_BOOKING_REQUESTS'
     | 'BOOKING_REQUESTS';
@@ -24,8 +24,8 @@ const baseQuery: Record<UserMetricCountType, string> = {
     SESSIONS: 'SELECT COUNT(*) AS count FROM Sessions WHERE TRUE',
     USER_SESSIONS: 'SELECT COUNT(*) AS count FROM Sessions WHERE userId IS NOT NULL',
     SEARCH_REQUESTS: 'SELECT COUNT(*) AS count FROM SearchRequests WHERE TRUE',
-    HOME_SEARCH_REQUEST: "SELECT COUNT(*) AS count FROM SearchRequests WHERE origin = 'HOME'",
-    COOK_SEARCH_REQUEST: "SELECT COUNT(*) AS count FROM SearchRequests WHERE origin = 'PUBLIC_COOKS'",
+    HOME_SEARCH_REQUESTS: "SELECT COUNT(*) AS count FROM SearchRequests WHERE origin = 'HOME'",
+    COOK_SEARCH_REQUESTS: "SELECT COUNT(*) AS count FROM SearchRequests WHERE origin = 'PUBLIC_COOKS'",
     MENU_SEARCH_REQUESTS: "SELECT COUNT(*) AS count FROM SearchRequests WHERE origin = 'PUBLIC_MENUS'",
     GLOBAL_BOOKING_REQUESTS: 'SELECT COUNT(*) AS count FROM GlobalBookingRequests WHERE TRUE',
     BOOKING_REQUESTS: 'SELECT COUNT(*) AS count FROM BookingRequests WHERE TRUE',
@@ -46,8 +46,8 @@ const toMySqlTableWithRelevantCreatedAt: Record<UserMetricCountType, string> = {
     SESSIONS: 'Sessions',
     USER_SESSIONS: 'Sessions',
     SEARCH_REQUESTS: 'SearchRequests',
-    HOME_SEARCH_REQUEST: 'SearchRequests',
-    COOK_SEARCH_REQUEST: 'SearchRequests',
+    HOME_SEARCH_REQUESTS: 'SearchRequests',
+    COOK_SEARCH_REQUESTS: 'SearchRequests',
     MENU_SEARCH_REQUESTS: 'SearchRequests',
     GLOBAL_BOOKING_REQUESTS: 'GlobalBookingRequests',
     BOOKING_REQUESTS: 'BookingRequests',
