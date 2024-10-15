@@ -22,5 +22,6 @@ export interface GlobalBookingRequest {
     kitchenId?: string;
     location: Location;
     expiresAt: Date;
+    // matchedAt: Date;
     createdAt: Date;
 }

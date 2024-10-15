@@ -12,7 +12,9 @@ export type UserMetricCountType =
     | 'SEARCH_REQUESTS'
     | 'HOME_SEARCH_REQUEST'
     | 'COOK_SEARCH_REQUEST'
-    | 'MENU_SEARCH_REQUESTS';
+    | 'MENU_SEARCH_REQUESTS'
+    | 'GLOBAL_BOOKING_REQUESTS'
+    | 'BOOKING_REQUESTS';
 
 const baseQuery: Record<UserMetricCountType, string> = {
     USER: 'SELECT COUNT(*) AS count FROM Users WHERE TRUE',
@@ -25,6 +27,8 @@ const baseQuery: Record<UserMetricCountType, string> = {
     HOME_SEARCH_REQUEST: "SELECT COUNT(*) AS count FROM SearchRequests WHERE origin = 'HOME'",
     COOK_SEARCH_REQUEST: "SELECT COUNT(*) AS count FROM SearchRequests WHERE origin = 'PUBLIC_COOKS'",
     MENU_SEARCH_REQUESTS: "SELECT COUNT(*) AS count FROM SearchRequests WHERE origin = 'PUBLIC_MENUS'",
+    GLOBAL_BOOKING_REQUESTS: 'SELECT COUNT(*) AS count FROM GlobalBookingRequests WHERE TRUE',
+    BOOKING_REQUESTS: 'SELECT COUNT(*) AS count FROM BookingRequests WHERE TRUE',
 };
 
 const toMySqlTimeUnit: Record<TimeUnit, string> = {
@@ -45,6 +49,8 @@ const toMySqlTableWithRelevantCreatedAt: Record<UserMetricCountType, string> = {
     HOME_SEARCH_REQUEST: 'SearchRequests',
     COOK_SEARCH_REQUEST: 'SearchRequests',
     MENU_SEARCH_REQUESTS: 'SearchRequests',
+    GLOBAL_BOOKING_REQUESTS: 'GlobalBookingRequests',
+    BOOKING_REQUESTS: 'BookingRequests',
 };
 
 export interface ResolveMetricCountTotalSinceRequest {

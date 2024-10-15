@@ -2338,9 +2338,11 @@ export type GQLUserMenuVisitQueryFindManyArgs = {
 
 export type GQLUserMetricCountType =
     | 'ADMIN'
+    | 'BOOKING_REQUESTS'
     | 'COOK'
     | 'COOK_SEARCH_REQUEST'
     | 'CUSTOMER'
+    | 'GLOBAL_BOOKING_REQUESTS'
     | 'HOME_SEARCH_REQUEST'
     | 'MENU_SEARCH_REQUESTS'
     | 'SEARCH_REQUESTS'
