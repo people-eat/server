@@ -26,6 +26,7 @@ import { createMealService } from './meal/createMealService';
 import { createMenuCategoryService } from './menu-category/createMenuCategoryService';
 import { createMenuVisitService } from './menu-visit/createMenuVisitService';
 import { createMenuService } from './menu/createMenuService';
+import { createMetricService } from './metric/metric';
 import { createNewsletterSubscriptionService } from './newsletter-subscription/createNewsletterSubscriptionService';
 import { createOneTimeAccessTokenService } from './one-time-access-token/createOneTimeAccessTokenService';
 import { createPhoneNumberUpdateService } from './phone-number-update/createPhoneNumberUpdateService';
@@ -111,5 +112,6 @@ export function createService(runtime: Runtime): Service {
         menuVisitService: createMenuVisitService(runtime),
         cookVisitService: createCookVisitService(runtime),
         featureToggle: createFeatureToggleService(runtime),
+        adminMetricService: createMetricService(runtime),
     };
 }

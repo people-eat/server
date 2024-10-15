@@ -42,6 +42,7 @@ export type GQLAddress = {
 export type GQLAdmin = {
     __typename?: 'Admin';
     adminId: Scalars['String'];
+    metrics: GQLAdminMetric;
     user: GQLPublicUser;
 };
 
@@ -93,6 +94,29 @@ export type GQLAdminGiftCardPromoCodeMutationUpdateOneArgs = {
 export type GQLAdminGiftCardPromoCodeQuery = {
     __typename?: 'AdminGiftCardPromoCodeQuery';
     findMany: Array<GQLGiftCardPromoCode>;
+};
+
+export type GQLAdminMetric = {
+    __typename?: 'AdminMetric';
+    count: GQLAdminMetricCount;
+};
+
+export type GQLAdminMetricCount = {
+    __typename?: 'AdminMetricCount';
+    totalIn: Scalars['UInt'];
+    totalSince: Scalars['UInt'];
+};
+
+export type GQLAdminMetricCountTotalInArgs = {
+    timeUnit: GQLTimeUnit;
+    type: GQLUserMetricCountType;
+    value: Scalars['UInt'];
+};
+
+export type GQLAdminMetricCountTotalSinceArgs = {
+    timeUnit: GQLTimeUnit;
+    type: GQLUserMetricCountType;
+    value: Scalars['UInt'];
 };
 
 export type GQLAdminMutation = {
@@ -2018,6 +2042,8 @@ export type GQLTermsUpdateQueryFindOneArgs = {
     termsUpdateId: Scalars['String'];
 };
 
+export type GQLTimeUnit = 'DAYS' | 'HOURS' | 'MONTHS' | 'WEEKS';
+
 export type GQLUpdateOneMenuKeyMealOptionRequest = {
     courseId: Scalars['String'];
     index: Scalars['UInt'];
@@ -2309,6 +2335,18 @@ export type GQLUserMenuVisitQuery = {
 export type GQLUserMenuVisitQueryFindManyArgs = {
     request?: InputMaybe<GQLFindManyRequest>;
 };
+
+export type GQLUserMetricCountType =
+    | 'ADMIN'
+    | 'COOK'
+    | 'COOK_SEARCH_REQUEST'
+    | 'CUSTOMER'
+    | 'HOME_SEARCH_REQUEST'
+    | 'MENU_SEARCH_REQUESTS'
+    | 'SEARCH_REQUESTS'
+    | 'SESSIONS'
+    | 'USER'
+    | 'USER_SESSIONS';
 
 export type GQLUserMutation = {
     __typename?: 'UserMutation';
@@ -2717,6 +2755,8 @@ export type GQLResolversTypes = {
     AdminFeatureToggleQuery: ResolverTypeWrapper<GQLAdminFeatureToggleQuery>;
     AdminGiftCardPromoCodeMutation: ResolverTypeWrapper<GQLAdminGiftCardPromoCodeMutation>;
     AdminGiftCardPromoCodeQuery: ResolverTypeWrapper<GQLAdminGiftCardPromoCodeQuery>;
+    AdminMetric: ResolverTypeWrapper<GQLAdminMetric>;
+    AdminMetricCount: ResolverTypeWrapper<GQLAdminMetricCount>;
     AdminMutation: ResolverTypeWrapper<GQLAdminMutation>;
     AdminQuery: ResolverTypeWrapper<GQLAdminQuery>;
     Allergy: ResolverTypeWrapper<GQLAllergy>;
@@ -2898,6 +2938,7 @@ export type GQLResolversTypes = {
     TermsUpdate: ResolverTypeWrapper<GQLTermsUpdate>;
     TermsUpdateMutation: ResolverTypeWrapper<GQLTermsUpdateMutation>;
     TermsUpdateQuery: ResolverTypeWrapper<GQLTermsUpdateQuery>;
+    TimeUnit: GQLTimeUnit;
     UInt: ResolverTypeWrapper<Scalars['UInt']>;
     UUID: ResolverTypeWrapper<Scalars['UUID']>;
     UpdateOneMenuKeyMealOptionRequest: GQLUpdateOneMenuKeyMealOptionRequest;
@@ -2930,6 +2971,7 @@ export type GQLResolversTypes = {
     UserGlobalBookingRequestQuery: ResolverTypeWrapper<GQLUserGlobalBookingRequestQuery>;
     UserLanguage: GQLUserLanguage;
     UserMenuVisitQuery: ResolverTypeWrapper<GQLUserMenuVisitQuery>;
+    UserMetricCountType: GQLUserMetricCountType;
     UserMutation: ResolverTypeWrapper<GQLUserMutation>;
     UserNotificationMutation: ResolverTypeWrapper<GQLUserNotificationMutation>;
     UserOneTimeAccessTokenMutation: ResolverTypeWrapper<GQLUserOneTimeAccessTokenMutation>;
@@ -2952,6 +2994,8 @@ export type GQLResolversParentTypes = {
     AdminFeatureToggleQuery: GQLAdminFeatureToggleQuery;
     AdminGiftCardPromoCodeMutation: GQLAdminGiftCardPromoCodeMutation;
     AdminGiftCardPromoCodeQuery: GQLAdminGiftCardPromoCodeQuery;
+    AdminMetric: GQLAdminMetric;
+    AdminMetricCount: GQLAdminMetricCount;
     AdminMutation: GQLAdminMutation;
     AdminQuery: GQLAdminQuery;
     Allergy: GQLAllergy;
@@ -3179,6 +3223,7 @@ export type GQLAddressResolvers<
 
 export type GQLAdminResolvers<ContextType = any, ParentType extends GQLResolversParentTypes['Admin'] = GQLResolversParentTypes['Admin']> = {
     adminId?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;
+    metrics?: Resolver<GQLResolversTypes['AdminMetric'], ParentType, ContextType>;
     user?: Resolver<GQLResolversTypes['PublicUser'], ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -3245,6 +3290,33 @@ export type GQLAdminGiftCardPromoCodeQueryResolvers<
     ParentType extends GQLResolversParentTypes['AdminGiftCardPromoCodeQuery'] = GQLResolversParentTypes['AdminGiftCardPromoCodeQuery'],
 > = {
     findMany?: Resolver<Array<GQLResolversTypes['GiftCardPromoCode']>, ParentType, ContextType>;
+    __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GQLAdminMetricResolvers<
+    ContextType = any,
+    ParentType extends GQLResolversParentTypes['AdminMetric'] = GQLResolversParentTypes['AdminMetric'],
+> = {
+    count?: Resolver<GQLResolversTypes['AdminMetricCount'], ParentType, ContextType>;
+    __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GQLAdminMetricCountResolvers<
+    ContextType = any,
+    ParentType extends GQLResolversParentTypes['AdminMetricCount'] = GQLResolversParentTypes['AdminMetricCount'],
+> = {
+    totalIn?: Resolver<
+        GQLResolversTypes['UInt'],
+        ParentType,
+        ContextType,
+        RequireFields<GQLAdminMetricCountTotalInArgs, 'timeUnit' | 'type' | 'value'>
+    >;
+    totalSince?: Resolver<
+        GQLResolversTypes['UInt'],
+        ParentType,
+        ContextType,
+        RequireFields<GQLAdminMetricCountTotalSinceArgs, 'timeUnit' | 'type' | 'value'>
+    >;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5905,6 +5977,8 @@ export type GQLResolvers<ContextType = any> = {
     AdminFeatureToggleQuery?: GQLAdminFeatureToggleQueryResolvers<ContextType>;
     AdminGiftCardPromoCodeMutation?: GQLAdminGiftCardPromoCodeMutationResolvers<ContextType>;
     AdminGiftCardPromoCodeQuery?: GQLAdminGiftCardPromoCodeQueryResolvers<ContextType>;
+    AdminMetric?: GQLAdminMetricResolvers<ContextType>;
+    AdminMetricCount?: GQLAdminMetricCountResolvers<ContextType>;
     AdminMutation?: GQLAdminMutationResolvers<ContextType>;
     AdminQuery?: GQLAdminQueryResolvers<ContextType>;
     Allergy?: GQLAllergyResolvers<ContextType>;

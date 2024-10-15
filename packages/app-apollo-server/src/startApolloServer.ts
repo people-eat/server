@@ -29,7 +29,7 @@ import {
 import { GraphQLUpload, graphqlUploadExpress } from 'graphql-upload-minimal';
 import { type Disposable } from 'graphql-ws';
 import { useServer } from 'graphql-ws/lib/use/ws';
-import { createServer as createHttpServer, type IncomingMessage, type Server as HttpServer } from 'http';
+import { createServer as createHttpServer, type Server as HttpServer, type IncomingMessage } from 'http';
 import { join } from 'path';
 import sharp from 'sharp';
 import { WebSocketServer } from 'ws';
@@ -65,6 +65,7 @@ import { createMealResolvers } from './meal/createMealResolvers';
 import { createMenuConfigurationResolvers } from './menu-configuration/createMenuConfigurationResolvers';
 import { createMenuVisitResolvers } from './menu-visit/createMenuVisitResolvers';
 import { createMenuResolvers } from './menu/createMenuResolvers';
+import { createMetricResolvers } from './metric/createMetricResolvers';
 import { createNewsletterSubscriptionResolvers } from './newsletter-subscription/createNewsletterSubscriptionResolvers';
 import { createNotificationConfigurationResolvers } from './notification-configuration/createNotificationConfigurationResolvers';
 import { createNotificationResolvers } from './notification/createNotificationResolvers';
@@ -216,6 +217,7 @@ export async function startApolloServerApp({
         ...createGiftCardPromoCodeResolvers(service),
         ...createGiftCardResolvers(service),
         ...createNewsletterSubscriptionResolvers(service),
+        ...createMetricResolvers(service),
     };
 
     const path: string = '/graphql';

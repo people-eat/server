@@ -24,6 +24,7 @@ import { type MealService } from './meal/createMealService';
 import { type MenuCategoryService } from './menu-category/createMenuCategoryService';
 import { type MenuVisitService } from './menu-visit/createMenuVisitService';
 import { type MenuService } from './menu/createMenuService';
+import { type MetricService } from './metric/metric';
 import { type NewsletterSubscriptionService } from './newsletter-subscription/createNewsletterSubscriptionService';
 import { type OneTimeAccessTokenService } from './one-time-access-token/createOneTimeAccessTokenService';
 import { type PhoneNumberUpdateService } from './phone-number-update/createPhoneNumberUpdateService';
@@ -83,4 +84,6 @@ export interface Service {
     menuVisitService: MenuVisitService;
     cookVisitService: CookVisitService;
     featureToggle: FeatureToggleService;
+
+    adminMetricService: MetricService;
 }

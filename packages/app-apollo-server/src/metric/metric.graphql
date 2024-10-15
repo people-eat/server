@@ -1,0 +1,32 @@
+enum TimeUnit {
+    MONTHS
+    WEEKS
+    DAYS
+    HOURS
+}
+
+enum UserMetricCountType {
+    USER
+    CUSTOMER
+    COOK
+    ADMIN
+    SESSIONS
+    USER_SESSIONS
+    SEARCH_REQUESTS
+    HOME_SEARCH_REQUEST
+    COOK_SEARCH_REQUEST
+    MENU_SEARCH_REQUESTS
+}
+
+type AdminMetricCount {
+    totalIn(timeUnit: TimeUnit!, value: UInt!, type: UserMetricCountType!): UInt!
+    totalSince(timeUnit: TimeUnit!, value: UInt!, type: UserMetricCountType!): UInt!
+}
+
+type AdminMetric {
+    count: AdminMetricCount!
+}
+
+type Admin {
+    metrics: AdminMetric!
+}
