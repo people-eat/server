@@ -1,4 +1,5 @@
 import { Authorization, type DataSource } from '../../..';
+import { type DBSession } from '../../../data-source';
 import { type Runtime } from '../../Runtime';
 import { type FindManyRequest } from '../../shared';
 import { type Session } from '../Session';
@@ -22,5 +23,5 @@ export async function findMany({
 
     if (!sessions) return;
 
-    return sessions;
+    return sessions.map((session: DBSession) => ({ ...session, isAssignedToUser: Boolean(session.userId) }));
 }

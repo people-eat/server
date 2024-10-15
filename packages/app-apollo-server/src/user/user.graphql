@@ -44,7 +44,6 @@ type User {
 type UserQuery {
     findMany(request: FindManyRequest!): [User!]
     findOne(userId: String!): User
-    me: User
 }
 
 type Query {

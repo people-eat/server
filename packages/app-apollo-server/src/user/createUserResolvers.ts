@@ -133,13 +133,13 @@ export function createUserResolvers(service: Service): Resolvers<'User' | 'UserM
                 context: Authorization.Context,
             ): Promise<GQLUser | undefined> => service.user.findOneByUserId(context, { userId }) as any,
 
-            me: async (_parent: GQLUserQuery, _input: unknown, context: Authorization.Context): Promise<GQLUser | undefined> => {
-                const { userId } = context;
+            // me: async (_parent: GQLUserQuery, _input: unknown, context: Authorization.Context): Promise<GQLUser | undefined> => {
+            //     const { userId } = context;
 
-                if (!userId) return undefined;
+            //     if (!userId) return undefined;
 
-                return service.user.findOneByUserId(context, { userId }) as any;
-            },
+            //     return service.user.findOneByUserId(context, { userId }) as any;
+            // },
 
             phoneNumberUpdate: (_parent: GQLUserQuery, { userId }: GQLUserQueryPhoneNumberUpdateArgs) => ({ userId } as any),
             emailAddressUpdate: (_parent: GQLUserQuery, { userId }: GQLUserQueryEmailAddressUpdateArgs) => ({ userId } as any),

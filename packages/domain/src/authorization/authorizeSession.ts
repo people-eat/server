@@ -1,5 +1,6 @@
-import { type DataSource, type Logger, type Session } from '..';
+import { type DataSource, type Logger } from '..';
 import { type NanoId } from '../core/shared';
+import { type DBSession } from '../data-source';
 import createOneSession from './createOneSession';
 import extendOneSession from './extendOneSession';
 
@@ -39,7 +40,7 @@ export async function authorizeSession({
         };
     }
 
-    const session: Session | undefined = await dataSourceAdapter.sessionRepository.findOne({ sessionId });
+    const session: DBSession | undefined = await dataSourceAdapter.sessionRepository.findOne({ sessionId });
 
     if (!session) {
         // logger.debug(`Received request with session id ${sessionId} without according session`);

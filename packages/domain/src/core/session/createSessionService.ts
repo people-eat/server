@@ -19,7 +19,7 @@ export interface SessionService {
     updateCookieSettings(context: Authorization.Context, request: UpdateCookieSettingsRequest): Promise<boolean>;
     expireOne(context: Authorization.Context, request: ExpireOneSessionRequest): Promise<boolean>;
     findMany(context: Authorization.Context, request: FindManySessionsRequest): Promise<Session[] | undefined>;
-    findCurrent(context: Authorization.Context): Promise<Session | undefined>;
+    findCurrent(context: Authorization.Context): Promise<Session>;
 }
 
 export function createSessionService(runtime: Runtime): SessionService {

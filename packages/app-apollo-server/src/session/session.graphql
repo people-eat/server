@@ -8,6 +8,8 @@ type Session {
     createdAt: DateTime!
 
     cookieSettings: SessionCookieSettings
+    isAssignedToUser: Boolean!
+    user: User
 }
 
 type SessionCookieSettings {
@@ -84,7 +86,7 @@ type Mutation {
 }
 
 type SessionQuery {
-    current: Session
+    current: Session!
 }
 
 type Query {

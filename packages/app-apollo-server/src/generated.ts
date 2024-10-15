@@ -1888,10 +1888,12 @@ export type GQLSession = {
     cookieSettings?: Maybe<GQLSessionCookieSettings>;
     createdAt: Scalars['DateTime'];
     expired: Scalars['Boolean'];
+    isAssignedToUser: Scalars['Boolean'];
     lastExtendedAt: Scalars['DateTime'];
     platform: GQLPlatform;
     sessionId: Scalars['String'];
     title?: Maybe<Scalars['String']>;
+    user?: Maybe<GQLUser>;
     userId?: Maybe<Scalars['String']>;
 };
 
@@ -1939,7 +1941,7 @@ export type GQLSessionMutationUpdateCookieSettingsArgs = {
 
 export type GQLSessionQuery = {
     __typename?: 'SessionQuery';
-    current?: Maybe<GQLSession>;
+    current: GQLSession;
 };
 
 export type GQLSubscription = {
@@ -2497,7 +2499,6 @@ export type GQLUserQuery = {
     findOne?: Maybe<GQLUser>;
     followings: GQLUserFollowingQuery;
     globalBookingRequests: GQLUserGlobalBookingRequestQuery;
-    me?: Maybe<GQLUser>;
     menuVisits: GQLUserAddressQuery;
     notificationConfiguration?: Maybe<GQLNotificationConfigurationQuery>;
     notifications: GQLNotificationQuery;
@@ -4994,10 +4995,12 @@ export type GQLSessionResolvers<
     cookieSettings?: Resolver<Maybe<GQLResolversTypes['SessionCookieSettings']>, ParentType, ContextType>;
     createdAt?: Resolver<GQLResolversTypes['DateTime'], ParentType, ContextType>;
     expired?: Resolver<GQLResolversTypes['Boolean'], ParentType, ContextType>;
+    isAssignedToUser?: Resolver<GQLResolversTypes['Boolean'], ParentType, ContextType>;
     lastExtendedAt?: Resolver<GQLResolversTypes['DateTime'], ParentType, ContextType>;
     platform?: Resolver<GQLResolversTypes['Platform'], ParentType, ContextType>;
     sessionId?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;
     title?: Resolver<Maybe<GQLResolversTypes['String']>, ParentType, ContextType>;
+    user?: Resolver<Maybe<GQLResolversTypes['User']>, ParentType, ContextType>;
     userId?: Resolver<Maybe<GQLResolversTypes['String']>, ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -5048,7 +5051,7 @@ export type GQLSessionQueryResolvers<
     ContextType = any,
     ParentType extends GQLResolversParentTypes['SessionQuery'] = GQLResolversParentTypes['SessionQuery'],
 > = {
-    current?: Resolver<Maybe<GQLResolversTypes['Session']>, ParentType, ContextType>;
+    current?: Resolver<GQLResolversTypes['Session'], ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5786,7 +5789,6 @@ export type GQLUserQueryResolvers<
         ContextType,
         RequireFields<GQLUserQueryGlobalBookingRequestsArgs, 'userId'>
     >;
-    me?: Resolver<Maybe<GQLResolversTypes['User']>, ParentType, ContextType>;
     menuVisits?: Resolver<
         GQLResolversTypes['UserAddressQuery'],
         ParentType,

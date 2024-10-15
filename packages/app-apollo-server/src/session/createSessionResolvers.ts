@@ -8,6 +8,7 @@ import {
     type GQLSessionMutationAssignOneByPhoneNumberArgs,
     type GQLSessionMutationUpdateCookieSettingsArgs,
     type GQLSessionQuery,
+    type GQLUser,
     type GQLUserSessionMutation,
 } from '../generated';
 import { type Resolvers } from '../Resolvers';
@@ -16,9 +17,12 @@ export function createSessionResolvers(
     service: Service,
 ): Resolvers<'Session' | 'SessionQuery' | 'SessionMutation' | 'UserSessionQuery' | 'UserSessionMutation'> {
     return {
-        Session: {},
+        Session: {
+            user: async ({ userId }: GQLSession, _input: unknown, context: Authorization.Context): Promise<GQLUser> =>
+                userId ? (service.user.findOneByUserId(context, { userId }) as any) : undefined,
+        },
         SessionQuery: {
-            current: async (_parent: GQLSessionQuery, _input: unknown, context: Authorization.Context): Promise<GQLSession | undefined> =>
+            current: async (_parent: GQLSessionQuery, _input: unknown, context: Authorization.Context): Promise<GQLSession> =>
                 service.session.findCurrent(context),
         },
         SessionMutation: {

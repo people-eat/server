@@ -7,5 +7,6 @@ export { type DBGlobalBookingRequest } from './GlobalBookingRequest';
 export { type DBMenu } from './Menu';
 export { type DBOneTimeAccessToken } from './OneTimeAccessToken';
 export { type DBPhoneNumberUpdate } from './PhoneNumberUpdate';
+export { type DBSession } from './Session';
 export * from './unchanged';
 export { type DBUser } from './User';
