@@ -66,7 +66,7 @@ async function bootstrap(): Promise<void> {
         stripeConnectedAccountOnboarding: {
             refreshUrl: 'https://integration.people-eat.com/profile',
             returnToProfileUrl: 'https://integration.people-eat.com/profile?update-wallet-status',
-            returnToBookingUrl: 'https://integration.people-eat.com/profile/bookings/:bookingRequestId?update-wallet-status',
+            returnToBookingUrl: 'https://integration.people-eat.com/profile/bookings/r/:bookingRequestId?update-wallet-status',
         },
     });
 
