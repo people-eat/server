@@ -1,4 +1,4 @@
-import { type Authorization, type Meal, type Service } from '@people-eat/server-domain';
+import { type Authorization, type Meal, type Menu, type Service } from '@people-eat/server-domain';
 import { type CookVisitStatistics } from '../../../domain/src/core/cook-visit/CookVisitStatistics';
 import {
     type GQLCook,
@@ -33,6 +33,7 @@ import {
     type GQLCookVisitStatistics,
     type GQLLanguage,
     type GQLMeal,
+    type GQLMenu,
     type GQLUser,
 } from '../generated';
 import { type Resolvers } from '../Resolvers';
@@ -49,6 +50,12 @@ export function createCookResolvers(service: Service): Resolvers<'Cook' | 'CookM
             mealCount: async ({ cookId }: GQLCook, _input: unknown, context: Authorization.Context): Promise<number> => {
                 const meals: Meal[] | undefined = await service.meal.findMany(context, { cookId });
                 return meals?.length ?? 0;
+            },
+            menus: async ({ cookId }: GQLCook, _input: unknown, context: Authorization.Context): Promise<GQLMenu[]> =>
+                service.menu.findMany(context, { cookId }) as any,
+            menuCount: async ({ cookId }: GQLCook, _input: unknown, context: Authorization.Context): Promise<number> => {
+                const menus: Menu[] | undefined = await service.menu.findMany(context, { cookId });
+                return menus?.length ?? 0;
             },
             ratingAverage: () => 15,
             ratingCount: () => 0,
