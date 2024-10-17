@@ -1,5 +1,6 @@
 import { type Address, type Admin, type Authorization, type Cook, type Service } from '@people-eat/server-domain';
 import {
+    type GQLCreateOneUserResult,
     type GQLFollowing,
     type GQLUser,
     type GQLUserMutation,
@@ -70,7 +71,7 @@ export function createUserResolvers(service: Service): Resolvers<'User' | 'UserM
                 _parent: GQLUserMutation,
                 { request, profilePicture }: GQLUserMutationCreateOneArgs,
                 context: Authorization.Context,
-            ): Promise<boolean> =>
+            ): Promise<GQLCreateOneUserResult> =>
                 service.user.createOne(context, {
                     ...request,
                     profilePicture: profilePicture && (await profilePicture).createReadStream(),

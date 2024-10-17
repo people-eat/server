@@ -15,19 +15,19 @@ import { type Runtime } from '../../Runtime';
 import { type NanoId } from '../../shared';
 import { type CreateOneUserRequest } from '../CreateOneUserRequest';
 
-// interface CreateOneUserSuccessResult {
-//     succeeded: true;
-// }
+interface CreateOneUserSuccessResult {
+    succeeded: true;
+}
 
-// interface CreateOneUserFailedResult {
-//     failed: true;
-// }
+interface CreateOneUserFailedResult {
+    failed: true;
+}
 
-// interface CreateOneUserFailedAlreadyExistsResult {
-//     alreadyExists: true;
-// }
+interface CreateOneUserFailedAlreadyExistsResult {
+    alreadyExists: true;
+}
 
-// type CreateOneUserResult = CreateOneUserSuccessResult | CreateOneUserFailedResult | CreateOneUserFailedAlreadyExistsResult;
+export type CreateOneUserResult = CreateOneUserSuccessResult | CreateOneUserFailedResult | CreateOneUserFailedAlreadyExistsResult;
 
 export interface CreateOneUserByEmailAddressInput {
     runtime: Runtime;
@@ -42,7 +42,7 @@ const priceClassTitles: Record<GlobalBookingRequestPriceClassType, string> = Obj
 });
 
 // eslint-disable-next-line max-statements
-export async function createOne({ runtime, context, request }: CreateOneUserByEmailAddressInput): Promise<boolean> {
+export async function createOne({ runtime, context, request }: CreateOneUserByEmailAddressInput): Promise<CreateOneUserResult> {
     const { dataSourceAdapter, emailAdapter, klaviyoEmailAdapter, smsAdapter, logger, serverUrl, webAppUrl } = runtime;
     const {
         emailAddress,
@@ -71,8 +71,7 @@ export async function createOne({ runtime, context, request }: CreateOneUserByEm
                 existingEmailAddressUpdate,
             })}`,
         );
-        // return { alreadyExists: true };
-        return false;
+        return { alreadyExists: true };
     }
 
     const userId: NanoId = createNanoId();
@@ -115,8 +114,7 @@ export async function createOne({ runtime, context, request }: CreateOneUserByEm
 
     if (!success) {
         logger.warn('Persisting user did fail');
-        // return { failed: true };
-        return true;
+        return { failed: true };
     }
 
     // STEP - set current request to signed in state
@@ -144,8 +142,7 @@ export async function createOne({ runtime, context, request }: CreateOneUserByEm
 
         if (!emailSuccess) {
             logger.error('Could not create email address update');
-            // return { failed: true };
-            return true;
+            return { failed: true };
         }
 
         confirmEmailAddressUrl = emailSuccess.confirmEmailAddressUrl;
@@ -158,8 +155,7 @@ export async function createOne({ runtime, context, request }: CreateOneUserByEm
 
         if (!emailSuccess) {
             logger.error('Could not create email address update');
-            // return { failed: true };
-            return true;
+            return { failed: true };
         }
     }
 
@@ -202,10 +198,7 @@ export async function createOne({ runtime, context, request }: CreateOneUserByEm
             createdAt: new Date(),
         });
 
-        if (!globalBookingRequestSuccess) {
-            // return { failed: true };
-            return true;
-        }
+        if (!globalBookingRequestSuccess) return { failed: true };
 
         let kitchen: DBKitchen | undefined;
 
@@ -278,12 +271,8 @@ export async function createOne({ runtime, context, request }: CreateOneUserByEm
             }<br/><br/>Allergies: ${allergyTitles.join(', ')}<br/><br/>Categories: ${categoryTitles.join(', ')}`,
         );
 
-        if (!globalBookingRequestEmailSuccess) {
-            // return { failed: true };
-            return true;
-        }
+        if (!globalBookingRequestEmailSuccess) return { failed: true };
     }
 
-    // return { succeeded: true };
-    return true;
+    return { succeeded: true };
 }

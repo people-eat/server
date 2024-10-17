@@ -8,7 +8,7 @@ import {
     type CreateOneUserByPhoneNumberRequest,
     type CreateOneUserRequest,
 } from './CreateOneUserRequest';
-import { createOne } from './useCases/createOne';
+import { createOne, type CreateOneUserResult } from './useCases/createOne';
 import { createOneByEmailAddress } from './useCases/createOneByEmailAddress';
 import { createOneByIdentityProvider } from './useCases/createOneByIdentityProvider';
 import { createOneByPhoneNumber } from './useCases/createOneByPhoneNumber';
@@ -22,7 +22,7 @@ import { type User } from './User';
 export interface UserService {
     findOneByUserId(context: Authorization.Context, request: FindOneUserByUserIdRequest): Promise<User | undefined>;
     findMany(context: Authorization.Context, request: FindManyRequest): Promise<User[] | undefined>;
-    createOne(context: Authorization.Context, request: CreateOneUserRequest): Promise<boolean>;
+    createOne(context: Authorization.Context, request: CreateOneUserRequest): Promise<CreateOneUserResult>;
     createOneByEmailAddress(context: Authorization.Context, request: CreateOneUserByEmailAddressRequest): Promise<boolean>;
     createOneByPhoneNumber(context: Authorization.Context, request: CreateOneUserByPhoneNumberRequest): Promise<boolean>;
     createOneByIdentityProvider(context: Authorization.Context, request: CreateOneUserByIdentityProviderRequest): Promise<boolean>;

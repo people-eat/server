@@ -1205,6 +1205,16 @@ export type GQLCreateOneUserByPhoneNumberRequest = {
     profilePictureUrl?: InputMaybe<Scalars['Url']>;
 };
 
+export type GQLCreateOneUserFailedAlreadyExistsResult = {
+    __typename?: 'CreateOneUserFailedAlreadyExistsResult';
+    alreadyExists: Scalars['Boolean'];
+};
+
+export type GQLCreateOneUserFailedResult = {
+    __typename?: 'CreateOneUserFailedResult';
+    failed: Scalars['Boolean'];
+};
+
 export type GQLCreateOneUserRequest = {
     addresses?: InputMaybe<Array<GQLCreateOneAddressRequest>>;
     birthDate?: InputMaybe<Scalars['Date']>;
@@ -1218,6 +1228,16 @@ export type GQLCreateOneUserRequest = {
     password?: InputMaybe<Scalars['String']>;
     phoneNumber: Scalars['PhoneNumber'];
     profilePictureUrl?: InputMaybe<Scalars['Url']>;
+};
+
+export type GQLCreateOneUserResult =
+    | GQLCreateOneUserFailedAlreadyExistsResult
+    | GQLCreateOneUserFailedResult
+    | GQLCreateOneUserSuccessResult;
+
+export type GQLCreateOneUserSuccessResult = {
+    __typename?: 'CreateOneUserSuccessResult';
+    succeeded: Scalars['Boolean'];
 };
 
 export type GQLCurrencyCode = 'EUR' | 'USD';
@@ -2356,7 +2376,7 @@ export type GQLUserMutation = {
     acceptLatestTerms: Scalars['Boolean'];
     addresses: GQLUserAddressMutation;
     bookingRequests: GQLUserBookingRequestMutation;
-    createOne: Scalars['Boolean'];
+    createOne: GQLCreateOneUserResult;
     createOneByEmailAddress: Scalars['Boolean'];
     createOneByIdentityProvider: Scalars['Boolean'];
     createOneByPhoneNumber: Scalars['Boolean'];
@@ -2733,6 +2753,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type GQLResolversUnionTypes = {
     CouponCode: GQLGiftCard | GQLGiftCardPromoCode;
     CreateOneGiftCardResponse: GQLCreateOneGiftCardFailedResponse | GQLCreateOneGiftCardSuccessResponse;
+    CreateOneUserResult: GQLCreateOneUserFailedAlreadyExistsResult | GQLCreateOneUserFailedResult | GQLCreateOneUserSuccessResult;
     DeleteMealResult: GQLDeleteMealErrorResult | GQLDeleteMealRequiredForMenuResult | GQLDeleteMealSuccessResult;
     UserEmailAddressUpdateMutationConfirmationResult:
         | GQLUserEmailAddressUpdateMutationConfirmationFailedResult
@@ -2743,6 +2764,7 @@ export type GQLResolversUnionTypes = {
 export type GQLResolversUnionParentTypes = {
     CouponCode: GQLGiftCard | GQLGiftCardPromoCode;
     CreateOneGiftCardResponse: GQLCreateOneGiftCardFailedResponse | GQLCreateOneGiftCardSuccessResponse;
+    CreateOneUserResult: GQLCreateOneUserFailedAlreadyExistsResult | GQLCreateOneUserFailedResult | GQLCreateOneUserSuccessResult;
     DeleteMealResult: GQLDeleteMealErrorResult | GQLDeleteMealRequiredForMenuResult | GQLDeleteMealSuccessResult;
     UserEmailAddressUpdateMutationConfirmationResult:
         | GQLUserEmailAddressUpdateMutationConfirmationFailedResult
@@ -2841,7 +2863,11 @@ export type GQLResolversTypes = {
     CreateOneUserByEmailAddressRequest: GQLCreateOneUserByEmailAddressRequest;
     CreateOneUserByIdentityProviderRequest: GQLCreateOneUserByIdentityProviderRequest;
     CreateOneUserByPhoneNumberRequest: GQLCreateOneUserByPhoneNumberRequest;
+    CreateOneUserFailedAlreadyExistsResult: ResolverTypeWrapper<GQLCreateOneUserFailedAlreadyExistsResult>;
+    CreateOneUserFailedResult: ResolverTypeWrapper<GQLCreateOneUserFailedResult>;
     CreateOneUserRequest: GQLCreateOneUserRequest;
+    CreateOneUserResult: ResolverTypeWrapper<GQLResolversUnionTypes['CreateOneUserResult']>;
+    CreateOneUserSuccessResult: ResolverTypeWrapper<GQLCreateOneUserSuccessResult>;
     CurrencyCode: GQLCurrencyCode;
     CustomerFeeUpdate: ResolverTypeWrapper<GQLCustomerFeeUpdate>;
     CustomerFeeUpdateMutation: ResolverTypeWrapper<GQLCustomerFeeUpdateMutation>;
@@ -2974,7 +3000,7 @@ export type GQLResolversTypes = {
     UserLanguage: GQLUserLanguage;
     UserMenuVisitQuery: ResolverTypeWrapper<GQLUserMenuVisitQuery>;
     UserMetricCountType: GQLUserMetricCountType;
-    UserMutation: ResolverTypeWrapper<GQLUserMutation>;
+    UserMutation: ResolverTypeWrapper<Omit<GQLUserMutation, 'createOne'> & { createOne: GQLResolversTypes['CreateOneUserResult'] }>;
     UserNotificationMutation: ResolverTypeWrapper<GQLUserNotificationMutation>;
     UserOneTimeAccessTokenMutation: ResolverTypeWrapper<GQLUserOneTimeAccessTokenMutation>;
     UserOneTimeAccessTokenQuery: ResolverTypeWrapper<GQLUserOneTimeAccessTokenQuery>;
@@ -3078,7 +3104,11 @@ export type GQLResolversParentTypes = {
     CreateOneUserByEmailAddressRequest: GQLCreateOneUserByEmailAddressRequest;
     CreateOneUserByIdentityProviderRequest: GQLCreateOneUserByIdentityProviderRequest;
     CreateOneUserByPhoneNumberRequest: GQLCreateOneUserByPhoneNumberRequest;
+    CreateOneUserFailedAlreadyExistsResult: GQLCreateOneUserFailedAlreadyExistsResult;
+    CreateOneUserFailedResult: GQLCreateOneUserFailedResult;
     CreateOneUserRequest: GQLCreateOneUserRequest;
+    CreateOneUserResult: GQLResolversUnionParentTypes['CreateOneUserResult'];
+    CreateOneUserSuccessResult: GQLCreateOneUserSuccessResult;
     CustomerFeeUpdate: GQLCustomerFeeUpdate;
     CustomerFeeUpdateMutation: GQLCustomerFeeUpdateMutation;
     CustomerFeeUpdateQuery: GQLCustomerFeeUpdateQuery;
@@ -3193,7 +3223,7 @@ export type GQLResolversParentTypes = {
     UserGlobalBookingRequestMutation: GQLUserGlobalBookingRequestMutation;
     UserGlobalBookingRequestQuery: GQLUserGlobalBookingRequestQuery;
     UserMenuVisitQuery: GQLUserMenuVisitQuery;
-    UserMutation: GQLUserMutation;
+    UserMutation: Omit<GQLUserMutation, 'createOne'> & { createOne: GQLResolversParentTypes['CreateOneUserResult'] };
     UserNotificationMutation: GQLUserNotificationMutation;
     UserOneTimeAccessTokenMutation: GQLUserOneTimeAccessTokenMutation;
     UserOneTimeAccessTokenQuery: GQLUserOneTimeAccessTokenQuery;
@@ -4242,6 +4272,41 @@ export type GQLCreateOneGiftCardSuccessResponseResolvers<
 > = {
     giftCardId?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;
     stripeClientSecret?: Resolver<GQLResolversTypes['String'], ParentType, ContextType>;
+    __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GQLCreateOneUserFailedAlreadyExistsResultResolvers<
+    ContextType = any,
+    ParentType extends GQLResolversParentTypes['CreateOneUserFailedAlreadyExistsResult'] = GQLResolversParentTypes['CreateOneUserFailedAlreadyExistsResult'],
+> = {
+    alreadyExists?: Resolver<GQLResolversTypes['Boolean'], ParentType, ContextType>;
+    __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GQLCreateOneUserFailedResultResolvers<
+    ContextType = any,
+    ParentType extends GQLResolversParentTypes['CreateOneUserFailedResult'] = GQLResolversParentTypes['CreateOneUserFailedResult'],
+> = {
+    failed?: Resolver<GQLResolversTypes['Boolean'], ParentType, ContextType>;
+    __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GQLCreateOneUserResultResolvers<
+    ContextType = any,
+    ParentType extends GQLResolversParentTypes['CreateOneUserResult'] = GQLResolversParentTypes['CreateOneUserResult'],
+> = {
+    __resolveType: TypeResolveFn<
+        'CreateOneUserFailedAlreadyExistsResult' | 'CreateOneUserFailedResult' | 'CreateOneUserSuccessResult',
+        ParentType,
+        ContextType
+    >;
+};
+
+export type GQLCreateOneUserSuccessResultResolvers<
+    ContextType = any,
+    ParentType extends GQLResolversParentTypes['CreateOneUserSuccessResult'] = GQLResolversParentTypes['CreateOneUserSuccessResult'],
+> = {
+    succeeded?: Resolver<GQLResolversTypes['Boolean'], ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5617,7 +5682,12 @@ export type GQLUserMutationResolvers<
         ContextType,
         RequireFields<GQLUserMutationBookingRequestsArgs, 'userId'>
     >;
-    createOne?: Resolver<GQLResolversTypes['Boolean'], ParentType, ContextType, RequireFields<GQLUserMutationCreateOneArgs, 'request'>>;
+    createOne?: Resolver<
+        GQLResolversTypes['CreateOneUserResult'],
+        ParentType,
+        ContextType,
+        RequireFields<GQLUserMutationCreateOneArgs, 'request'>
+    >;
     createOneByEmailAddress?: Resolver<
         GQLResolversTypes['Boolean'],
         ParentType,
@@ -6030,6 +6100,10 @@ export type GQLResolvers<ContextType = any> = {
     CreateOneGiftCardFailedResponse?: GQLCreateOneGiftCardFailedResponseResolvers<ContextType>;
     CreateOneGiftCardResponse?: GQLCreateOneGiftCardResponseResolvers<ContextType>;
     CreateOneGiftCardSuccessResponse?: GQLCreateOneGiftCardSuccessResponseResolvers<ContextType>;
+    CreateOneUserFailedAlreadyExistsResult?: GQLCreateOneUserFailedAlreadyExistsResultResolvers<ContextType>;
+    CreateOneUserFailedResult?: GQLCreateOneUserFailedResultResolvers<ContextType>;
+    CreateOneUserResult?: GQLCreateOneUserResultResolvers<ContextType>;
+    CreateOneUserSuccessResult?: GQLCreateOneUserSuccessResultResolvers<ContextType>;
     CustomerFeeUpdate?: GQLCustomerFeeUpdateResolvers<ContextType>;
     CustomerFeeUpdateMutation?: GQLCustomerFeeUpdateMutationResolvers<ContextType>;
     CustomerFeeUpdateQuery?: GQLCustomerFeeUpdateQueryResolvers<ContextType>;

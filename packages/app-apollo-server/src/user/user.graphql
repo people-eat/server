@@ -108,21 +108,25 @@ input CreateOneUserRequest {
     globalBookingRequest: CreateOneGlobalBookingRequestRequest
 }
 
-# type CreateOneUserFailedAlreadyExistsResult {
+type CreateOneUserSuccessResult {
+    succeeded: Boolean!
+}
 
-# }
+type CreateOneUserFailedResult {
+    failed: Boolean!
+}
 
-# type CreateOneUserSuccessResult {
-#     succeeded: Boolean!
-# }
+type CreateOneUserFailedAlreadyExistsResult {
+    alreadyExists: Boolean!
+}
 
-# union CreateOneUserResult = CreateOneUserSuccessResult
+union CreateOneUserResult = CreateOneUserSuccessResult | CreateOneUserFailedResult | CreateOneUserFailedAlreadyExistsResult
 
 type UserMutation {
     acceptLatestPrivacyPolicy: Boolean!
     acceptLatestTerms: Boolean!
 
-    createOne(request: CreateOneUserRequest!, profilePicture: Upload): Boolean!
+    createOne(request: CreateOneUserRequest!, profilePicture: Upload): CreateOneUserResult!
     createOneByEmailAddress(request: CreateOneUserByEmailAddressRequest!, profilePicture: Upload): Boolean!
     createOneByPhoneNumber(request: CreateOneUserByPhoneNumberRequest!): Boolean!
     createOneByIdentityProvider(request: CreateOneUserByIdentityProviderRequest!): Boolean!
